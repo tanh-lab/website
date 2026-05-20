@@ -1,0 +1,101 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/**
+ * Maps primitive tokens (tokens.css) onto Tailwind utility names.
+ * Result: bg-app, text-primary, p-md, rounded-lg, font-sans, etc.
+ */
+@theme inline {
+  --color-app: var(--color-bg-app);
+  --color-fallback: var(--color-bg-fallback);
+  --color-modal: var(--color-bg-modal);
+  --color-panel: var(--color-bg-panel);
+
+  --color-primary: var(--color-text-primary);
+  --color-secondary: var(--color-text-secondary);
+  --color-tertiary: var(--color-text-tertiary);
+  --color-muted: var(--color-text-muted);
+  --color-placeholder: var(--color-text-placeholder);
+
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-glow: var(--color-accent-glow);
+
+  --color-destructive: var(--color-destructive);
+  --color-destructive-bg: var(--color-destructive-bg);
+  --color-destructive-border: var(--color-destructive-border);
+
+  --color-surface-faintest: var(--color-surface-faintest);
+  --color-surface-faint: var(--color-surface-faint);
+  --color-surface-subtle: var(--color-surface-subtle);
+  --color-border-subtle: var(--color-border-subtle);
+
+  --color-overlay-dim: var(--color-overlay-dim);
+  --color-overlay-modal: var(--color-overlay-modal);
+  --color-overlay-heavy: var(--color-overlay-heavy);
+
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-smd: var(--space-smd);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-xxl: var(--space-xxl);
+  --spacing-xxxl: var(--space-xxxl);
+  --spacing-jumbo: var(--space-jumbo);
+  --spacing-massive: var(--space-massive);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-pill: var(--radius-pill);
+
+  --text-2xs: var(--text-2xs);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-md: var(--text-md);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-display: var(--text-display);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+}
+
+/**
+ * Glass surface — frosted backdrop blur with a faint surface fill and border.
+ * Mirrors the liquid-glass look from the inspo navbar.
+ */
+@utility glass {
+  background-color: var(--color-surface-faint);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: 0 8px 32px 0 rgb(0 0 0 / 0.36);
+}
+
+/**
+ * Heavier glass — less transparent, used for content panels below the header.
+ */
+@utility glass-panel {
+  background-color: rgb(23 22 23 / 0.7); /* --color-bg-app at 70% */
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: 0 8px 32px 0 rgb(0 0 0 / 0.4);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-bg-app);
+  }
+  body {
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}

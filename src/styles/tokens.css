@@ -1,0 +1,83 @@
+/**
+ * Primitive design tokens — mirrors cosmos/utils/theme/tokens.ts.
+ * Brand is dark-only. All tokens live here as CSS variables; Tailwind
+ * utilities are wired up in globals.css via @theme inline.
+ */
+
+:root {
+  /* color — background */
+  --color-bg-app: #171617;
+  --color-bg-fallback: #000000;
+  --color-bg-modal: #1a1a1a;
+  --color-bg-panel: rgb(0 0 0 / 0.2);
+  --color-bg-side-panel: rgb(44 44 44 / 0.5);
+
+  /* color — text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgb(255 255 255 / 0.6);
+  --color-text-tertiary: rgb(255 255 255 / 0.5);
+  --color-text-muted: rgb(255 255 255 / 0.4);
+  --color-text-placeholder: rgb(255 255 255 / 0.2);
+
+  /* color — accent (cosmos purple) */
+  --color-accent: #a855f7;
+  --color-accent-soft: rgb(168 85 247 / 0.12);
+  --color-accent-glow: rgb(168 85 247 / 0.6);
+
+  /* color — destructive */
+  --color-destructive: rgb(204 51 51 / 0.8);
+  --color-destructive-bg: rgb(204 51 51 / 0.08);
+  --color-destructive-border: rgb(204 51 51 / 0.3);
+
+  /* color — surface (white alpha layers over dark bg) */
+  --color-surface-faintest: rgb(255 255 255 / 0.03);
+  --color-surface-faint: rgb(255 255 255 / 0.05);
+  --color-surface-subtle: rgb(255 255 255 / 0.06);
+  --color-border-subtle: rgb(255 255 255 / 0.1);
+
+  /* color — overlay */
+  --color-overlay-dim: rgb(0 0 0 / 0.55);
+  --color-overlay-modal: rgb(0 0 0 / 0.5);
+  --color-overlay-heavy: rgb(0 0 0 / 0.85);
+
+  /* spacing (mirrors cosmos px values, expressed in rem at 16px base) */
+  --space-xs: 0.25rem;   /* 4 */
+  --space-sm: 0.375rem;  /* 6 */
+  --space-md: 0.5rem;    /* 8 */
+  --space-smd: 0.625rem; /* 10 */
+  --space-lg: 0.75rem;   /* 12 */
+  --space-xl: 1rem;      /* 16 */
+  --space-xxl: 1.25rem;  /* 20 */
+  --space-xxxl: 1.5rem;  /* 24 */
+  --space-jumbo: 2rem;   /* 32 */
+  --space-massive: 3rem; /* 48 */
+
+  /* radii */
+  --radius-xs: 1px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+
+  /* font size */
+  --text-2xs: 0.5625rem; /* 9 */
+  --text-xs: 0.625rem;   /* 10 */
+  --text-sm: 0.75rem;    /* 12 */
+  --text-md: 0.8125rem;  /* 13 */
+  --text-lg: 0.875rem;   /* 14 */
+  --text-xl: 1rem;       /* 16 */
+  --text-2xl: 1.125rem;  /* 18 */
+  --text-display: 1.875rem; /* 30 */
+
+  /* font family — Inter for body (matches cosmos), Instrument Serif for display */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+
+  /* opacity */
+  --opacity-disabled: 0.25;
+  --opacity-muted: 0.4;
+  --opacity-half: 0.5;
+  --opacity-soft: 0.7;
+}
