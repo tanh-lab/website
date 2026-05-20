@@ -2,6 +2,9 @@
  * Primitive design tokens — mirrors cosmos/utils/theme/tokens.ts.
  * Brand is dark-only. All tokens live here as CSS variables; Tailwind
  * utilities are wired up in globals.css via @theme inline.
+ *
+ * @font-face declarations are kept inline in index.html so Bun's CSS
+ * bundler doesn't try to resolve the /fonts/* URLs at build time.
  */
 
 :root {
