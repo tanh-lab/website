@@ -37,7 +37,10 @@ export function App() {
       <Suspense fallback={null}>
         <GradientBackground />
       </Suspense>
-      <div className="fixed inset-0 -z-10 bg-overlay-dim" />
+      <div
+        className="fixed inset-x-0 top-0 -z-10 bg-overlay-dim"
+        style={{ height: "100lvh" }}
+      />
       <Navbar />
 
       <Suspense fallback={<main className="min-h-screen" />}>
