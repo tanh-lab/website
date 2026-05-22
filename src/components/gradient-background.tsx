@@ -1,27 +1,124 @@
-import { GrainGradient } from "@paper-design/shaders-react"
+import { useEffect, useRef } from "react"
+import { parseColor } from "./gradient/color"
+
+const FPS_CAP = 30
+
+const COLORS = [
+  "hsl(193, 85%, 66%)",
+  "hsl(196, 100%, 83%)",
+  "hsl(195, 100%, 50%)",
+]
+const COLOR_BACK = "hsl(0, 0%, 0%)"
+
+const SHAPE_CORNERS = 4
+const FIT_CONTAIN = 1
+
+// `transferControlToOffscreen()` is a one-shot, irreversible operation per
+// canvas. Owning the worker outside React keeps StrictMode's double-mount
+// from re-transferring the canvas, and gives us a stable handle to post
+// resize/visibility updates from any later mount.
+let workerInstance: Worker | null = null
+let ownedCanvas: HTMLCanvasElement | null = null
+
+function getOrCreateWorker(canvas: HTMLCanvasElement): Worker | null {
+  if (workerInstance && ownedCanvas === canvas) return workerInstance
+  if (workerInstance) return workerInstance // canvas changed mid-session; reuse worker anyway
+  if (typeof canvas.transferControlToOffscreen !== "function") return null
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  const rect = canvas.getBoundingClientRect()
+  const initWidth = Math.max(1, rect.width || window.innerWidth)
+  const initHeight = Math.max(1, rect.height || window.innerHeight)
+
+  const offscreen = canvas.transferControlToOffscreen()
+  // Worker is pre-built (see `build:worker` script) so the same URL works in
+  // dev (served from public/) and production (emitted to dist/). Bun's dev
+  // server resolves `new URL(..., import.meta.url)` to a file:// path which
+  // browsers refuse to load as a Worker — hence the fixed path.
+  const worker = new Worker("/gradient-worker.js", { type: "module" })
+
+  worker.postMessage(
+    {
+      type: "init",
+      canvas: offscreen,
+      width: initWidth,
+      height: initHeight,
+      pixelRatio: dpr,
+      noiseUrl: "/shader-noise.png",
+      speed: 1,
+      colorBack: parseColor(COLOR_BACK),
+      colors: COLORS.map(parseColor),
+      softness: 0.76,
+      intensity: 0.45,
+      noise: 0,
+      shape: SHAPE_CORNERS,
+      fit: FIT_CONTAIN,
+      scale: 1,
+      rotation: 0,
+      offsetX: 0,
+      offsetY: 0,
+      originX: 0.5,
+      originY: 0.5,
+      worldWidth: 0,
+      worldHeight: 0,
+      fps: FPS_CAP,
+    },
+    [offscreen],
+  )
+
+  workerInstance = worker
+  ownedCanvas = canvas
+  return worker
+}
 
 export function GradientBackground() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const worker = getOrCreateWorker(canvas)
+    if (!worker) return // OffscreenCanvas unsupported — canvas stays black.
+
+    const ro = new ResizeObserver((entries) => {
+      const e = entries[0]
+      if (!e) return
+      const cr = e.contentRect
+      worker.postMessage({
+        type: "resize",
+        width: Math.max(1, cr.width),
+        height: Math.max(1, cr.height),
+        pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      })
+    })
+    ro.observe(canvas)
+
+    const onVisibility = () => {
+      worker.postMessage({ type: "visibility", visible: !document.hidden })
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+
+    return () => {
+      ro.disconnect()
+      document.removeEventListener("visibilitychange", onVisibility)
+      // Worker outlives the component on purpose — see comment at module top.
+    }
+  }, [])
+
   return (
-    <div
-      className="fixed inset-x-0 top-0 -z-10"
-      style={{ height: "100lvh" }}
-    >
-      <GrainGradient
-        style={{ height: "100%", width: "100%" }}
-        minPixelRatio={1}
-        maxPixelCount={1920 * 1080}
-        colorBack="hsl(0, 0%, 0%)"
-        softness={0.76}
-        intensity={0.45}
-        noise={0}
-        shape="corners"
-        offsetX={0}
-        offsetY={0}
-        scale={1}
-        rotation={0}
-        speed={1}
-        colors={["hsl(193, 85%, 66%)", "hsl(196, 100%, 83%)", "hsl(195, 100%, 50%)"]}
-      />
-    </div>
+    <canvas
+      ref={canvasRef}
+      aria-hidden
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100lvh",
+        zIndex: -10,
+        display: "block",
+        background: "#000",
+      }}
+    />
   )
 }

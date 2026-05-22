@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun --hot ./index.html",
+    "build:worker": "bun build ./src/components/gradient/worker.ts --outfile=./public/gradient-worker.js --target=browser --format=esm --minify",
+    "dev": "bun run build:worker && bun --hot ./dev-server.ts",
     "build": "bun run build.ts",
     "start": "bun ./index.html",
     "type-check": "tsc --noEmit"
@@ -12,7 +13,6 @@
   "dependencies": {
     "@fontsource/instrument-serif": "^5.2.8",
     "@fontsource/inter": "^5.1.0",
-    "@paper-design/shaders-react": "latest",
     "clsx": "^2.1.1",
     "lucide-react": "^1.16.0",
     "react": "^19",
