@@ -54,7 +54,30 @@ const ROUTES: string[] = [
   "/legal",
 ]
 
-const bundledHtml = await readFile(join(OUT_DIR, "index.html"), "utf8")
+let bundledHtml = await readFile(join(OUT_DIR, "index.html"), "utf8")
+
+// Inline the Tailwind CSS chunk into <head> so first paint isn't blocked
+// by a network request. The bundle hash is content-addressed and the file
+// stays in dist/ for repeat visitors who already cached it elsewhere.
+const cssLinkMatch = bundledHtml.match(/<link[^>]*rel="stylesheet"[^>]*href="(\/chunk-[^"]+\.css)"[^>]*>/)
+if (cssLinkMatch) {
+  const cssPath = cssLinkMatch[1]!
+  const cssContent = await readFile(join(OUT_DIR, cssPath), "utf8")
+  bundledHtml = bundledHtml.replace(cssLinkMatch[0], `<style>${cssContent}</style>`)
+}
+
+// Preload the fonts that appear above the fold so they fetch in parallel
+// with the HTML rather than after CSS parses. Done here (not in source
+// index.html) because Bun's HTML bundler treats absolute paths as inputs
+// to resolve, not URLs to ship.
+const preloads = [
+  "/fonts/inter-latin-400-normal.woff2",
+  "/fonts/inter-latin-700-normal.woff2",
+  "/fonts/instrument-serif-latin-400-normal.woff2",
+]
+  .map((href) => `<link rel="preload" href="${href}" as="font" type="font/woff2" crossorigin>`)
+  .join("")
+bundledHtml = bundledHtml.replace("</head>", `${preloads}</head>`)
 
 function injectMarkup(markup: string): string {
   return bundledHtml.replace(
