@@ -2,9 +2,14 @@ import { GrainGradient } from "@paper-design/shaders-react"
 
 export function GradientBackground() {
   return (
-    <div className="fixed inset-0 -z-10">
+    <div
+      className="fixed inset-x-0 top-0 -z-10"
+      style={{ height: "100lvh" }}
+    >
       <GrainGradient
         style={{ height: "100%", width: "100%" }}
+        minPixelRatio={1}
+        maxPixelCount={1920 * 1080}
         colorBack="hsl(0, 0%, 0%)"
         softness={0.76}
         intensity={0.45}
