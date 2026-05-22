@@ -31,9 +31,6 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: SPA fallback (404 → index.html)
-        run: cp dist/index.html dist/404.html
-
       - name: Custom domain (CNAME)
         run: echo "tanh-lab.com" > dist/CNAME
 
