@@ -61,8 +61,17 @@ function getOrCreateDriver(canvas: HTMLCanvasElement): Driver | null {
   const initHeight = Math.max(1, rect.height || window.innerHeight)
   const config = buildConfig(initWidth, initHeight, dpr)
 
+  // Mobile browsers (touch-primary devices) hit driver/compositor bugs with
+  // OffscreenCanvas + WebGL2 in workers — both Firefox and Chrome on Android
+  // render a black canvas even though `transferControlToOffscreen` exists.
+  // Force the main-thread path there; reserve the worker for desktop where
+  // it works reliably and the off-main-thread perf win matters.
+  const isCoarsePointer =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(pointer: coarse)").matches
+
   // Preferred path: render in a worker against an OffscreenCanvas.
-  if (typeof canvas.transferControlToOffscreen === "function") {
+  if (!isCoarsePointer && typeof canvas.transferControlToOffscreen === "function") {
     const offscreen = canvas.transferControlToOffscreen()
     // Worker is pre-built (see `build:worker` script) so the same URL works in
     // dev (served from public/) and production (emitted to dist/). Bun's dev
