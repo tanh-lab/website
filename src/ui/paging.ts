@@ -22,6 +22,10 @@ import { scrollTick } from "@/ui/scroll-tick";
 const PAGE_MS = 700;
 /** Quiet that separates one gesture from the next. */
 const GAP_MS = 150;
+/** After a commit, how long before a rising stream may count as a new push. */
+const REARM_MS = 300;
+/** How far the stream must fall below its peak to read as a momentum tail. */
+const DECAY = 0.5;
 /** px of wheel travel that commits a gesture. */
 const COMMIT = 20;
 /** px per line, for `deltaMode: 1` — Firefox reports lines, not pixels. */
@@ -62,8 +66,12 @@ export function createPaging(scroller: HTMLElement): Paging {
     let armed = true;
     /** Wheel distance accumulated within the current gesture. */
     let travel = 0;
-    /** Smallest delta seen since the last commit. */
+    /** Largest delta seen since the last commit. */
+    let loudest = 0;
+    /** Smallest delta seen since that peak. */
     let quietest = Infinity;
+    /** When the gesture in progress committed. */
+    let committed = -Infinity;
     /** Direction of the gesture in progress. */
     let heading = 0;
     /** One step held back while a move runs. */
@@ -176,22 +184,33 @@ export function createPaging(scroller: HTMLElement): Paging {
         const direction = delta > 0 ? 1 : -1;
 
         // A gap in the stream is one way to know a gesture is new. The other is
-        // that the input got stronger again: a momentum tail only ever decays,
-        // so a delta rising back above the quietest one seen is a fresh push.
-        // Without this, scrolling again during a move was swallowed — the tail
-        // kept the stream unbroken, so no gap ever arrived.
+        // that the input got stronger again after dying down — but only after
+        // dying down. One flick *ramps up*: its first events are small, one of
+        // them crosses COMMIT, and the ones that follow are far larger. Read as
+        // "stronger again", that ramp committed a second page from a single
+        // gesture. So a rise only counts once the stream has fallen to half its
+        // peak, which a momentum tail does and a ramp never does, and not
+        // within REARM_MS of the commit, where the ramp lives.
+        const tail = quietest <= loudest * DECAY && now - committed > REARM_MS;
         const rearm =
             now - lastWheel > GAP_MS ||
-            (!armed && direction !== heading) ||
-            (!armed && size > quietest * 2 + 2);
+            (!armed && tail && (direction !== heading || size > quietest * 2 + 2));
         if (rearm) {
             armed = true;
             travel = 0;
+            loudest = 0;
             quietest = Infinity;
         }
         lastWheel = now;
         if (!armed) {
-            quietest = Math.min(quietest, size);
+            // Tracked from the peak down, not from the commit: the minimum has
+            // to mean "how far this has decayed", so a new high restarts it.
+            if (size > loudest) {
+                loudest = size;
+                quietest = size;
+            } else {
+                quietest = Math.min(quietest, size);
+            }
             return;
         }
 
@@ -200,7 +219,9 @@ export function createPaging(scroller: HTMLElement): Paging {
 
         armed = false;
         heading = direction;
+        loudest = size;
         quietest = size;
+        committed = now;
         commit(travel);
     };
 
