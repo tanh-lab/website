@@ -30,16 +30,22 @@ export interface Partner {
      * The file is used as a *mask*, not drawn: only its silhouette reaches the
      * page, painted in the page's own ink. That is what lets one file serve
      * both themes — every mark we were sent is a white-on-transparent export,
-     * which would be invisible on the light ground as an image — and it means
-     * none of the artwork has to be recoloured, which is the modification most
-     * brand guidelines refuse.
+     * invisible on the light ground as an image — and it means none of the
+     * artwork has to be recoloured, which is the change most brand guidelines
+     * refuse.
      *
-     * `scale` is optical trim, not layout. The marks run from a compact
-     * three-letter monogram to a wordmark fourteen times wider than it is tall,
-     * and fitting each to a shared box makes some of them read heavier than
-     * others at the same measured size. Default 1; nudge per mark by eye.
+     * The `-tight` files are the supplied artwork with the viewBox cropped to
+     * the ink and nothing else altered, so a slot given the same `aspect` is
+     * filled exactly and sizing becomes arithmetic rather than guesswork.
+     *
+     * `aspect` is the mark's own width ÷ height, measured off the artwork.
+     *
+     * `scale` is a per-mark trim, and unset everywhere by default: the strip
+     * sets one height for all of them. A dense mark reads heavier than an open
+     * one at the same height, so this is here for the case where one visibly
+     * breaks the set — not as a general sizing knob.
      */
-    logo?: { src: string; scale?: number };
+    logo?: { src: string; aspect: number; scale?: number };
 }
 
 export const partners: Partner[] = [
@@ -49,28 +55,46 @@ export const partners: Partner[] = [
     {
         name: "Suture Sound Inc",
         href: "https://suturesound.com/",
-        logo: { src: "/logos/partners/suturesound.svg" }
+        logo: {
+            src: "/logos/partners/suturesound-tight.svg",
+            aspect: 8.38
+        }
     },
     {
         name: "Black Salt Audio",
         href: "https://www.blacksaltaudio.com/",
-        logo: { src: "/logos/partners/bsa.svg" }
+        logo: {
+            src: "/logos/partners/bsa-tight.svg",
+            aspect: 2.96
+        }
     },
     {
         name: "Tonsturm",
         href: "https://tonsturm.com/",
-        logo: { src: "/logos/partners/Tonsturm.svg" }
+        logo: {
+            src: "/logos/partners/Tonsturm-tight.svg",
+            aspect: 5.26,
+            scale: 1.22
+        }
     },
     // Lowercase and one word, as they set it themselves.
     {
         name: "meltedsounds",
         href: "https://www.meltedsounds.com/",
-        logo: { src: "/logos/partners/meltedsounds.svg" }
+        logo: {
+            src: "/logos/partners/meltedsounds-tight.svg",
+            aspect: 13.53,
+            scale: 0.82
+        }
     },
     // Trades as Elastic Instruments; elasticinstruments.com redirects here.
     {
         name: "Elastic Instruments",
         href: "https://mominstruments.com/",
-        logo: { src: "/logos/partners/ElasticInstruments.svg" }
+        logo: {
+            src: "/logos/partners/ElasticInstruments-tight.svg",
+            aspect: 14.14,
+            scale: 0.78
+        }
     }
 ];

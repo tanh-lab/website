@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import type { Partner } from "@/data/partners";
 
 /**
- * A partner's mark, in a slot that is held whether or not there is one.
+ * A partner's mark, standing in for the name rather than beside it.
  *
  * The mark is a CSS mask over `currentColor`, not an `<img>` and not inline
  * SVG. Every export we were sent is white-on-transparent — a dark-theme
@@ -22,22 +22,20 @@ import type { Partner } from "@/data/partners";
  * prevent for the fonts and covers. A runtime string is never resolved, so
  * these stay separately cached files and no build rule has to know about them.
  *
- * Empty rather than absent when a partner has no mark: the slot is what keeps
- * the names on a common left edge. Dropped for the ones without, every other
- * name shifts left by the width of one and the list goes ragged — which reads
- * as broken, where an empty slot reads as "no mark". The same reasoning holds
- * the cover slot open on Research.
+ * The box carries the mark's own aspect ratio and the height it is sized to,
+ * so the mask fills it exactly — the files are cropped to their ink for this.
+ * See `Partner.logo` for where the numbers come from.
  *
- * `aria-hidden`, and deliberately: the company name sits beside it as real
- * text, so a label here would have every row announce itself twice.
+ * `aria-hidden`, and deliberately: the name travels with the mark as visually
+ * hidden text in the row, which is what the link is announced as. A label here
+ * would say it twice.
  */
-export function PartnerLogo({ logo }: { logo?: Partner["logo"] }) {
-    const style = logo
-        ? ({
-              "--mark": `url("${logo.src}")`,
-              "--mark-scale": logo.scale ?? 1
-          } as CSSProperties)
-        : undefined;
+export function PartnerLogo({ logo }: { logo: NonNullable<Partner["logo"]> }) {
+    const style = {
+        "--mark": `url("${logo.src}")`,
+        "--mark-aspect": logo.aspect,
+        "--mark-scale": logo.scale ?? 1
+    } as CSSProperties;
 
     return <span className="partner-logo" style={style} aria-hidden="true" />;
 }

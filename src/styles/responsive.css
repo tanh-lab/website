@@ -75,33 +75,11 @@
 
     /* ---------- work ---------- */
 
-    /* Stacks like the rows do: a 6fr/11fr split leaves the label column too
-       narrow to set "Partners" on one line, and the names too narrow to set at
-       all. The label becomes a heading over the list rather than beside it. */
-    .partners {
-        grid-template-columns: 1fr;
-        row-gap: 0.9rem;
-    }
-
-    .partners h3,
+    /* The strip keeps its marks at one height and wraps instead of shrinking
+       them; all a phone needs is the label above it and a tighter band. */
     .partners ul {
-        grid-column: 1;
-    }
-
-    .partners h3 {
-        padding-top: 0;
-        font-size: 14px;
-    }
-
-    /* The vh-clamped size bottoms out well below what a phone wants on a short
-       viewport — hold a floor, as the row type does. */
-    .partner-name {
-        font-size: 23px;
-    }
-
-    .partner a,
-    .partner-plain {
-        padding: 0.95rem 0;
+        gap: 1.3rem 1.8rem;
+        padding: 1.2rem 0;
     }
 
     /* ---------- open source ---------- */
