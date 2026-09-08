@@ -1,0 +1,166 @@
+/* ---------- development overlays ---------------------------------------
+   Imported only from src/dev, which the production build drops entirely — so
+   none of this reaches the shipped stylesheet.
+--------------------------------------------------------------------- */
+
+/* The 18 column grid — press G. */
+.grid {
+    position: absolute;
+    inset: 0;
+    z-index: 800;
+    display: flex;
+    padding: 0 var(--gutter);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s linear;
+}
+
+.grid.is-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.grid .col {
+    flex: 1 1 0;
+    background: rgba(252, 125, 125, 0.14);
+}
+
+/* The flare panel — press C. */
+.controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1200;
+    width: 250px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    display: none;
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.86);
+    border: 1px solid rgba(183, 183, 183, 0.26);
+    backdrop-filter: blur(8px);
+    font-family: var(--ui);
+    font-size: 11px;
+    line-height: 1.3;
+    color: var(--primary);
+    text-transform: uppercase;
+}
+
+.controls.is-open {
+    display: block;
+}
+
+.controls h2 {
+    font: inherit;
+    margin: 0 0 12px;
+    opacity: 0.55;
+    letter-spacing: 0.08em;
+}
+
+.controls .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 5px 8px;
+    margin-bottom: 10px;
+    padding: 0;
+    border: 0;
+}
+
+.controls label {
+    opacity: 0.7;
+}
+
+.controls .val {
+    opacity: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.controls input[type="range"] {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 2px;
+    margin: 2px 0 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(183, 183, 183, 0.28);
+    outline: none;
+    cursor: pointer;
+}
+
+.controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+}
+
+.controls input[type="range"]::-moz-range-thumb {
+    width: 9px;
+    height: 9px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+}
+
+.controls .row.check {
+    grid-template-columns: auto 1fr;
+    margin-bottom: 8px;
+}
+
+.controls input[type="checkbox"] {
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.controls select {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 2px;
+    padding: 4px 6px;
+    background: rgba(183, 183, 183, 0.08);
+    border: 1px solid rgba(183, 183, 183, 0.26);
+    color: var(--primary);
+    font: inherit;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.controls .actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.controls button {
+    flex: 1;
+    padding: 6px 4px;
+    background: rgba(183, 183, 183, 0.1);
+    border: 1px solid rgba(183, 183, 183, 0.26);
+    color: var(--primary);
+    font: inherit;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s var(--ease);
+}
+
+.controls button:hover {
+    background: rgba(183, 183, 183, 0.22);
+}
+
+.controls .hint {
+    margin: 12px 0 0;
+    opacity: 0.4;
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 620px) {
+    .controls {
+        display: none !important;
+    }
+}

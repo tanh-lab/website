@@ -1,0 +1,57 @@
+/* ---------- about ------------------------------------------------------
+   The airiest page on the site: no rules, just people and space.
+--------------------------------------------------------------------- */
+
+#about .row {
+    border: 0;
+    padding: clamp(0.9rem, 2.4vh, 1.6rem) 0;
+}
+
+.people {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+#about .people {
+    gap: clamp(1rem, 2.6vh, 1.7rem);
+}
+
+.person {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+}
+
+#about .person {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+
+.person .name {
+    font-size: clamp(14.5px, 1.95vh, 16px);
+    line-height: 1.4;
+}
+
+#about .person .name {
+    font-size: clamp(19px, 2.7vh, 25px);
+    line-height: 1.15;
+    opacity: 1;
+}
+
+.person .links {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.person .links a {
+    font-size: clamp(12px, 1.55vh, 13px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.person .links a:hover {
+    opacity: 1;
+}

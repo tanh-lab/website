@@ -1,0 +1,8 @@
+dist
+node_modules
+bun.lock
+public
+prototype
+.github
+.claude
+README.md

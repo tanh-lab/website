@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    /* The tab strip follows the OS theme, and a favicon does not inherit
+       anything from the page — so the swap has to live inside the file. */
+    path { stroke: #1c1c1a; }
+    @media (prefers-color-scheme: dark) { path { stroke: #e8e8e6; } }
+  </style>
+  <path d="M5.12 26.76 L5.66 26.73 L6.21 26.68 L6.75 26.62 L7.30 26.55 L7.84 26.45 L8.38 26.32 L8.93 26.16 L9.47 25.96 L10.02 25.70 L10.56 25.38 L11.10 24.97 L11.65 24.46 L12.19 23.85 L12.74 23.10 L13.28 22.22 L13.82 21.20 L14.37 20.04 L14.91 18.77 L15.46 17.41 L16.00 16.00 L16.54 14.59 L17.09 13.23 L17.63 11.96 L18.18 10.80 L18.72 9.78 L19.26 8.90 L19.81 8.15 L20.35 7.54 L20.90 7.03 L21.44 6.62 L21.98 6.30 L22.53 6.04 L23.07 5.84 L23.62 5.68 L24.16 5.55 L24.70 5.45 L25.25 5.38 L25.79 5.32 L26.34 5.27 L26.88 5.24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,237 @@
+/* ---------- header -----------------------------------------------------
+   Difference blending keeps the nav legible over any section without a single
+   scroll listener — including the one page that reverses ground and ink.
+--------------------------------------------------------------------- */
+
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 700;
+    padding-top: calc(var(--gutter) * 0.9);
+    padding-bottom: 2.2rem;
+    mix-blend-mode: difference;
+    color: var(--primary);
+}
+
+.header-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+/* Three groups separated by a blank line, as in the artwork. */
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.9rem;
+}
+
+.menu-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.menu a {
+    font-family: var(--ui);
+    font-size: var(--header-size);
+    font-weight: var(--header-weight);
+    opacity: 0.9;
+    transition: opacity 0.25s var(--ease);
+}
+
+.menu a:hover {
+    opacity: 1;
+}
+
+.menu a.is-active {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+}
+
+.header-actions .theme-toggle {
+    margin-top: 1rem;
+}
+
+.header-cta {
+    font-family: var(--ui);
+    font-size: var(--header-size);
+    font-weight: var(--header-weight);
+}
+
+.theme-toggle {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.theme-toggle svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+    transition: transform 0.45s var(--ease);
+}
+
+html[data-theme="light"] .theme-toggle svg {
+    transform: rotate(180deg);
+}
+
+/* ---------- brand ------------------------------------------------------
+   Its own layer, mirroring the header's top padding and gutters, so it lands on
+   the same line as the nav without inheriting the header's difference blend.
+   The nav can afford that blend; a mark this size cannot — over the shader it
+   comes out green.
+--------------------------------------------------------------------- */
+
+.brand-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 701;
+    padding-top: calc(var(--gutter) * 0.9);
+    pointer-events: none;
+}
+
+.brand {
+    --brand-ink: var(--text-positive);
+    display: block;
+    position: absolute;
+    left: 50%; /* width and the -w/2 offset come from JS */
+    top: var(--brand-nudge); /* JS replaces this with the measured baseline */
+    /* No transform: scale() here, and no will-change. Both would promote this
+       to a compositor layer whose raster gets *resampled* rather than
+       re-rendered — the text arrives as an upscaled bitmap on the way back to
+       the hero, and sits at rest as a resampled one. The travel changes the
+       SVG's width instead, so the type is drawn at its true size in every
+       frame; the transform only ever translates. */
+    pointer-events: none;
+}
+
+.brand .wordmark-svg {
+    fill: var(--brand-ink);
+    transition:
+        fill 0.35s var(--ease),
+        opacity 0.25s var(--ease);
+}
+
+/* No opacity transition on the subtitle: the travel writes its opacity every
+   frame, and a transition turns that per-frame value into a quarter-second lag
+   behind the scroll. The hover fade is only ever wanted on the title, which is
+   all that is visible by then. */
+.brand .wordmark-svg.is-sub {
+    transform-origin: 0 0;
+    transition: fill 0.35s var(--ease);
+}
+
+/* Only reachable once JS has enabled hit-testing, at the header end. */
+.brand:hover .wordmark-svg {
+    opacity: 0.62;
+}
+
+/* The one page whose ground is --primary, which is also the header's blend
+   colour — so difference resolves the nav to black there, in either theme. The
+   brand is not blended, so it has to say so itself. Without this it vanishes on
+   that page in dark mode, where --text-positive is a near-white on light grey. */
+body.is-brand-inverted .brand {
+    --brand-ink: var(--ink-on-primary);
+}
+
+/* ---------- scroller ---------------------------------------------------
+   The header, brand layer and grid overlay sit outside this inside .screen, so
+   they stay put while it scrolls.
+--------------------------------------------------------------------- */
+
+.scroller {
+    position: absolute;
+    inset: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    z-index: 1; /* above the shader backdrop */
+}
+
+.scroller::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.hero,
+.page {
+    height: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+/* ---------- section pages ---------------------------------------------- */
+
+.page {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+/* The veil that keeps type readable over the shader is an inset panel rather
+   than a full-bleed wash, so the artwork stays visible around all four edges and
+   each page reads as a card passing through. It is a pseudo-element and not a
+   background on .page itself because .page has to stay flush for scroll
+   snapping — only the paint is inset.
+
+   No z-index: it is the first child and .page-inner is positioned, so DOM order
+   already paints the content over it. */
+.page::before {
+    content: "";
+    position: absolute;
+    inset: var(--page-inset);
+    border-radius: var(--page-radius);
+    background: var(--page-scrim);
+    pointer-events: none;
+}
+
+.page.is-inverted {
+    color: var(--ink-on-primary);
+}
+
+.page.is-inverted::before {
+    background: var(--primary);
+}
+
+.page-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    /* `safe` matters: when the content is taller than the space left, plain
+       centring overflows equally on both sides and rides up under the nav. Safe
+       centring falls back to start alignment in that case, so the top edge is
+       always respected. */
+    align-content: safe center;
+    align-items: end;
+    row-gap: 5vh;
+    /* The nav keeps its full stacked height on every page and owns the left
+       gutter all the way down, so content has to start below it rather than at a
+       fixed fraction of the viewport — at shorter heights 18vh ran straight into
+       it. --header-h already includes the header's own 2.2rem bottom padding, so
+       it is the clearance as well as the height. JS keeps it current. */
+    padding-top: var(--header-h, 18vh);
+    padding-bottom: 10vh;
+}

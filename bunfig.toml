@@ -1,0 +1,7 @@
+# Bun is the whole toolchain here: install, dev server, bundler.
+
+[serve.static]
+# The dev server's bundler has no `external` option, so the rule that keeps
+# /fonts/* out of the module graph is registered here as a plugin. build.ts
+# passes the same plugin to Bun.build, so dev and production agree.
+plugins = ["./plugins/static-assets.ts"]

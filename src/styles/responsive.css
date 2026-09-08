@@ -1,0 +1,125 @@
+/* ---------- responsive --------------------------------------------------
+   Below 900px the paging controller stands down and the stylesheet lets pages
+   grow past the viewport, because mandatory snapping fights taller-than-screen
+   content on a phone.
+--------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+    .scroller {
+        scroll-snap-type: none;
+    }
+
+    .hero,
+    .page {
+        height: auto;
+        min-height: 100%;
+    }
+
+    .page-inner {
+        align-content: start;
+        align-items: start;
+        row-gap: 4vh;
+        padding-top: calc(var(--header-h, 16vh) + 3vh);
+        padding-bottom: 12vh;
+    }
+
+    /* Rows stack. A 6fr/11fr split across a phone leaves a ~120px label column
+       and a ~230px body, which is why this read as cramped: the grid was still
+       the desktop one. */
+    .lead {
+        grid-column: 1 / -1;
+        max-width: none;
+        font-size: 17px;
+    }
+
+    .row {
+        grid-template-columns: 1fr;
+        row-gap: 0.4rem;
+        padding: 1.1rem 0;
+    }
+
+    .row-label,
+    .row-body {
+        grid-column: 1;
+    }
+
+    .row-body p,
+    .row-body > span,
+    dd.row-body {
+        max-width: none;
+    }
+
+    .pub-title,
+    .pub-authors {
+        max-width: none;
+    }
+
+    /* The vh-clamped sizes collapse to their minimum on a short phone viewport,
+       which is smaller than a phone needs — hold a floor. */
+    .row-label {
+        font-size: 14px;
+    }
+
+    .row-body p,
+    .row-body > span,
+    dd.row-body {
+        font-size: 15.5px;
+    }
+
+    .pub-title {
+        font-size: 16.5px;
+    }
+
+    .pub-authors {
+        font-size: 14px;
+    }
+
+    #open-source .row-label > span:first-child {
+        font-size: 23px;
+    }
+
+    #about .person .name {
+        font-size: 21px;
+    }
+
+    #about .row {
+        padding: 1.3rem 0;
+    }
+
+    #legal .row-body,
+    #legal .row-body p,
+    #legal dd.row-body {
+        font-size: 14.5px;
+    }
+
+    .header-content {
+        align-items: center;
+    }
+
+    .header-actions {
+        flex-direction: row;
+        align-items: center;
+        gap: 1.2rem;
+    }
+
+    .header-actions .theme-toggle {
+        margin-top: 0;
+    }
+
+    .menu {
+        flex-direction: row;
+        gap: 1.4rem;
+    }
+}
+
+@media (max-width: 620px) {
+    .menu {
+        display: none;
+    }
+
+    /* With the menu gone, the actions are the only child of a space-between row
+       and would collapse to the left edge. */
+    .header-actions {
+        margin-left: auto;
+    }
+}

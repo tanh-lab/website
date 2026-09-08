@@ -1,0 +1,143 @@
+/* ---------- hero -------------------------------------------------------
+   The lockup centred in the screen; the visible mark is the brand up in the
+   header layer, so what lives here is only the rig it starts its travel from.
+--------------------------------------------------------------------- */
+
+.hero {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+.hero-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-lockup {
+    display: flex;
+    justify-content: center;
+}
+
+.hero-lockup .lockup {
+    width: 24vw;
+    min-width: 220px;
+}
+
+/* Invisible, but still laid out and still fitted — it is what tells the brand
+   where to start. `visibility: hidden` rather than `display: none`: a
+   display-none element has no box, so nothing to measure. */
+.hero-lockup.is-rig {
+    visibility: hidden;
+}
+
+/* Each line is fitted to the full width, so the short title sets large and the
+   long subtitle sets small — the artwork's relationship. */
+.wordmark-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    fill: var(--text-positive);
+    font-family: var(--serif);
+    font-weight: 400;
+}
+
+/* Instrument Serif ships only a 400, so the thin subtitle comes from the
+   interface family's ultralight italic — which also ties the lockup back to the
+   face the nav is set in. Barlow Semi Condensed carries a real 200, so unlike
+   the previous stack this needs no synthesised hairline stroke to fake the
+   weight. */
+.wordmark-svg.is-sub {
+    font-family: var(--italic);
+    font-weight: 200;
+    font-style: italic;
+}
+
+/* ---------- shader backdrop -------------------------------------------- */
+
+.hero-art {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.hero-gl {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ---------- scroll hint ------------------------------------------------
+   A hairline capsule at the foot of the hero with a dot drifting down it.
+   Doubles as a link to the first section, and gets out of the way as soon as
+   the page moves.
+--------------------------------------------------------------------- */
+
+.scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--gutter) * 0.9);
+    transform: translateX(-50%);
+    z-index: 2;
+    color: var(--text-positive);
+    opacity: 0.5;
+    transition: opacity 0.45s var(--ease);
+}
+
+.scroll-hint:hover {
+    opacity: 0.9;
+}
+
+.scroll-hint-pill {
+    display: block;
+    width: 21px;
+    height: 33px;
+    border: 1px solid currentColor;
+    border-radius: 11px;
+    position: relative;
+}
+
+.scroll-hint-dot {
+    position: absolute;
+    left: 50%;
+    top: 7px;
+    width: 3px;
+    height: 3px;
+    margin-left: -1.5px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: scroll-hint 2s var(--ease) infinite;
+}
+
+@keyframes scroll-hint {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    65% {
+        transform: translateY(13px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(13px);
+        opacity: 0;
+    }
+}
+
+/* Once the page has moved, the hint has done its job. */
+body.is-scrolled .scroll-hint {
+    opacity: 0;
+    pointer-events: none;
+}

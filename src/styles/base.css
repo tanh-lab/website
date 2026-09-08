@@ -1,0 +1,128 @@
+/* ---------- reset and page shell ------------------------------------- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    background: var(--background);
+    font-family: var(--display);
+    font-size: 10px;
+    font-weight: 400;
+    height: 100%;
+    overflow: hidden; /* the first screen fills the viewport */
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    overscroll-behavior: none;
+    color: var(--text-positive);
+    background: var(--background);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+p {
+    margin: 0;
+}
+
+/* Visible keyboard focus. The design hides a lot of chrome, and without this
+   a keyboard user has no idea where they are. :focus-visible only shows it for
+   keyboard traversal, so it costs the pointer experience nothing. */
+:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+/* The screen sits inside the frame; everything is clipped to it. */
+.screen {
+    position: fixed;
+    inset: 0;
+    background: var(--background);
+    border-radius: var(--radius);
+    overflow: hidden; /* clips the hero art to the corners */
+    isolation: isolate; /* keeps the header's blend mode inside the panel */
+}
+
+/* The page gutter. */
+.w {
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    position: relative;
+}
+
+/* ---------- preloader -------------------------------------------------- */
+
+.preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Follows the theme rather than always being black, so it does not flash
+       dark before a light page. */
+    background: var(--background);
+    transition:
+        opacity 0.55s var(--ease),
+        visibility 0.55s;
+}
+
+.preloader.is-done {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader {
+    display: block;
+    width: 44px;
+    height: 44px;
+    color: var(--text-positive);
+}
+
+/* ---------- intro ------------------------------------------------------ */
+
+.fade {
+    opacity: 0;
+    transition: opacity 1.2s var(--ease) 0.5s;
+}
+
+.fade.is-in {
+    opacity: 1;
+}
+
+.header,
+.hero-art {
+    opacity: 0;
+    transition: opacity 1.2s var(--ease) 0.3s;
+}
+
+.is-ready .header,
+.is-ready .hero-art {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* No animated jump between pages either. */
+    .scroller {
+        scroll-behavior: auto;
+    }
+
+    .fade,
+    .header,
+    .hero-art {
+        opacity: 1;
+    }
+
+    .scroll-hint-dot {
+        animation: none;
+    }
+}

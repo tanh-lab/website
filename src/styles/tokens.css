@@ -1,0 +1,116 @@
+/* =========================================================
+   Design tokens: type, colour, layout.
+
+   Everything the rest of the stylesheets read is declared here, once. Light is
+   the bare :root; dark redefines only what actually changes.
+   ========================================================= */
+
+/* ---------- fonts ------------------------------------------------------
+   Both families are self-hosted rather than loaded from a CDN, so the page
+   makes no third-party request and works offline. Latin subsets only.
+
+   The interface was previously set in Avenir Next Condensed, which ships only
+   with macOS: on Windows, Linux and Android the entire nav, every row label and
+   all body copy fell through to Arial or Roboto at normal width. Barlow Semi
+   Condensed is the bundled replacement — a condensed grotesque with a real
+   200 italic, which is also what lets the wordmark's subtitle drop the
+   synthesised-hairline hack it needed when the weight did not exist.
+--------------------------------------------------------------------- */
+
+@font-face {
+    font-family: "Barlow Semi Condensed";
+    src: url("/fonts/barlow-semi-condensed-latin-400-normal.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Barlow Semi Condensed";
+    src: url("/fonts/barlow-semi-condensed-latin-500-normal.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Barlow Semi Condensed";
+    src: url("/fonts/barlow-semi-condensed-latin-200-italic.woff2") format("woff2");
+    font-weight: 200;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Instrument Serif";
+    src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Instrument Serif";
+    src: url("/fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+:root {
+    /* ---------- colour ---------- */
+    /* #e3e3e3 is chosen so the difference-blended header renders as the ink
+       colour on white and as a light grey on the dark ground. */
+    --primary: #e3e3e3;
+    --background: #fff;
+    --text-positive: #1c1c1a;
+
+    /* The inverted page's ground is --primary, a light grey in both themes, so
+       its ink is a constant rather than a themed token. White on #e3e3e3 is
+       about 1.2:1, which is why that page was unreadable in dark mode. */
+    --ink-on-primary: #1c1c1a;
+
+    /* How far the section pages veil the shader behind them. The hero shows it
+       outright; the pages knock it back so type stays readable. */
+    --page-scrim: rgba(255, 255, 255, 0.42);
+
+    /* ---------- layout ---------- */
+    /* The pages' veil is inset from the screen and rounded, so it reads as a
+       panel passing over the artwork rather than a flat wash. The inset stays
+       well inside --gutter, so type keeps its breathing room within the panel. */
+    --page-inset: clamp(10px, 1.15vw, 22px);
+    --page-radius: 18px;
+
+    --radius: 0px; /* corner radius of the screen */
+    --gutter: clamp(24px, 4.45vw, 88px);
+    --cols: 18; /* the 18 column grid */
+
+    /* ---------- type ---------- */
+    --p-mono: 12px; /* fixed micro type */
+    --header-size: 14px; /* nav and secondary links */
+    --header-weight: 400;
+
+    /* The wordmark's rendered size once it has landed in the header. The script
+       sits it on the nav's measured baseline; --brand-nudge is an optical trim
+       on top of that, should the serif want one. */
+    --brand-size: 20px;
+    --brand-nudge: 0px;
+
+    --serif: "Instrument Serif", "Times New Roman", Times, serif;
+    --display:
+        "Barlow Semi Condensed", "Avenir Next Condensed", "Helvetica Neue", Arial,
+        sans-serif;
+    --italic: var(--display);
+    --ui: var(--display);
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Dark is the alternate: the artwork is set on white. --primary is not
+   redefined — the difference-blended header resolves correctly against both
+   grounds from the single value above. */
+html[data-theme="dark"] {
+    --background: #1c1c1a;
+    --text-positive: #e8e8e6;
+    --page-scrim: rgba(28, 28, 26, 0.6);
+}

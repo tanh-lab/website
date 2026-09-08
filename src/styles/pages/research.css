@@ -1,0 +1,38 @@
+/* ---------- research: publications -------------------------------------
+   The title is the link, but a link with no affordance is not one — so the
+   source sits inline at the end of the citation, where it also says where the
+   reference goes rather than only that it goes somewhere.
+--------------------------------------------------------------------- */
+
+.pub-title {
+    margin: 0 0 0.45rem;
+    font-size: clamp(15px, 2.05vh, 17px);
+    font-weight: var(--header-weight);
+    line-height: 1.4;
+    max-width: 54ch;
+}
+
+.pub-title a {
+    border-bottom-color: transparent;
+    opacity: 1;
+}
+
+.pub-title a:hover {
+    border-bottom-color: currentColor;
+}
+
+.pub-authors {
+    font-size: clamp(13.5px, 1.8vh, 15px);
+    line-height: 1.45;
+    opacity: 0.68;
+    max-width: 54ch;
+}
+
+.pub-sep {
+    opacity: 0.5;
+    padding: 0 0.15em;
+}
+
+.pub-src {
+    white-space: nowrap;
+}
