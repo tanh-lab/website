@@ -1,9 +1,10 @@
 import type { BunPlugin } from "bun";
 
 /**
- * Leave root-absolute font URLs alone.
+ * Leave root-absolute asset URLs alone.
  *
- * The fonts are served from `public/` and must not be pulled into the module
+ * The fonts and the publication covers are served from `public/` and must not be
+ * pulled into the module
  * graph. Left to itself Bun's CSS pipeline inlines a font referenced by `url()`
  * as a data URI, which put all five faces — including the three below the fold
  * — into the render-blocking stylesheet, with no separate URL to cache them by.
@@ -17,7 +18,7 @@ import type { BunPlugin } from "bun";
 export const staticAssets: BunPlugin = {
     name: "static-assets",
     setup(build) {
-        build.onResolve({ filter: /^\/fonts\// }, (args) => ({
+        build.onResolve({ filter: /^\/(fonts|covers)\// }, (args) => ({
             path: args.path,
             external: true
         }));

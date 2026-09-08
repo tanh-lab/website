@@ -123,3 +123,37 @@
         margin-left: auto;
     }
 }
+
+@media (max-width: 900px) {
+    /* The split head stacks, and the covers go inline above the citation. */
+    .research-head {
+        grid-template-columns: 1fr;
+        row-gap: 2rem;
+    }
+
+    .research-aside {
+        grid-column: 1;
+        border-left: 0;
+        border-top: 1px solid rgba(183, 183, 183, 0.3);
+        padding-left: 0;
+        padding-top: 1.2rem;
+    }
+
+    .research-aside p {
+        max-width: none;
+    }
+
+    .row.paper {
+        grid-template-columns: 1fr;
+    }
+
+    .paper .row-label,
+    .paper .row-body,
+    .paper-cover {
+        grid-column: 1;
+    }
+
+    .paper-cover {
+        padding: 0 0 0.8rem;
+    }
+}
