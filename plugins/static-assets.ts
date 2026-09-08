@@ -1,7 +1,7 @@
 import type { BunPlugin } from "bun";
 
 /**
- * Leave root-absolute asset URLs alone.
+ * Leave root-absolute font URLs alone.
  *
  * The fonts are served from `public/` and must not be pulled into the module
  * graph. Left to itself Bun's CSS pipeline inlines a font referenced by `url()`
@@ -17,7 +17,7 @@ import type { BunPlugin } from "bun";
 export const staticAssets: BunPlugin = {
     name: "static-assets",
     setup(build) {
-        build.onResolve({ filter: /^\/(fonts|assets)\// }, (args) => ({
+        build.onResolve({ filter: /^\/fonts\// }, (args) => ({
             path: args.path,
             external: true
         }));
