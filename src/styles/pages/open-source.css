@@ -151,10 +151,15 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem clamp(1.8rem, 4vw, 3.6rem);
-    /* Set at the size of a heading, not a caption. Three names are the only
+    /* Set at the size of a heading, not a caption: three names are the only
        outside evidence on the site that any of this is in use, and at caption
-       size they read as a footnote to the cards above. */
-    font-size: clamp(19px, 2.6vh, 27px);
+       size they read as a footnote to the cards above.
+
+       And set in the grotesk rather than the site's condensed face. Barlow made
+       them look like more of our own interface text; a wider, more neutral face
+       reads as another company's name rather than as our copy. */
+    font-family: var(--grotesk);
+    font-size: clamp(18px, 2.4vh, 25px);
     line-height: 1.2;
     letter-spacing: -0.01em;
 }
