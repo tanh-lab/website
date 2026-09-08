@@ -28,16 +28,18 @@ export function ResearchPage() {
                 </p>
 
                 {/*
-                    The one thing a visitor cannot infer from a publication list.
-                    Set above the lead because it is the page's single claim on
-                    the reader, not because it is raising its voice.
+                    Origin and direction, and nothing else. Successive drafts
+                    here either repeated the lead outright ("applied research",
+                    "shipped products") or asserted a feeling about research,
+                    which reads as advertising however calmly it is phrased. The
+                    label stays a plain section marker: anything more specific
+                    ended up restating the sentence beneath it.
                 */}
                 <div className="research-aside">
-                    <h3>Custom &amp; collaborative R&amp;D</h3>
+                    <h3>Background</h3>
                     <p>
-                        We work alongside companies as an integrated research partner
-                        &mdash; from the first feasibility study to state of the art
-                        running in real time, on device.
+                        Our roots lie in research, and we are always looking for new
+                        problems to solve.
                     </p>
                 </div>
             </div>

@@ -9,7 +9,7 @@
 .research-head {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 8fr 1fr 9fr;
+    grid-template-columns: 7fr 1fr 10fr;
     align-items: start;
 }
 
@@ -38,10 +38,13 @@
    size it read as a footnote to the description rather than as its own point. */
 .research-aside p {
     margin: 0;
-    font-size: clamp(18px, 2.5vh, 25px);
-    line-height: 1.28;
+    font-size: clamp(17px, 2.6vh, 25px);
+    line-height: 1.3;
     letter-spacing: -0.01em;
-    max-width: 30ch;
+    /* Wide measure on purpose: at 30ch this ran to five lines and towered over
+       the lead beside it. Wider trades depth for width so the two blocks end
+       at roughly the same line. */
+    max-width: 40ch;
 }
 
 /* ---------- papers, across ---------------------------------------------- */
