@@ -1,10 +1,10 @@
 /**
  * One keydown listener for the whole page.
  *
- * There were three — paging, the flare panel and the grid overlay — each with
- * its own idea of when a keypress belongs to the page rather than to a form
- * field. The grid overlay had no guard at all, so typing a "g" into any input
- * toggled it. The guard lives here now, once.
+ * There was one per shortcut, each with its own idea of when a keypress
+ * belongs to the page rather than to a form field — and some with no such
+ * guard at all, so typing into an input fired them. The guard lives here now,
+ * once.
  */
 type KeyFn = (event: KeyboardEvent) => void;
 

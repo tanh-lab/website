@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { onResize } from "@/lib/resize";
 import { AboutPage } from "@/pages/about";
@@ -17,17 +17,6 @@ import { Preloader } from "@/ui/preloader";
 import { Scroller } from "@/ui/scroller";
 import { ScrollerContext } from "@/ui/scroller-context";
 import { fitWordmarks } from "@/ui/wordmark-fit";
-
-// The lazy() call is guarded, not just its use: left unconditional at module
-// scope, the closure holding import("@/dev") stays reachable and the bundler
-// keeps the whole dev tree — the flare panel, the grid overlay and their
-// stylesheet — even with the render branch dead.
-//
-// The check is written inline rather than through an `isDev` constant because
-// Bun's minifier folds a literal condition but does not propagate a known-false
-// variable into a ternary: via a constant this still emitted the dev chunk.
-const DevTools =
-    process.env.NODE_ENV !== "production" ? lazy(() => import("@/dev")) : null;
 
 /**
  * Boot: adopt the theme, fit the wordmarks, and open the two remaining gates
@@ -102,12 +91,6 @@ export function App() {
                     <AboutPage />
                     <ContactPage />
                 </Scroller>
-
-                {DevTools ? (
-                    <Suspense fallback={null}>
-                        <DevTools />
-                    </Suspense>
-                ) : null}
             </div>
         </ScrollerContext.Provider>
     );

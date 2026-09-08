@@ -104,7 +104,7 @@ export function createFlare(canvas: HTMLCanvasElement): () => void {
         );
     }
 
-    // "Centre the flare" from the dev panel, and a way back from a corner.
+    // A way back from a corner, once the pointer has dragged the flare there.
     disposers.push(onKeys(["0"], () => drift.centre()));
 
     quad.resize(pixelRatio());
