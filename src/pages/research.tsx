@@ -1,20 +1,19 @@
 import { publications } from "@/data/publications";
 import { useReveal } from "@/hooks/use-reveal";
 import { cn } from "@/lib/cn";
-import { ExternalLink } from "@/ui/external-link";
 import { Page } from "@/ui/page";
 
 /**
  * The one page that breaks the lead-then-rows shape the others share.
  *
- * Two moves, both earned by the content rather than applied for variety's sake.
- * The head splits: what we do on the left, and on the right the one thing a
- * visitor cannot infer from a publication list — that the same work is
- * available under contract. And each paper carries its own first page, rendered
- * at build time, so the section shows the work instead of only citing it.
+ * The papers run across rather than down, each under its own first page. Three
+ * fit the width comfortably, and reading them as a row rather than a list makes
+ * the section a body of work instead of a changelog.
  *
- * A cover is optional: a paper whose PDF is not fetchable simply sets its
- * column empty rather than showing a placeholder.
+ * Each carries a plain-language summary as well as its citation: a title alone
+ * tells a visitor outside the field nothing, and the whole point of showing
+ * research on a studio site is that someone who is not a researcher can see
+ * what it was for.
  */
 export function ResearchPage() {
     const { ref, isVisible } = useReveal<HTMLOListElement>();
@@ -29,32 +28,27 @@ export function ResearchPage() {
                 </p>
 
                 {/*
-                    Stated, not sold. The register here follows the rest of the
-                    site: name the thing and say what it involves, in the same
-                    voice the Services rows use.
+                    The one thing a visitor cannot infer from a publication list.
+                    Set above the lead because it is the page's single claim on
+                    the reader, not because it is raising its voice.
                 */}
                 <div className="research-aside">
-                    <h3>Contract research</h3>
+                    <h3>Custom &amp; collaborative R&amp;D</h3>
                     <p>
-                        Feasibility studies, method development and evaluation, carried
-                        out under contract. Findings are delivered as a written report, a
-                        working prototype, or production code — whichever the question
-                        calls for.
-                    </p>
-                    <p className="research-contact">
-                        <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>
+                        We work alongside companies as an integrated research partner
+                        &mdash; from the first feasibility study to state of the art
+                        running in real time, on device.
                     </p>
                 </div>
             </div>
 
-            <ol ref={ref} className={cn("rows", "papers", "fade", isVisible && "is-in")}>
+            <ol ref={ref} className={cn("papers", "fade", isVisible && "is-in")}>
                 {publications.map((publication) => (
-                    <li className="row paper" key={publication.title}>
+                    <li className="paper" key={publication.title}>
                         {/*
-                            The column is held even when there is no cover, so
-                            the venue labels stay aligned down the page. A row
-                            that jumps left reads as a mistake on a grid this
-                            strict; an empty slot reads as "no preview".
+                            The slot is held even when there is no cover, so the
+                            three columns stay level. A short column reads as a
+                            mistake; an empty slot reads as "no preview".
                         */}
                         <div className="paper-cover" aria-hidden="true">
                             {publication.cover ? (
@@ -67,32 +61,36 @@ export function ResearchPage() {
                             ) : null}
                         </div>
 
-                        <div className="row-label">
-                            <span>{publication.venue}</span>
-                            <span className="sub">{publication.venueFull}</span>
-                        </div>
+                        <h3 className="paper-title">
+                            <a
+                                href={publication.links[0]?.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {publication.title}
+                                <span className="paper-arrow" aria-hidden="true">
+                                    &#8599;
+                                </span>
+                            </a>
+                        </h3>
 
-                        <div className="row-body">
-                            <h3 className="pub-title">
+                        <p className="paper-summary">{publication.summary}</p>
+
+                        <p className="paper-venue">{publication.venue}</p>
+                        <p className="paper-authors">{publication.authors}</p>
+
+                        <p className="paper-links">
+                            {publication.links.map((link) => (
                                 <a
-                                    href={publication.source.href}
+                                    key={link.href}
+                                    href={link.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    {publication.title}
+                                    {link.label}
                                 </a>
-                            </h3>
-                            <p className="pub-authors">
-                                {publication.authors}{" "}
-                                <span className="pub-sep">&middot;</span>{" "}
-                                <ExternalLink
-                                    className="pub-src"
-                                    href={publication.source.href}
-                                >
-                                    {publication.source.label}
-                                </ExternalLink>
-                            </p>
-                        </div>
+                            ))}
+                        </p>
                     </li>
                 ))}
             </ol>

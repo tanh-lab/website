@@ -86,3 +86,10 @@ dd.row-body {
 .page.is-inverted .row {
     border-color: rgba(0, 0, 0, 0.16);
 }
+
+/* A mid-sentence separator between a statement and its link. Shared, not
+   page-specific: Open Source uses it in its rows and Research used to. */
+.pub-sep {
+    opacity: 0.5;
+    padding: 0 0.15em;
+}

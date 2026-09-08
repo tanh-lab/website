@@ -1,53 +1,15 @@
-/* ---------- research: publications -------------------------------------
-   The title is the link, but a link with no affordance is not one — so the
-   source sits inline at the end of the citation, where it also says where the
-   reference goes rather than only that it goes somewhere.
+/* ---------- research: publications --------------------------------------
+   The one page that runs across rather than down. Three papers side by side,
+   each under its own first page, so the section reads as a body of work rather
+   than a changelog.
 --------------------------------------------------------------------- */
 
-.pub-title {
-    margin: 0 0 0.45rem;
-    font-size: clamp(15px, 2.05vh, 17px);
-    font-weight: var(--header-weight);
-    line-height: 1.4;
-    max-width: 54ch;
-}
-
-.pub-title a {
-    border-bottom-color: transparent;
-    opacity: 1;
-}
-
-.pub-title a:hover {
-    border-bottom-color: currentColor;
-}
-
-.pub-authors {
-    font-size: clamp(13.5px, 1.8vh, 15px);
-    line-height: 1.45;
-    opacity: 0.68;
-    max-width: 54ch;
-}
-
-.pub-sep {
-    opacity: 0.5;
-    padding: 0 0.15em;
-}
-
-.pub-src {
-    white-space: nowrap;
-}
-
-/* ---------- the split head ---------------------------------------------
-   The other pages open with a lead across the left nine columns. Research
-   splits: the description keeps its column, and the right-hand block carries
-   contract research — the one thing a visitor cannot infer from a list of
-   papers.
---------------------------------------------------------------------- */
+/* ---------- the split head --------------------------------------------- */
 
 .research-head {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 9fr 2fr 7fr;
+    grid-template-columns: 8fr 1fr 9fr;
     align-items: start;
 }
 
@@ -57,81 +19,136 @@
 
 .research-aside {
     grid-column: 3;
-    /* Held off the type rather than boxed: a rule is enough to separate it,
-       and a panel here would fight the scrim the page already sits on. */
+    /* Held off the type by a rule rather than boxed: a panel here would fight
+       the scrim the page already sits on. */
     border-left: 1px solid rgba(183, 183, 183, 0.3);
-    padding-left: clamp(1rem, 1.6vw, 1.8rem);
+    padding-left: clamp(1.2rem, 2vw, 2.4rem);
 }
 
 .research-aside h3 {
-    margin: 0 0 0.6rem;
-    font-size: clamp(13px, 1.7vh, 14.5px);
+    margin: 0 0 0.7rem;
+    font-size: clamp(11.5px, 1.45vh, 12.5px);
     font-weight: var(--header-weight);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
 }
 
+/* Set above the lead: this is the page's one claim on the reader, and at lead
+   size it read as a footnote to the description rather than as its own point. */
 .research-aside p {
-    font-size: clamp(13px, 1.75vh, 14.5px);
-    line-height: 1.5;
-    opacity: 0.82;
-    max-width: 34ch;
+    margin: 0;
+    font-size: clamp(18px, 2.5vh, 25px);
+    line-height: 1.28;
+    letter-spacing: -0.01em;
+    max-width: 30ch;
 }
 
-.research-contact {
-    margin-top: 0.7rem;
+/* ---------- papers, across ---------------------------------------------- */
+
+.papers {
+    grid-column: 1 / -1;
+    list-style: none;
+    margin: 0;
+    padding: clamp(1rem, 2.4vh, 1.8rem) 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.4rem, 3vw, 3.2rem);
+    border-top: 1px solid rgba(183, 183, 183, 0.22);
 }
 
-.research-contact a {
-    border-bottom: 1px solid currentColor;
-    opacity: 0.8;
-    transition: opacity 0.25s var(--ease);
-}
-
-.research-contact a:hover {
-    opacity: 1;
-}
-
-/* ---------- papers, with their own first page --------------------------
-   The cover takes a column of its own ahead of the venue, so the row still
-   lands on the 18 column grid: 2 + 4 + 1 + 11.
---------------------------------------------------------------------- */
-
-.row.paper {
-    grid-template-columns: 2fr 4fr 1fr 11fr;
-    align-items: start;
-}
-
-.paper .row-label {
-    grid-column: 2;
-}
-
-.paper .row-body {
-    grid-column: 4;
+.paper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
 }
 
 .paper-cover {
-    grid-column: 1;
-    padding-right: 1rem;
+    /* Reserved even when empty, so the three columns stay level. */
+    min-height: clamp(84px, 12.5vh, 124px);
+    margin-bottom: 0.35rem;
 }
 
 .paper-cover img {
     display: block;
-    width: 100%;
-    max-width: 74px;
-    height: auto;
-    /* The page is a scrim over a coloured shader, so a paper — which is white
-       with black type — needs an edge or it floats. */
+    width: auto;
+    height: clamp(84px, 12.5vh, 124px);
+    /* The page is a scrim over a coloured shader, so a paper — white with black
+       type — needs an edge or it floats. */
     border: 1px solid rgba(183, 183, 183, 0.35);
+    border-radius: 6px;
 }
 
-/* The covers are white documents. On the dark ground they would glare, so
-   they are knocked back and lift on hover. */
+/* The covers are white documents; on the dark ground they would glare. */
 html[data-theme="dark"] .paper-cover img {
     opacity: 0.62;
     transition: opacity 0.3s var(--ease);
 }
 
-html[data-theme="dark"] .row.paper:hover .paper-cover img {
+html[data-theme="dark"] .paper:hover .paper-cover img {
+    opacity: 1;
+}
+
+.paper-title {
+    margin: 0;
+    font-size: clamp(14.5px, 1.95vh, 16.5px);
+    font-weight: var(--header-weight);
+    line-height: 1.3;
+}
+
+.paper-title a {
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s var(--ease);
+}
+
+.paper-title a:hover {
+    border-bottom-color: currentColor;
+}
+
+/* Part of the link text rather than a CSS pseudo-element, so it is carried into
+   the accessible name — the title reads as leaving the site. */
+.paper-arrow {
+    padding-left: 0.35em;
+    opacity: 0.55;
+}
+
+.paper-summary {
+    margin: 0;
+    font-size: clamp(12.5px, 1.7vh, 14px);
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+.paper-venue,
+.paper-authors {
+    margin: 0;
+    font-size: clamp(11px, 1.4vh, 12px);
+    line-height: 1.4;
+    opacity: 0.55;
+}
+
+.paper-venue {
+    margin-top: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.paper-links {
+    margin: 0.15rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    font-size: clamp(11.5px, 1.5vh, 12.5px);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.paper-links a {
+    border-bottom: 1px solid currentColor;
+    opacity: 0.7;
+    transition: opacity 0.25s var(--ease);
+}
+
+.paper-links a:hover {
     opacity: 1;
 }

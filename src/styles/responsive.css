@@ -49,11 +49,6 @@
         max-width: none;
     }
 
-    .pub-title,
-    .pub-authors {
-        max-width: none;
-    }
-
     /* The vh-clamped sizes collapse to their minimum on a short phone viewport,
        which is smaller than a phone needs — hold a floor. */
     .row-label {
@@ -64,14 +59,6 @@
     .row-body > span,
     dd.row-body {
         font-size: 15.5px;
-    }
-
-    .pub-title {
-        font-size: 16.5px;
-    }
-
-    .pub-authors {
-        font-size: 14px;
     }
 
     #open-source .row-label > span:first-child {
@@ -91,6 +78,69 @@
     #legal dd.row-body {
         font-size: 14.5px;
     }
+
+    /* ---------- research ---------- */
+
+    /* The split head stacks, and the papers go one per row. */
+    .research-head {
+        grid-template-columns: 1fr;
+        row-gap: 1.8rem;
+    }
+
+    .research-aside {
+        grid-column: 1;
+        border-left: 0;
+        border-top: 1px solid rgba(183, 183, 183, 0.3);
+        padding-left: 0;
+        padding-top: 1.2rem;
+    }
+
+    .research-aside p {
+        font-size: 21px;
+        max-width: none;
+    }
+
+    .papers {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* The cover moves beside the citation rather than above it: a full-width
+       cover over one paper wastes the row and pushes the third off the screen. */
+    .paper {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 1.2rem;
+        row-gap: 0.45rem;
+    }
+
+    .paper-cover {
+        grid-row: 1 / -1;
+        min-height: 0;
+        margin-bottom: 0;
+    }
+
+    .paper-cover img {
+        height: 118px;
+    }
+
+    .paper-title,
+    .paper-summary,
+    .paper-venue,
+    .paper-authors,
+    .paper-links {
+        grid-column: 2;
+    }
+
+    .paper-title {
+        font-size: 16px;
+    }
+
+    .paper-summary {
+        font-size: 14px;
+    }
+
+    /* ---------- header ---------- */
 
     .header-content {
         align-items: center;
@@ -122,38 +172,22 @@
     .header-actions {
         margin-left: auto;
     }
-}
 
-@media (max-width: 900px) {
-    /* The split head stacks, and the covers go inline above the citation. */
-    .research-head {
-        grid-template-columns: 1fr;
-        row-gap: 2rem;
-    }
-
-    .research-aside {
-        grid-column: 1;
-        border-left: 0;
-        border-top: 1px solid rgba(183, 183, 183, 0.3);
-        padding-left: 0;
-        padding-top: 1.2rem;
-    }
-
-    .research-aside p {
-        max-width: none;
-    }
-
-    .row.paper {
+    /* The cover would leave too little for the citation at this width. */
+    .paper {
         grid-template-columns: 1fr;
     }
 
-    .paper .row-label,
-    .paper .row-body,
     .paper-cover {
-        grid-column: 1;
+        grid-row: auto;
+        margin-bottom: 0.3rem;
     }
 
-    .paper-cover {
-        padding: 0 0 0.8rem;
+    .paper-title,
+    .paper-summary,
+    .paper-venue,
+    .paper-authors,
+    .paper-links {
+        grid-column: 1;
     }
 }
