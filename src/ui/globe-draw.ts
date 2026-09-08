@@ -25,8 +25,18 @@ export const BERLIN: GlobePoint = { lat: 52.52, lon: 13.405, label: "Berlin" };
 
 const RAD = Math.PI / 180;
 
-/** Tilt, so the sphere is seen slightly from above rather than edge on. */
-const TILT = 22 * RAD;
+/**
+ * The latitude the viewer is over. Berlin's, so the mark sits at the centre of
+ * the disc where the projection is undistorted.
+ *
+ * This was 22°, which put the viewer over the Sahara and Berlin 30° off-centre
+ * — and orthographic foreshortening is worst at the limb, so Europe came out
+ * compressed against the top edge. Note that Africa really is about three times
+ * Europe: an orthographic projection shows true relative areas, and it is
+ * Mercator, the projection everyone has in their head, that inflates the high
+ * latitudes. The distortion here was the viewpoint, not the areas.
+ */
+const TILT = BERLIN.lat * RAD;
 
 /** Meridian and parallel spacing. Coarse: this is a mark, not an atlas. */
 const STEP = 20;
