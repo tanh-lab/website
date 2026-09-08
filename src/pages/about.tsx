@@ -1,5 +1,5 @@
 import type { Person } from "@/data/people";
-import { contributors, founders } from "@/data/people";
+import { team } from "@/data/people";
 import { Lead } from "@/ui/lead";
 import { Page } from "@/ui/page";
 import { DefinitionRow, Rows } from "@/ui/rows";
@@ -41,11 +41,8 @@ export function AboutPage() {
             </Lead>
 
             <Rows as="dl">
-                <DefinitionRow label="Founders">
-                    <People people={founders} />
-                </DefinitionRow>
-                <DefinitionRow label="Contributors">
-                    <People people={contributors} />
+                <DefinitionRow label="Team">
+                    <People people={team} />
                 </DefinitionRow>
                 <DefinitionRow label="Location">Berlin, Germany</DefinitionRow>
             </Rows>
