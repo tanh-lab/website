@@ -61,12 +61,14 @@ if (linkMatch?.[1]) {
     html = html.replace(linkMatch[0], `<style>${css}</style>`);
 }
 
-// Preload the two faces that are above the fold.
+// The favicon, and a preload for the two faces that are above the fold.
 //
 // Injected here rather than written into index.html because Bun treats a
 // <link href> in the entry as something to resolve and bundle, and these are
-// deliberately external. Without the hint they are discovered inside the
-// stylesheet, which puts them a full round trip behind it.
+// deliberately external. Without the hint the fonts are discovered inside the
+// stylesheet, which puts them a full round trip behind it; the favicon would be
+// emitted a second time under a hashed name, when /client/ already needs it at
+// a stable path it can hard-code.
 const PRELOAD_FONTS = [
     "/fonts/barlow-semi-condensed-latin-400-normal.woff2",
     "/fonts/instrument-serif-latin-400-normal.woff2"
@@ -83,7 +85,7 @@ for (const href of PRELOAD_FONTS) {
 
 html = html.replace(
     "</head>",
-    `${PRELOAD_FONTS.map(
+    `<link rel="icon" href="/favicon.svg" type="image/svg+xml">${PRELOAD_FONTS.map(
         (href) =>
             `<link rel="preload" as="font" type="font/woff2" href="${href}" crossorigin>`
     ).join("")}</head>`

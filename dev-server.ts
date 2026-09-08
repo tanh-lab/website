@@ -17,6 +17,7 @@ const PUBLIC_DIR = join(import.meta.dir, "public");
 
 const MIME: Record<string, string> = {
     ".css": "text/css",
+    ".html": "text/html",
     ".ico": "image/x-icon",
     ".jpeg": "image/jpeg",
     ".jpg": "image/jpeg",
@@ -38,10 +39,20 @@ function collectPublicRoutes(dir: string, prefix = ""): Record<string, () => Res
             Object.assign(routes, collectPublicRoutes(full, route));
         } else {
             const type = MIME[extname(name)] ?? "application/octet-stream";
-            routes[route] = () =>
+            const serve = () =>
                 new Response(Bun.file(full), {
                     headers: { "Content-Type": type, "Cache-Control": "no-store" }
                 });
+            routes[route] = serve;
+
+            // Pages serves a directory as its index.html, so the client area
+            // lives at /client/ in production. Without these two aliases the
+            // same URL falls through to the SPA in development, and the page
+            // only ever gets exercised at a path nothing links to.
+            if (name === "index.html" && prefix) {
+                routes[prefix] = serve;
+                routes[`${prefix}/`] = serve;
+            }
         }
     }
     return routes;

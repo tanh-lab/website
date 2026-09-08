@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { onResize } from "@/lib/resize";
+import { MobileMenu } from "@/ui/mobile-menu";
 import { Nav } from "@/ui/nav";
 import { ThemeToggle } from "@/ui/theme-toggle";
 
@@ -43,14 +44,27 @@ export function Header() {
                 <Nav />
 
                 <div className="header-actions">
-                    {/* TODO: no destination yet — a placeholder for the client area. */}
-                    <a className="header-cta" href="#">
+                    {/*
+                        A plain document under public/, not a section of this
+                        one: it is a separate destination, so it stays a real
+                        navigation rather than a hash the scroller would have to
+                        answer for.
+                    */}
+                    <a className="header-cta" href="/client/">
                         Client Login
                     </a>
                     <a className="header-cta" href="#legal">
                         Legal
                     </a>
                     <ThemeToggle />
+
+                    {/*
+                        Both the nav and the two links above are out of the
+                        header on a phone; this is where they go. It renders at
+                        every width and the stylesheet decides when it shows, so
+                        there is no breakpoint duplicated in JS.
+                    */}
+                    <MobileMenu />
                 </div>
             </div>
         </header>

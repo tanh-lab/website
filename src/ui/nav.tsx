@@ -1,8 +1,19 @@
 import { cn } from "@/lib/cn";
 import { useSectionStore } from "@/store/useSectionStore";
 
-/** Three groups separated by a blank line, as in the artwork. */
-const MENU: { id: string; label: string }[][] = [
+export interface MenuItem {
+    id: string;
+    label: string;
+}
+
+/**
+ * Three groups separated by a blank line, as in the artwork.
+ *
+ * Shared with the panel behind the burger, so the phone and the desktop nav
+ * cannot drift apart — the groups carry the shape of the list as much as the
+ * labels do.
+ */
+export const MENU: MenuItem[][] = [
     [{ id: "services", label: "Services" }],
     [
         { id: "research", label: "Research" },

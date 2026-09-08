@@ -18,7 +18,7 @@ import type { BunPlugin } from "bun";
 export const staticAssets: BunPlugin = {
     name: "static-assets",
     setup(build) {
-        build.onResolve({ filter: /^\/(fonts|covers)\// }, (args) => ({
+        build.onResolve({ filter: /^\/(fonts|covers)\/|^\/favicon\./ }, (args) => ({
             path: args.path,
             external: true
         }));

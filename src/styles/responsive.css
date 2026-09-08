@@ -15,6 +15,18 @@
         min-height: 100%;
     }
 
+    /* The hero's own height is `auto` here, so the content's `height: 100%`
+       resolves against an indefinite parent — and an explicit percentage also
+       opts the item out of the flex stretch that would otherwise have saved it.
+       The column collapsed to the lockup's own height, leaving
+       `justify-content: center` nothing to centre inside, and the mark sat at
+       the top of the screen under the header. A minimum keeps the column the
+       height of the hero without making it definite. */
+    .hero-content {
+        height: auto;
+        min-height: 100%;
+    }
+
     .page-inner {
         align-content: start;
         align-items: start;
@@ -193,14 +205,22 @@
 }
 
 @media (max-width: 620px) {
-    .menu {
+    /* The whole nav moves behind the burger here — the stacked list and the two
+       links beside it, which is the rest of what the header carries. */
+    .menu,
+    .header-cta {
         display: none;
+    }
+
+    .menu-burger {
+        display: block;
     }
 
     /* With the menu gone, the actions are the only child of a space-between row
        and would collapse to the left edge. */
     .header-actions {
         margin-left: auto;
+        gap: 1.4rem;
     }
 
     /* The cover would leave too little for the citation at this width. */
