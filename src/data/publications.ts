@@ -35,7 +35,13 @@ export const publications: Publication[] = [
         authors: "Fares Schulz, Max Weidauer, Stefan Weinzierl, Henrik von Coler",
         summary:
             "A modular real-time renderer that spreads spatial audio processing across several Linux servers, so Ambisonics and Wave Field Synthesis can drive hundreds of loudspeakers — past what a single machine can carry.",
-        links: [{ label: "Read on HAL", href: "https://hal.science/hal-05697686" }],
+        links: [
+            { label: "Read on HAL", href: "https://hal.science/hal-05697686" },
+            // SeamLess is a system of components spread across the tu-studio
+            // org rather than one repository, so the documentation site is the
+            // honest entry point — it is what links the parts together.
+            { label: "Documentation", href: "https://tu-studio.github.io/seamless-docs/" }
+        ],
         cover: "/covers/seamless.webp"
     },
     {
@@ -44,7 +50,11 @@ export const publications: Publication[] = [
         authors: "Christian Limberg, Fares Schulz, Zhe Zhang, Stefan Weinzierl",
         summary:
             "A two-stage model that disentangles pitch from timbre, so instrument sounds can be steered through a small, navigable latent space rather than the high-dimensional one such systems usually leave you with.",
-        links: [{ label: "Read on arXiv", href: "https://arxiv.org/abs/2510.04339" }],
+        links: [
+            { label: "Read on arXiv", href: "https://arxiv.org/abs/2510.04339" },
+            { label: "Listen", href: "https://pgesam.faresschulz.com/" },
+            { label: "GitHub", href: "https://github.com/faressc/pgesam" }
+        ],
         cover: "/covers/pitch-conditioned.webp"
     },
     {
