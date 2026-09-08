@@ -1,24 +1,173 @@
 /* ---------- open source ------------------------------------------------
-   The names are the object here, so they get the room to be names — and they
-   keep their own casing: uppercasing "anira" or "tanh-lib" misspells them.
+   The repositories as their own GitHub banners, three across, with a strip of
+   adopters along the foot.
+
+   Rows with the banner beside the text was the first attempt and did not
+   survive contact with the viewport: at row width a 2:1 banner is ~180px tall,
+   and three of those plus a lead and the strip overflow a page that has about
+   525px to work with. Across, each banner is a third as wide and half as tall,
+   which fits and shows them larger than the row version could.
+
+   It still does not read as Research: those covers are portrait and read as
+   documents, these are landscape and read as repositories, and this page ends
+   on a band rather than opening on a split head.
 --------------------------------------------------------------------- */
 
-#open-source .row {
-    padding: clamp(1rem, 2.6vh, 1.7rem) 0;
+.repos {
+    /* Thirteen of the eighteen columns, not all of them. Across the full
+       width a 2:1 banner is over 200px tall and the three cards dominate the
+       page; held back they read as previews of the repositories rather than as
+       the subject. */
+    grid-column: 1 / span 13;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2.2vw, 2.1rem);
 }
 
-#open-source .row-label {
-    gap: 0.5rem;
+.repo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
-#open-source .row-label > span:first-child {
-    font-size: clamp(21px, 2.9vh, 27px);
-    text-transform: none;
+.repo-mark-link {
+    display: block;
+}
+
+/* A fixed 2:1 tile, the same proportion GitHub's own previews use — so if a
+   real banner is ever put back it drops straight in. */
+.repo-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 2 / 1;
+    border: 1px solid rgba(183, 183, 183, 0.28);
+    border-radius: 6px;
+    background: rgba(183, 183, 183, 0.06);
+    transition: background 0.25s var(--ease);
+}
+
+.repo-mark svg {
+    width: clamp(22px, 3.6vh, 34px);
+    height: auto;
+    opacity: 0.38;
+    transition: opacity 0.25s var(--ease);
+}
+
+.repo:hover .repo-mark {
+    background: rgba(183, 183, 183, 0.1);
+}
+
+.repo:hover .repo-mark svg {
+    opacity: 0.62;
+}
+
+.repo-name {
+    margin: 0 0 0.35rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.9rem;
+    /* The names are the object here, and they keep their own casing:
+       uppercasing "anira" or "tanh-lib" misspells them. */
+    font-size: clamp(16px, 2.1vh, 20px);
+    font-weight: var(--header-weight);
+    line-height: 1.15;
     letter-spacing: -0.01em;
-    line-height: 1.1;
 }
 
-#open-source .row-label .sub {
-    font-size: clamp(12.5px, 1.6vh, 13.5px);
-    opacity: 0.6;
+.repo-name > a {
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s var(--ease);
+}
+
+.repo-name > a:hover {
+    border-bottom-color: currentColor;
+}
+
+.repo-summary {
+    font-size: clamp(12px, 1.55vh, 13px);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.55;
+}
+
+.repo-description {
+    margin: 0;
+    font-size: clamp(12px, 1.6vh, 13.5px);
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+.repo-link {
+    white-space: nowrap;
+}
+
+.repo-description a {
+    border-bottom: 1px solid currentColor;
+    opacity: 0.75;
+    transition: opacity 0.25s var(--ease);
+}
+
+.repo-description a:hover {
+    opacity: 1;
+}
+
+/* ---------- adopters ----------------------------------------------------
+   A band across the foot — the one structural element the site does not use
+   elsewhere, and the only place another company's name appears.
+--------------------------------------------------------------------- */
+
+.adopters {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 5fr 1fr 12fr;
+    align-items: baseline;
+    /* Ruled on both edges: above the cards it has to read as a band in its own
+       right, not as a heading for what follows. */
+    padding: clamp(0.9rem, 2.2vh, 1.5rem) 0;
+    border-top: 1px solid rgba(183, 183, 183, 0.22);
+    border-bottom: 1px solid rgba(183, 183, 183, 0.22);
+}
+
+.adopters h3 {
+    grid-column: 1;
+    margin: 0;
+    font-size: clamp(11px, 1.4vh, 12px);
+    font-weight: var(--header-weight);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.55;
+}
+
+.adopters ul {
+    grid-column: 3;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem clamp(1.8rem, 4vw, 3.6rem);
+    /* Set at the size of a heading, not a caption. Three names are the only
+       outside evidence on the site that any of this is in use, and at caption
+       size they read as a footnote to the cards above. */
+    font-size: clamp(19px, 2.6vh, 27px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.adopters a {
+    border-bottom: 1px solid transparent;
+    opacity: 0.85;
+    transition:
+        opacity 0.25s var(--ease),
+        border-color 0.25s var(--ease);
+}
+
+.adopters a:hover {
+    opacity: 1;
+    border-bottom-color: currentColor;
 }

@@ -61,8 +61,33 @@
         font-size: 15.5px;
     }
 
-    #open-source .row-label > span:first-child {
-        font-size: 23px;
+    /* ---------- open source ---------- */
+
+    .repos,
+    .adopters {
+        grid-template-columns: 1fr;
+        row-gap: 0.8rem;
+    }
+
+    .repos {
+        gap: 1.8rem;
+    }
+
+    .adopters h3,
+    .adopters ul {
+        grid-column: 1;
+    }
+
+    .repo-mark-link {
+        max-width: 320px;
+    }
+
+    .repo-name {
+        font-size: 21px;
+    }
+
+    .repo-description {
+        max-width: none;
     }
 
     #about .person .name {
