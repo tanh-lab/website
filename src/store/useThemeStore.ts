@@ -8,7 +8,7 @@ interface ThemeState {
     theme: Theme;
     setTheme: (theme: Theme) => void;
     toggle: () => void;
-    /** Adopt the stored or system preference. Client-only; call once on mount. */
+    /** Adopt the stored preference, if any. Client-only; call once on mount. */
     hydrate: () => void;
 }
 
@@ -35,10 +35,10 @@ function persist(theme: Theme) {
 /**
  * Light and dark.
  *
- * The default is the system preference, falling back to light — which is what
- * the bare `:root` block in tokens.css paints, `html[data-theme="dark"]` being
- * the override. The previous implementation initialised to light while its own
- * comment claimed dark, and never consulted `prefers-color-scheme` at all.
+ * The default is light — what the bare `:root` block in tokens.css paints,
+ * `html[data-theme="dark"]` being the override. Only a stored choice moves it;
+ * `prefers-color-scheme` is deliberately not consulted, so a first visit looks
+ * the same for everyone.
  *
  * `document.documentElement.dataset.theme` is written by the store rather than
  * by a component, so that non-React subscribers — the flare, which keeps a
@@ -61,11 +61,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     toggle: () => get().setTheme(get().theme === "dark" ? "light" : "dark"),
 
     hydrate: () => {
-        const stored = readStored();
-        const system = window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light";
-        const theme = stored ?? system;
+        const theme = readStored() ?? "light";
         set({ theme });
         document.documentElement.dataset.theme = theme;
     }
