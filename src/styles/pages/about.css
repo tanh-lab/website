@@ -55,3 +55,42 @@
 .person .links a:hover {
     opacity: 1;
 }
+
+/* ---------- the globe --------------------------------------------------
+   Berlin, on the right of the page.
+
+   A grid item, not an absolutely positioned one. Floating it over the empty
+   right-hand side put it in relation to nothing — it read as placed rather than
+   laid out, because it aligned to no column and no baseline. On columns 14-18
+   it takes the same edges as everything else.
+
+   Bottom-aligned, so it finishes level with the Location row: the globe then
+   reads as that line drawn rather than as decoration parked in the empty half.
+   Centred aligned to nothing and top-aligned left the lower half hollow.
+--------------------------------------------------------------------- */
+
+#about .rows {
+    grid-column: 1 / span 12;
+}
+
+.globe {
+    grid-column: 14 / -1;
+    grid-row: 2;
+    align-self: end;
+    justify-self: end;
+    width: 100%;
+    max-width: clamp(180px, 28vh, 340px);
+    pointer-events: none;
+    /* Drawn in the page's own ink — About reverses its ground, so this follows
+       it rather than picking a colour of its own. */
+    color: var(--ink-on-invert);
+    font-family: var(--ui);
+    opacity: 0.9;
+}
+
+.globe canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+}

@@ -1,5 +1,6 @@
 import type { Person } from "@/data/people";
 import { team } from "@/data/people";
+import { Globe } from "@/ui/globe";
 import { Lead } from "@/ui/lead";
 import { Page } from "@/ui/page";
 import { DefinitionRow, Rows } from "@/ui/rows";
@@ -46,6 +47,13 @@ export function AboutPage() {
                 </DefinitionRow>
                 <DefinitionRow label="Location">Berlin, Germany</DefinitionRow>
             </Rows>
+
+            {/*
+                Decorative, and marked so: the location is already stated in the
+                row above, so a screen reader gains nothing from a canvas it
+                cannot read.
+            */}
+            <Globe />
         </Page>
     );
 }

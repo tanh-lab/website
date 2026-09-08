@@ -98,6 +98,11 @@
         padding: 1.3rem 0;
     }
 
+    /* No room for it beside the rows once they are full width. */
+    .globe {
+        display: none;
+    }
+
     #legal .row-body,
     #legal .row-body p,
     #legal dd.row-body {
