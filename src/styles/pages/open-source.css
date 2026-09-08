@@ -155,10 +155,11 @@
        outside evidence on the site that any of this is in use, and at caption
        size they read as a footnote to the cards above.
 
-       And set in the grotesk rather than the site's condensed face. Barlow made
-       them look like more of our own interface text; a wider, more neutral face
-       reads as another company's name rather than as our copy. */
-    font-family: var(--grotesk);
+       And set in Barlow's regular width rather than the Semi Condensed the rest
+       of the site uses. Condensed, the names looked like more of our own
+       interface text; wider, they read as somebody else's. Same superfamily, so
+       the shift reads as deliberate — an unrelated grotesque read as a mistake. */
+    font-family: var(--wide);
     font-size: clamp(18px, 2.4vh, 25px);
     line-height: 1.2;
     letter-spacing: -0.01em;

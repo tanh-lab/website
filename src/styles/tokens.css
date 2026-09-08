@@ -41,22 +41,15 @@
     font-display: swap;
 }
 
-/* Switzer, by the Indian Type Foundry, under the ITF Free Font License — free
-   for commercial use. It is here for one job: the companies on Open Source are
-   the only outside names on the site, and a wide neutral grotesque marks them
-   as someone else's rather than more of our own interface text. Not subsetted
-   by unicode-range the way the others are; Fontshare ships one file. */
+/* Barlow's regular width. The interface is set in the Semi Condensed cut of
+   the same superfamily, so this is the identical design — same skeleton, same
+   terminals, same rhythm — just wider. That is what makes it usable for the
+   company names on Open Source: the contrast reads as one voice speaking
+   differently rather than as a foreign face, which is where a third family
+   (Switzer, a Graphik stand-in) went wrong. */
 @font-face {
-    font-family: "Switzer";
-    src: url("/fonts/switzer-400-normal.woff2") format("woff2");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Instrument Serif";
-    src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
+    font-family: "Barlow";
+    src: url("/fonts/barlow-latin-400-normal.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -116,8 +109,8 @@
     --italic: var(--display);
     --ui: var(--display);
     /* Deliberately not --display: this is the voice for names that are not
-       ours. */
-    --grotesk: "Switzer", "Helvetica Neue", Arial, sans-serif;
+       ours. Same family, wider cut. */
+    --wide: "Barlow", "Helvetica Neue", Arial, sans-serif;
 
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
