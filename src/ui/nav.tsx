@@ -14,7 +14,10 @@ export interface MenuItem {
  * labels do.
  */
 export const MENU: MenuItem[][] = [
-    [{ id: "services", label: "Services" }],
+    [
+        { id: "services", label: "Services" },
+        { id: "work", label: "Work" }
+    ],
     [
         { id: "research", label: "Research" },
         { id: "open-source", label: "Open Source" }

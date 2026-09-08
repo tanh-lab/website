@@ -7,6 +7,7 @@ import { LegalPage } from "@/pages/legal";
 import { OpenSourcePage } from "@/pages/open-source";
 import { ResearchPage } from "@/pages/research";
 import { ServicesPage } from "@/pages/services";
+import { WorkPage } from "@/pages/work";
 import { useMotionStore } from "@/store/useMotionStore";
 import { useThemeStore } from "@/store/useThemeStore";
 import { BrandLayer } from "@/ui/brand-layer";
@@ -95,6 +96,7 @@ export function App() {
                 <Scroller onMount={setScroller}>
                     <HeroPage />
                     <ServicesPage />
+                    <WorkPage />
                     <ResearchPage />
                     <OpenSourcePage />
                     <AboutPage />
