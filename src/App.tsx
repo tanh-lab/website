@@ -4,7 +4,6 @@ import { onResize } from "@/lib/resize";
 import { AboutPage } from "@/pages/about";
 import { ContactPage } from "@/pages/contact";
 import { HeroPage } from "@/pages/hero";
-import { LegalPage } from "@/pages/legal";
 import { OpenSourcePage } from "@/pages/open-source";
 import { ResearchPage } from "@/pages/research";
 import { ServicesPage } from "@/pages/services";
@@ -102,7 +101,6 @@ export function App() {
                     <OpenSourcePage />
                     <AboutPage />
                     <ContactPage />
-                    <LegalPage />
                 </Scroller>
 
                 {DevTools ? (

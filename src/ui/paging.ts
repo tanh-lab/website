@@ -303,11 +303,13 @@ export function createPaging(scroller: HTMLElement): Paging {
      *
      * Delegated rather than bound per anchor so that links rendered later are
      * covered too, and the target is resolved with `getElementById` on the
-     * fragment rather than `querySelector(href)`: a bare `href="#"` — which
-     * three links on the page have — is not a valid selector, and
-     * `querySelector("#")` throws a SyntaxError. That exception aborted the
-     * handler before `preventDefault`, so those links jumped the scroller to
-     * the top instead of doing nothing.
+     * fragment rather than `querySelector(href)`: a bare `href="#"` is not a
+     * valid selector, and `querySelector("#")` throws a SyntaxError. That
+     * exception aborted the handler before `preventDefault`, so the three
+     * placeholder links the legal section carried at the time jumped the
+     * scroller to the top instead of doing nothing. The section has since moved
+     * to /legal/ and the page has no such link left, but the guard stays: it
+     * costs nothing and the next placeholder will not be announced.
      */
     const onClick = (event: MouseEvent) => {
         if (!wide.matches) return;

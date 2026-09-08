@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Legal notice — tanh lab</title>
+        <meta
+            name="description"
+            content="Legal notice for tanh lab, pursuant to § 5 DDG."
+        />
+        <!-- Indexable, unlike /client/: § 5 DDG asks for this to be easy to
+             find, and a disclosure nobody can look up is not one. -->
+        <link rel="canonical" href="https://tanh-lab.com/legal/" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+        <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/barlow-semi-condensed-latin-400-normal.woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/instrument-serif-latin-400-normal.woff2"
+            crossorigin
+        />
+
+        <!--
+            A plain document, on the same terms as /client/: no bundle, no
+            shader and no React. It is a document and not a section of the site
+            because it is a destination rather than a stop on the way — reached
+            from the Legal link, and never scrolled into by someone on their way
+            to Contact. /doc.css carries the shell it shares with /privacy/.
+        -->
+        <link rel="stylesheet" href="/doc.css" />
+
+        <!--
+            Runs before first paint, so a visitor who chose dark on the site
+            does not get a white flash on the way in.
+
+            Same key and same rule as src/store/useThemeStore.ts: only a stored
+            choice moves the theme, and everything else is light. There is no
+            toggle on this page — it has no shader and no state of its own to
+            keep, so the site stays the one place the choice is made.
+        -->
+        <script>
+            try {
+                var saved = localStorage.getItem("tanh-theme");
+                if (saved === "light" || saved === "dark") {
+                    document.documentElement.dataset.theme = saved;
+                }
+            } catch (e) {
+                // Private browsing denies localStorage outright; the bare
+                // :root palette is the light theme, so the page still paints.
+            }
+        </script>
+    </head>
+    <body>
+        <a class="brand" href="/">tanh lab</a>
+
+        <main>
+            <p class="label">Legal notice</p>
+            <h1>Impressum.</h1>
+            <p class="lead">Information pursuant to &sect;&nbsp;5 DDG.</p>
+
+            <dl class="rows">
+                <div class="row">
+                    <dt class="row-label">Contact</dt>
+                    <dd class="row-body">
+                        <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>
+                    </dd>
+                </div>
+
+                <div class="row">
+                    <dt class="row-label">Operator</dt>
+                    <dd class="row-body">
+                        Valentin Ackva<br />
+                        Harzer Str. 39<br />
+                        12059 Berlin, Germany
+                    </dd>
+                </div>
+
+                <div class="row">
+                    <dt class="row-label">
+                        <span>Responsible for content</span>
+                        <span class="sub">§ 18 Abs. 2 MStV</span>
+                    </dt>
+                    <dd class="row-body">Valentin Ackva, address as above.</dd>
+                </div>
+
+                <div class="row">
+                    <dt class="row-label">Data protection</dt>
+                    <dd class="row-body">
+                        How this site handles personal data is set out separately:
+                        <a href="/privacy/">Privacy policy</a>
+                    </dd>
+                </div>
+
+                <div class="row">
+                    <dt class="row-label">
+                        <span>Dispute resolution</span>
+                        <span class="sub">Art. 14 ODR Regulation</span>
+                    </dt>
+                    <dd class="row-body">
+                        <p>
+                            The European Commission provides a platform for online
+                            dispute resolution:
+                            <a
+                                href="https://ec.europa.eu/consumers/odr"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >ec.europa.eu/consumers/odr
+                                <span aria-hidden="true">&#8599;</span></a
+                            >
+                        </p>
+                        <p>
+                            We are neither obliged nor willing to take part in dispute
+                            resolution proceedings before a consumer arbitration board.
+                        </p>
+                    </dd>
+                </div>
+            </dl>
+        </main>
+
+        <footer>
+            <a href="/">&larr; Back to the site</a>
+            <a href="/privacy/">Privacy policy</a>
+        </footer>
+    </body>
+</html>

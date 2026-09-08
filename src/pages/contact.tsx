@@ -12,8 +12,8 @@ const EMAIL = "contact@tanh-lab.com";
  *
  * It used to be the legal notice wearing the word "Contact" in the nav, which
  * answered a visitor ready to write to us with a list of statutory disclosures.
- * Those stay on the legal notice, where the header already links them; this
- * page is the one thing they were buried under.
+ * Those stay on Legal, where the header already links them; this page is the
+ * one thing they were buried under.
  *
  * No rows, and no lead-then-rows shape: a section with two sentences and an
  * address in it has nothing to label. The address is set large because it is
@@ -50,7 +50,9 @@ export function ContactPage() {
                 <p className="contact-elsewhere">
                     <ExternalLink href={GITHUB}>GitHub</ExternalLink>
                     <span className="pub-sep">&middot;</span>
-                    <a href="#legal">Legal notice</a>
+                    <a href="/legal/">Legal</a>
+                    <span className="pub-sep">&middot;</span>
+                    <a href="/privacy/">Privacy</a>
                 </p>
             </div>
         </Page>

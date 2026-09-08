@@ -187,6 +187,8 @@ html[data-theme="light"] .theme-toggle svg {
 }
 
 .menu-panel-foot {
+    display: flex;
+    gap: 1.4rem;
     padding-bottom: calc(var(--gutter) * 0.9);
 }
 

@@ -45,15 +45,20 @@ export function Header() {
 
                 <div className="header-actions">
                     {/*
-                        A plain document under public/, not a section of this
-                        one: it is a separate destination, so it stays a real
-                        navigation rather than a hash the scroller would have to
-                        answer for.
+                        Both are plain documents under public/, not sections of
+                        this one: they are separate destinations, so they stay
+                        real navigations rather than hashes the scroller would
+                        have to answer for.
+
+                        The legal notice was a section until it was reached by
+                        scrolling past Contact, which is not what a disclosure
+                        page is for — it is somewhere you go when you are
+                        looking for it.
                     */}
                     <a className="header-cta" href="/client/">
                         Client Login
                     </a>
-                    <a className="header-cta" href="#legal">
+                    <a className="header-cta" href="/legal/">
                         Legal
                     </a>
                     <ThemeToggle />

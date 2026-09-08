@@ -146,12 +146,6 @@
         display: none;
     }
 
-    #legal .row-body,
-    #legal .row-body p,
-    #legal dd.row-body {
-        font-size: 14.5px;
-    }
-
     /* ---------- contact ---------- */
 
     /* Full width, and the vh-clamped display sizes get a floor: on a short

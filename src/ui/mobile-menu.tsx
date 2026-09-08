@@ -103,9 +103,28 @@ export function MobileMenu() {
                 ))}
             </nav>
 
+            {/*
+                Both of the header's own links, not just the one: below 620px
+                the header hides them together, and Legal had nowhere else to
+                go — on a phone it was unreachable outright.
+            */}
             <div className="menu-panel-foot w">
                 <a className="menu-panel-cta" href="/client/">
                     Client Login
+                </a>
+                <a
+                    className="menu-panel-cta"
+                    href="/legal/"
+                    onClick={() => setOpen(false)}
+                >
+                    Legal
+                </a>
+                <a
+                    className="menu-panel-cta"
+                    href="/privacy/"
+                    onClick={() => setOpen(false)}
+                >
+                    Privacy
                 </a>
             </div>
         </div>
