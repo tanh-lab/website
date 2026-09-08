@@ -24,7 +24,7 @@ export const MENU: MenuItem[][] = [
     ],
     [
         { id: "about", label: "About" },
-        { id: "legal", label: "Contact" }
+        { id: "contact", label: "Contact" }
     ]
 ];
 

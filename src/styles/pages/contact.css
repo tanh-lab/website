@@ -1,0 +1,102 @@
+/* ---------- contact ----------------------------------------------------
+   The closing page: an invitation and an address. No rows, so none of the
+   shared row furniture applies here — the two blocks are grid items on the
+   page's own 18 columns, and .page-inner's row-gap sets the space between
+   them.
+--------------------------------------------------------------------- */
+
+.contact-head {
+    grid-column: 1 / span 11;
+}
+
+/* The section marker Research already uses for its aside, at the same size and
+   tracking: this is the same kind of small label, and a second one would be a
+   second voice for one job. */
+.contact-eyebrow {
+    margin: 0 0 clamp(0.7rem, 1.6vh, 1.1rem);
+    font-family: var(--ui);
+    font-size: clamp(11.5px, 1.45vh, 12.5px);
+    font-weight: var(--header-weight);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+}
+
+/* The largest type on the site after the wordmark, and the only line set this
+   size — it carries the page on its own, with nothing beside it to balance
+   against. Negative tracking because the condensed cut opens up at display
+   sizes. */
+.contact-title {
+    margin: 0;
+    font-family: var(--ui);
+    font-size: clamp(34px, 7.4vh, 68px);
+    font-weight: var(--header-weight);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 14ch;
+}
+
+/* Deliberately not .lead: the lead is the sentence a section opens with, above
+   its rows, and this one sits below the headline as its second half. Same size
+   so the two still read as one voice. */
+.contact-copy {
+    margin: clamp(1rem, 2.6vh, 1.8rem) 0 0;
+    font-family: var(--ui);
+    font-size: clamp(16px, 2.2vh, 19px);
+    line-height: 1.5;
+    max-width: 44ch;
+    opacity: 0.88;
+}
+
+.contact-reach {
+    /* Full width, unlike the head above it: the rule is the same rule the row
+       pages draw across all 18 columns, and stopping it at column 11 read as a
+       stray underline rather than as the section line it is. */
+    grid-column: 1 / -1;
+    /* Held off the copy by a rule, as Research holds its aside: the page has no
+       rows, so this is the only line on it, and it is what stops the address
+       from floating unattached in the lower half. */
+    border-top: 1px solid rgba(183, 183, 183, 0.22);
+    padding-top: clamp(1rem, 2.6vh, 1.8rem);
+}
+
+/* The one thing on the page anyone came here to act on, so it is set as the
+   action and not as a detail. Underlined rather than coloured — the site has no
+   accent, and the row links are underlined for the same reason. */
+.contact-mail {
+    display: inline-block;
+    font-family: var(--ui);
+    font-size: clamp(21px, 3.4vh, 34px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.9;
+    transition: opacity 0.25s var(--ease);
+}
+
+.contact-mail:hover {
+    opacity: 1;
+}
+
+.contact-elsewhere {
+    display: flex;
+    align-items: baseline;
+    /* The shared separator carries its own hair space, which is the right
+       amount inside a sentence and too little between two standalone links at
+       this tracking. */
+    gap: 0.5rem;
+    margin: clamp(0.9rem, 2.2vh, 1.5rem) 0 0;
+    font-family: var(--ui);
+    font-size: clamp(12px, 1.55vh, 13px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.contact-elsewhere a {
+    opacity: 0.6;
+    transition: opacity 0.25s var(--ease);
+}
+
+.contact-elsewhere a:hover {
+    opacity: 1;
+}

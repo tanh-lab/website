@@ -152,6 +152,34 @@
         font-size: 14.5px;
     }
 
+    /* ---------- contact ---------- */
+
+    /* Full width, and the vh-clamped display sizes get a floor: on a short
+       phone viewport they collapse to their minimum, which leaves the one line
+       carrying the page barely larger than the copy under it. */
+    .contact-head,
+    .contact-reach {
+        grid-column: 1 / -1;
+    }
+
+    .contact-title {
+        font-size: clamp(30px, 9vw, 42px);
+        max-width: none;
+    }
+
+    .contact-copy {
+        font-size: 17px;
+        max-width: none;
+    }
+
+    .contact-mail {
+        font-size: clamp(19px, 5.6vw, 26px);
+        /* The address is one long word: below ~340px it is wider than the
+           screen, and a horizontal scrollbar on the whole page is a worse
+           outcome than a break inside it. */
+        overflow-wrap: anywhere;
+    }
+
     /* ---------- research ---------- */
 
     /* The split head stacks, and the papers go one per row. */

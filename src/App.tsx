@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 
 import { onResize } from "@/lib/resize";
 import { AboutPage } from "@/pages/about";
+import { ContactPage } from "@/pages/contact";
 import { HeroPage } from "@/pages/hero";
 import { LegalPage } from "@/pages/legal";
 import { OpenSourcePage } from "@/pages/open-source";
@@ -100,6 +101,7 @@ export function App() {
                     <ResearchPage />
                     <OpenSourcePage />
                     <AboutPage />
+                    <ContactPage />
                     <LegalPage />
                 </Scroller>
 
