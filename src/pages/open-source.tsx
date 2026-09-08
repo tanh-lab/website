@@ -27,8 +27,9 @@ export function OpenSourcePage() {
     return (
         <Page id="open-source">
             <Lead>
-                Our libraries and tools are developed in the open. They are on GitHub, to
-                use, fork and improve.
+                We believe the infrastructure under audio software should be shared. Code
+                that others can read improves, and it is easier to trust in something you
+                ship.
             </Lead>
 
             {/*
