@@ -145,12 +145,11 @@ html[data-theme="light"] .theme-toggle svg {
     opacity: 0.62;
 }
 
-/* The one page whose ground is --primary, which is also the header's blend
-   colour — so difference resolves the nav to black there, in either theme. The
-   brand is not blended, so it has to say so itself. Without this it vanishes on
-   that page in dark mode, where --text-positive is a near-white on light grey. */
+/* The one page that reverses the ground. The header survives it — difference
+   blending resolves against whatever is behind — but the brand is not blended,
+   so it has to be told, or it disappears into a ground of its own colour. */
 body.is-brand-inverted .brand {
-    --brand-ink: var(--ink-on-primary);
+    --brand-ink: var(--ink-on-invert);
 }
 
 /* ---------- scroller ---------------------------------------------------
@@ -207,11 +206,11 @@ body.is-brand-inverted .brand {
 }
 
 .page.is-inverted {
-    color: var(--ink-on-primary);
+    color: var(--ink-on-invert);
 }
 
 .page.is-inverted::before {
-    background: var(--primary);
+    background: var(--invert-scrim);
 }
 
 .page-inner {

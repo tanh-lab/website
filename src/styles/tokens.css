@@ -71,10 +71,17 @@
     --background: #fff;
     --text-positive: #1c1c1a;
 
-    /* The inverted page's ground is --primary, a light grey in both themes, so
-       its ink is a constant rather than a themed token. White on #e3e3e3 is
-       about 1.2:1, which is why that page was unreadable in dark mode. */
-    --ink-on-primary: #1c1c1a;
+    /* About reverses the ground, so its scrim is the opposite of whatever the
+       theme is: dark here, light under [data-theme="dark"]. It used to be a
+       constant light grey in both, which made it barely a reversal at all on
+       the light theme — the page read as the same white as its neighbours.
+
+       Solid, not translucent: letting the shader through turned the reversal
+       into a wash of whatever colour happened to be behind it, and the point of
+       this page is that its ground is flat. */
+    --invert-scrim: #1c1c1a;
+    --ink-on-invert: #e8e8e6;
+    --rule-on-invert: rgba(232, 232, 230, 0.22);
 
     /* How far the section pages veil the shader behind them. The hero shows it
        outright; the pages knock it back so type stays readable. */
@@ -122,4 +129,7 @@ html[data-theme="dark"] {
     --background: #1c1c1a;
     --text-positive: #e8e8e6;
     --page-scrim: rgba(28, 28, 26, 0.6);
+    --invert-scrim: #f4f1ec;
+    --ink-on-invert: #1c1c1a;
+    --rule-on-invert: rgba(28, 28, 26, 0.16);
 }

@@ -81,10 +81,10 @@ dd.row-body {
     opacity: 1;
 }
 
-/* The row rules are tuned for the translucent panels; on the solid light ground
-   they need to be darker to register at all. */
+/* The row rules are tuned for the ordinary panels; on the reversed ground they
+   have to flip with it, or they vanish into it. */
 .page.is-inverted .row {
-    border-color: rgba(0, 0, 0, 0.16);
+    border-color: var(--rule-on-invert);
 }
 
 /* A mid-sentence separator between a statement and its link. Shared, not
