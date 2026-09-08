@@ -41,7 +41,8 @@ export const team: Person[] = [
     {
         name: "Jakob Stolberg",
         links: [
-            { label: "LinkedIn", href: "https://www.linkedin.com/in/jakob-stolberg/" }
+            { label: "LinkedIn", href: "https://www.linkedin.com/in/jakob-stolberg/" },
+            { label: "GitHub", href: "https://github.com/jstolberg" }
         ]
     },
     {
@@ -50,7 +51,8 @@ export const team: Person[] = [
             {
                 label: "LinkedIn",
                 href: "https://www.linkedin.com/in/lina-campanella-a1062b319/"
-            }
+            },
+            { label: "GitHub", href: "https://github.com/linaclca" }
         ]
     }
 ];
