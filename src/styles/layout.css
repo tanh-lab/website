@@ -54,15 +54,13 @@
     text-underline-offset: 4px;
 }
 
+/* One spacing for all three: the links carry the same blank line between them
+   as the one that sets the toggle off from them. */
 .header-actions {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.2rem;
-}
-
-.header-actions .theme-toggle {
-    margin-top: 1rem;
+    gap: 1.2rem;
 }
 
 .header-cta {

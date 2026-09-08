@@ -225,10 +225,6 @@
         gap: 1.2rem;
     }
 
-    .header-actions .theme-toggle {
-        margin-top: 0;
-    }
-
     .menu {
         flex-direction: row;
         gap: 1.4rem;
