@@ -55,6 +55,20 @@
     font-display: swap;
 }
 
+/* Both cuts, and the upright one is the wordmark's: .wordmark-svg asks for the
+   family without a font-style, so it resolves to this face. Drop it and the
+   request has no exact match — browsers then differ over whether to take the
+   italic below as a last resort within the family or fall through to Times, so
+   the mark renders one way in Firefox and another on iOS. It went missing once
+   already, to an edit that swapped a different family in on top of it. */
+@font-face {
+    font-family: "Instrument Serif";
+    src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 @font-face {
     font-family: "Instrument Serif";
     src: url("/fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
