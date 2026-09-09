@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "bun --hot ./dev-server.ts",
         "build": "bun run build.ts",
+        "brand": "bun run tools/render-brand.ts",
         "start": "bun ./index.html",
         "type-check": "node_modules/typescript7/bin/tsc --noEmit",
         "format": "prettier --write .",

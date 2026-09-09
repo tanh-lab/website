@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Brand assets — tanh lab</title>
+        <meta
+            name="description"
+            content="The tanh lab mark, wordmark and header artwork, with the files to download and the rules for using them."
+        />
+        <!-- Not something that should turn up ahead of the site itself, but
+             linkable: it exists so it can be sent to someone who needs a logo. -->
+        <meta name="robots" content="noindex, follow" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+        <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/barlow-semi-condensed-latin-400-normal.woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/instrument-serif-latin-400-normal.woff2"
+            crossorigin
+        />
+
+        <!--
+            A plain document, like the other pages under public/: no bundle, no
+            React, no shader. The tokens below are copied from
+            src/styles/tokens.css rather than imported — the site's stylesheet is
+            content-hashed at build time and has no stable URL this file could
+            point at. Only the values this page paints are duplicated; if the
+            palette moves, it moves here too.
+        -->
+        <style>
+            @font-face {
+                font-family: "Barlow Semi Condensed";
+                src: url("/fonts/barlow-semi-condensed-latin-400-normal.woff2")
+                    format("woff2");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: "Barlow Semi Condensed";
+                src: url("/fonts/barlow-semi-condensed-latin-200-italic.woff2")
+                    format("woff2");
+                font-weight: 200;
+                font-style: italic;
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: "Instrument Serif";
+                src: url("/fonts/instrument-serif-latin-400-normal.woff2")
+                    format("woff2");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            :root {
+                --background: #fff;
+                --text-positive: #1c1c1a;
+                --rule: rgba(28, 28, 26, 0.16);
+                --sunken: rgba(28, 28, 26, 0.04);
+
+                --gutter: clamp(24px, 4.45vw, 88px);
+                --serif: "Instrument Serif", "Times New Roman", Times, serif;
+                --ui:
+                    "Barlow Semi Condensed", "Avenir Next Condensed",
+                    "Helvetica Neue", Arial, sans-serif;
+                --ease: cubic-bezier(0.22, 1, 0.36, 1);
+            }
+
+            html[data-theme="dark"] {
+                --background: #1c1c1a;
+                --text-positive: #e8e8e6;
+                --rule: rgba(232, 232, 230, 0.22);
+                --sunken: rgba(232, 232, 230, 0.06);
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            html {
+                -webkit-font-smoothing: antialiased;
+                background: var(--background);
+                font-size: 10px;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                padding: calc(var(--gutter) * 0.9) var(--gutter);
+                gap: 2rem;
+                font-family: var(--ui);
+                font-weight: 400;
+                color: var(--text-positive);
+                background: var(--background);
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            :focus-visible {
+                outline: 2px solid currentColor;
+                outline-offset: 3px;
+            }
+
+            .brand {
+                font-family: var(--serif);
+                font-size: 20px;
+                line-height: 1;
+                transition: opacity 0.25s var(--ease);
+            }
+
+            .brand:hover {
+                opacity: 0.62;
+            }
+
+            main {
+                flex: 1;
+                max-width: 1180px;
+                width: 100%;
+            }
+
+            .label {
+                margin: 0 0 1.4rem;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                opacity: 0.55;
+            }
+
+            h1 {
+                margin: 0 0 1.8rem;
+                font-family: var(--serif);
+                font-weight: 400;
+                font-size: clamp(38px, 7vw, 96px);
+                line-height: 1;
+                letter-spacing: -0.01em;
+            }
+
+            .lead {
+                margin: 0;
+                max-width: 58ch;
+                font-size: clamp(16px, 2.2vh, 19px);
+                line-height: 1.5;
+            }
+
+            section {
+                margin-top: 4.4rem;
+                padding-top: 1.6rem;
+                border-top: 1px solid var(--rule);
+            }
+
+            h2 {
+                margin: 0 0 0.6rem;
+                font-family: var(--serif);
+                font-weight: 400;
+                font-size: 28px;
+                line-height: 1.1;
+            }
+
+            .note {
+                margin: 0 0 1.8rem;
+                max-width: 62ch;
+                font-size: 15px;
+                line-height: 1.55;
+                opacity: 0.72;
+            }
+
+            /* ---------- the chroma control ---------- */
+
+            .control {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 1.2rem 2rem;
+                padding: 1.4rem 1.6rem;
+                background: var(--sunken);
+                border-radius: 10px;
+            }
+
+            .control label {
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                opacity: 0.55;
+            }
+
+            .control input[type="range"] {
+                flex: 1;
+                min-width: 220px;
+                accent-color: currentColor;
+            }
+
+            .readout {
+                font-variant-numeric: tabular-nums;
+                font-size: 15px;
+                min-width: 4.5ch;
+            }
+
+            .reset {
+                font-size: 14px;
+                border: 1px solid var(--rule);
+                border-radius: 999px;
+                padding: 0.35rem 1rem;
+                background: none;
+                color: inherit;
+                font-family: inherit;
+                cursor: pointer;
+                transition: border-color 0.25s var(--ease);
+            }
+
+            .reset:hover {
+                border-color: currentColor;
+            }
+
+            /* ---------- asset blocks ---------- */
+
+            .row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 2.4rem;
+                align-items: flex-start;
+            }
+
+            .preview {
+                background: var(--sunken);
+                border-radius: 10px;
+                padding: 1.2rem;
+                line-height: 0;
+            }
+
+            .preview canvas,
+            .preview img {
+                display: block;
+                max-width: 100%;
+                height: auto;
+                border-radius: 4px;
+            }
+
+            .files {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.6rem;
+                align-items: center;
+            }
+
+            .files a,
+            .files button {
+                font-family: inherit;
+                font-size: 14px;
+                color: inherit;
+                background: none;
+                border: 1px solid var(--rule);
+                border-radius: 999px;
+                padding: 0.4rem 1.05rem;
+                cursor: pointer;
+                transition:
+                    border-color 0.25s var(--ease),
+                    opacity 0.25s var(--ease);
+            }
+
+            .files a:hover,
+            .files button:hover {
+                border-color: currentColor;
+            }
+
+            .picker {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.6rem;
+                margin-bottom: 1.4rem;
+            }
+
+            .picker button {
+                font-family: inherit;
+                font-size: 14px;
+                color: inherit;
+                background: none;
+                border: 1px solid var(--rule);
+                border-radius: 999px;
+                padding: 0.4rem 1.05rem;
+                cursor: pointer;
+                transition: border-color 0.25s var(--ease);
+            }
+
+            .picker button[aria-pressed="true"] {
+                border-color: currentColor;
+                background: var(--sunken);
+            }
+
+            .dims {
+                font-size: 14px;
+                opacity: 0.55;
+                font-variant-numeric: tabular-nums;
+            }
+
+            /* ---------- reference tables ---------- */
+
+            .swatches {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+                gap: 1rem;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .swatch b {
+                display: block;
+                height: 64px;
+                border-radius: 8px;
+                border: 1px solid var(--rule);
+            }
+
+            .swatch span {
+                display: block;
+                margin-top: 0.5rem;
+                font-size: 14px;
+            }
+
+            .swatch code {
+                font-size: 13px;
+                opacity: 0.55;
+            }
+
+            .faces {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .faces li {
+                padding: 1rem 0;
+                border-bottom: 1px solid var(--rule);
+            }
+
+            .faces li:last-child {
+                border-bottom: 0;
+            }
+
+            .faces b {
+                display: block;
+                font-weight: 400;
+                font-size: 30px;
+                line-height: 1.15;
+            }
+
+            .faces span {
+                font-size: 14px;
+                opacity: 0.55;
+            }
+
+            .serif-400 {
+                font-family: var(--serif);
+            }
+
+            .sc-400 {
+                font-family: var(--ui);
+                font-weight: 400;
+            }
+
+            .sc-200i {
+                font-family: var(--ui);
+                font-weight: 200;
+                font-style: italic;
+            }
+
+            footer {
+                margin-top: 4rem;
+                padding-top: 1.4rem;
+                border-top: 1px solid var(--rule);
+                font-size: 14px;
+            }
+
+            footer a {
+                opacity: 0.9;
+                transition: opacity 0.25s var(--ease);
+            }
+
+            footer a:hover {
+                opacity: 1;
+            }
+
+            /* Without the script this page is still a list of files that work;
+               the generator's own controls are what have nothing to act on.
+
+               Toggled through the hidden attribute rather than a .has-js class
+               on a display rule: half of what the generator owns is laid out
+               with flex, and a descendant rule strong enough to reveal it is
+               also strong enough to overwrite the display it needs. */
+            [hidden] {
+                display: none !important;
+            }
+        </style>
+
+        <!--
+            Runs before first paint, so a visitor who chose dark on the site does
+            not get a white flash on the way in. Same key and same rule as
+            src/store/useThemeStore.ts: only a stored choice moves the theme.
+        -->
+        <script>
+            try {
+                var saved = localStorage.getItem("tanh-theme");
+                if (saved === "light" || saved === "dark") {
+                    document.documentElement.dataset.theme = saved;
+                }
+            } catch (e) {
+                // Private browsing denies localStorage outright; the bare :root
+                // palette is the light theme, so the page still paints.
+            }
+
+        </script>
+    </head>
+    <body>
+        <a class="brand" href="/">tanh lab</a>
+
+        <main>
+            <p class="label">Corporate identity</p>
+            <h1>Brand assets.</h1>
+            <p class="lead">
+                The mark, the wordmark and the header artwork, in the sizes the
+                places that ask for them actually want. Everything on this page
+                is generated from one piece of artwork, so a file taken from here
+                matches the site it came from.
+            </p>
+
+            <section>
+                <h2>Colour strength</h2>
+                <p class="note">
+                    One control over the whole page. It scales the artwork's
+                    chroma while holding its lightness, so the curve keeps its
+                    contrast against the ground at every setting — turning it
+                    down makes the magenta quieter, not the mark fainter. 1.00 is
+                    what the files ship at; the artwork itself already sits at
+                    55% of the strength the original render carried.
+                </p>
+                <div class="control needs-js" hidden>
+                    <label for="chroma">Chroma</label>
+                    <input
+                        id="chroma"
+                        type="range"
+                        min="0"
+                        max="1.5"
+                        step="0.01"
+                        value="1"
+                    />
+                    <output class="readout" id="chroma-readout">1.00</output>
+                    <button class="reset" type="button" id="chroma-reset">
+                        Reset
+                    </button>
+                </div>
+                <p class="note no-js">
+                    The control needs JavaScript. The files linked below are the
+                    artwork as it ships.
+                </p>
+            </section>
+
+            <section>
+                <h2>The mark</h2>
+                <p class="note">
+                    The tanh curve over its own ground. This is the avatar: it is
+                    what goes in a profile picture, a favicon or an app icon.
+                    Square, and it carries its own background, so it never needs
+                    one placed behind it.
+                </p>
+                <div class="row">
+                    <div class="preview">
+                        <canvas
+                            id="mark-canvas"
+                            width="320"
+                            height="320"
+                            class="needs-js"
+                            hidden
+                        ></canvas>
+                        <img
+                            class="no-js"
+                            src="/favicon.svg"
+                            width="320"
+                            height="320"
+                            alt="The tanh lab mark"
+                        />
+                    </div>
+                    <div>
+                        <p class="dims">SVG, and PNG at three sizes.</p>
+                        <div class="files" id="mark-files">
+                            <a href="/favicon.svg" download="tanh-lab-mark.svg">
+                                SVG
+                            </a>
+                            <a href="/brand/mark-256.png" download>256</a>
+                            <a href="/brand/mark-512.png" download>512</a>
+                            <a href="/brand/mark-1024.png" download>1024</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Headers</h2>
+                <p class="note">
+                    The wide artwork, at each platform's own stated pixel size so
+                    an upload is never resampled on the way in. The lockup sits
+                    left, clear of the avatar these platforms park in the
+                    bottom-left corner.
+                </p>
+                <div class="picker needs-js" id="size-picker" hidden></div>
+                <div class="picker needs-js" hidden>
+                    <button type="button" id="lockup-toggle" aria-pressed="false">
+                        With the lockup
+                    </button>
+                </div>
+                <div class="row">
+                    <div class="preview">
+                        <canvas id="header-canvas" class="needs-js" hidden></canvas>
+                        <img
+                            class="no-js"
+                            src="/brand/header-mastodon.png"
+                            width="600"
+                            alt="The header artwork"
+                        />
+                    </div>
+                </div>
+                <p class="dims needs-js" id="header-dims" hidden></p>
+                <div class="files needs-js" hidden>
+                    <button type="button" id="header-download">Download PNG</button>
+                </div>
+                <div class="files no-js">
+                    <a href="/brand/header-linkedin-page.png" download>
+                        LinkedIn page
+                    </a>
+                    <a href="/brand/header-linkedin-profile.png" download>
+                        LinkedIn profile
+                    </a>
+                    <a href="/brand/header-mastodon.png" download>Mastodon</a>
+                    <a href="/brand/card-social.png" download>Social card</a>
+                    <a href="/brand/header-wide.png" download>Wide master</a>
+                </div>
+            </section>
+
+            <section>
+                <h2>Wordmark</h2>
+                <p class="note">
+                    Set in Instrument Serif, with the line beneath it in Barlow
+                    Semi Condensed's 200 italic. The SVGs carry the letterforms as
+                    outlines, so they need no font installed to render correctly.
+                    Dark ink is for light grounds, light ink for dark ones.
+                </p>
+                <div class="files">
+                    <a href="/brand/wordmark.svg" download>Wordmark, dark</a>
+                    <a href="/brand/wordmark-light.svg" download>Wordmark, light</a>
+                    <a href="/brand/lockup.svg" download>Lockup, dark</a>
+                    <a href="/brand/lockup-light.svg" download>Lockup, light</a>
+                </div>
+            </section>
+
+            <section>
+                <h2>Colour</h2>
+                <p class="note">
+                    The site is set in ink on paper and reverses wholesale for the
+                    dark theme. The magenta belongs to the artwork; it is not an
+                    interface colour and nothing is set in it.
+                </p>
+                <ul class="swatches">
+                    <li class="swatch">
+                        <b style="background: #1c1c1a"></b>
+                        <span>Ink</span> <code>#1C1C1A</code>
+                    </li>
+                    <li class="swatch">
+                        <b style="background: #fff"></b>
+                        <span>Paper</span> <code>#FFFFFF</code>
+                    </li>
+                    <li class="swatch">
+                        <b style="background: #e8e8e6"></b>
+                        <span>Ink on dark</span> <code>#E8E8E6</code>
+                    </li>
+                    <li class="swatch">
+                        <b style="background: #e3e3e3"></b>
+                        <span>Header grey</span> <code>#E3E3E3</code>
+                    </li>
+                    <li class="swatch">
+                        <b style="background: #ffebeb"></b>
+                        <span>The curve</span> <code>#FFEBEB</code>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Type</h2>
+                <p class="note">
+                    Two families, both self-hosted. Instrument Serif carries the
+                    name and the headings; everything else is Barlow Semi
+                    Condensed, with Barlow's regular width reserved for names that
+                    are not ours.
+                </p>
+                <ul class="faces">
+                    <li>
+                        <b class="serif-400">Instrument Serif Regular</b>
+                        <span>The wordmark and every heading. 400 only.</span>
+                    </li>
+                    <li>
+                        <b class="sc-400">Barlow Semi Condensed Regular</b>
+                        <span>Interface, navigation and body copy. 400 and 500.</span>
+                    </li>
+                    <li>
+                        <b class="sc-200i">Barlow Semi Condensed ExtraLight Italic</b>
+                        <span>The line under the wordmark, and nothing else.</span>
+                    </li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <a href="/">&larr; Back to the site</a>
+        </footer>
+
+        <script>
+            // Before the module, which has a fetch to wait on: the page should
+            // not show a list of static links for a moment and then replace it.
+            for (const el of document.querySelectorAll(".needs-js")) {
+                el.hidden = false;
+            }
+            for (const el of document.querySelectorAll(".no-js")) {
+                el.hidden = true;
+            }
+        </script>
+        <script type="module" src="/ci/ci.js"></script>
+    </body>
+</html>

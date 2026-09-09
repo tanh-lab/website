@@ -3,30 +3,12 @@ import { prefersReducedMotion } from "@/lib/motion-preference";
 import { onFrame } from "@/lib/raf";
 import { onResize, pixelRatio } from "@/lib/resize";
 import { createQuadProgram } from "@/shader/gl";
-import { PALETTES } from "@/shader/palettes";
 import { createPointerDrift } from "@/shader/pointer-drift";
-import { FRAGMENT_SHADER, VERTEX_SHADER } from "@/shader/shaders";
+import { FRAGMENT_SHADER, UNIFORMS, VERTEX_SHADER } from "@/shader/shaders";
+import { applyFlareUniforms } from "@/shader/uniforms";
 import { useMotionStore } from "@/store/useMotionStore";
 import { useShaderStore } from "@/store/useShaderStore";
 import { useThemeStore } from "@/store/useThemeStore";
-
-const UNIFORMS = [
-    "iResolution",
-    "iTime",
-    "iMouse",
-    "intensity",
-    "streakLength",
-    "streakHeight",
-    "glowPower",
-    "flareSize",
-    "colorIntensity",
-    "primaryColor",
-    "contrastBW",
-    "saturation",
-    "invert",
-    "grainAmount",
-    "grainSize"
-] as const;
 
 /**
  * The hero artwork: a lens flare on one fullscreen triangle, in plain WebGL.
@@ -49,21 +31,7 @@ export function createFlare(canvas: HTMLCanvasElement): () => void {
     let clock = 0;
 
     const render = () => {
-        const s = useShaderStore.getState();
-        const palette = PALETTES[s.palette] ?? PALETTES.fire;
-
-        gl.uniform3fv(uniforms.primaryColor!, palette as unknown as number[]);
-        gl.uniform1f(uniforms.intensity!, s.intensity);
-        gl.uniform1f(uniforms.streakLength!, s.streakLength);
-        gl.uniform1f(uniforms.streakHeight!, s.streakHeight);
-        gl.uniform1f(uniforms.glowPower!, s.glowPower);
-        gl.uniform1f(uniforms.flareSize!, s.flareSize);
-        gl.uniform1f(uniforms.colorIntensity!, s.colorIntensity);
-        gl.uniform1f(uniforms.contrastBW!, s.contrastBW);
-        gl.uniform1f(uniforms.saturation!, s.saturation);
-        gl.uniform1i(uniforms.invert!, s.invert ? 1 : 0);
-        gl.uniform1f(uniforms.grainAmount!, s.grainAmount);
-        gl.uniform1f(uniforms.grainSize!, s.grainSize);
+        applyFlareUniforms(gl, uniforms, useShaderStore.getState());
         gl.uniform1f(uniforms.iTime!, clock);
         quad.draw();
     };

@@ -21,7 +21,8 @@
         "src/**/*.tsx",
         "src/**/*.d.ts",
         "build.ts",
-        "dev-server.ts"
+        "dev-server.ts",
+        "tools/**/*.ts"
     ],
     "exclude": ["node_modules", "dist"]
 }

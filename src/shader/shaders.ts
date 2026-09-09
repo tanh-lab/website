@@ -12,6 +12,31 @@
  * soft-clamping the pointer into a disc; the shader itself is untouched.
  */
 
+/**
+ * Every uniform the fragment shader declares, which is what `createQuadProgram`
+ * needs in order to cache their locations. It lives here rather than beside the
+ * render loop because this is the file that declares them: anything that
+ * compiles this shader needs the same list, and there is now more than one
+ * caller — the hero flare, and the brand renderer in tools/.
+ */
+export const UNIFORMS = [
+    "iResolution",
+    "iTime",
+    "iMouse",
+    "intensity",
+    "streakLength",
+    "streakHeight",
+    "glowPower",
+    "flareSize",
+    "colorIntensity",
+    "primaryColor",
+    "contrastBW",
+    "saturation",
+    "invert",
+    "grainAmount",
+    "grainSize"
+] as const;
+
 export const VERTEX_SHADER = /* glsl */ `
 attribute vec2 position;
 varying vec2 vUv;

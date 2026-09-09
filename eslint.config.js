@@ -40,9 +40,10 @@ export default tseslint.config(
         }
     },
     {
-        // The build and dev scripts run in a terminal, where printing what they
-        // did is the whole point rather than a leftover debug statement.
-        files: ["build.ts", "dev-server.ts", "eslint.config.js"],
+        // The build, dev and asset scripts run in a terminal, where printing
+        // what they did is the whole point rather than a leftover debug
+        // statement.
+        files: ["build.ts", "dev-server.ts", "eslint.config.js", "tools/*.ts"],
         rules: { "no-console": "off" }
     }
 );

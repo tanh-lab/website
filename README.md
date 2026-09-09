@@ -36,6 +36,7 @@ Open <http://localhost:4321>.
 |---|---|
 | `bun run dev` | Dev server with HMR |
 | `bun run build` | Minified static build into `dist/` |
+| `bun run brand` | Re-render the brand assets in `public/brand/` (needs Chrome and `rsvg-convert`) |
 | `bun run start` | Serve the bundled site |
 | `bun run type-check` | `tsc --noEmit` on TypeScript 7 |
 | `bun run type-check:ts6` | The same, on TypeScript 6 |
@@ -58,6 +59,7 @@ index.html            Bun entry
 build.ts              bundle → pre-render → copy public/
 dev-server.ts         dev server; serves public/ alongside the HMR bundle
 plugins/              keeps /fonts/* out of the module graph, for both of the above
+tools/                render-brand: the /ci/ downloads, drawn from favicon.svg and the real shader
 
 src/
   main.tsx            hydrates the pre-render (or plain render in dev)
@@ -81,7 +83,7 @@ src/
     keys                ONE keydown bus, with the typing guard in one place
     emitter, cn, motion-preference
 
-  shader/             gl (plumbing) · shaders (GLSL) · flare · palettes · pointer-drift
+  shader/             gl (plumbing) · shaders (GLSL) · flare · uniforms · palettes · pointer-drift
   ui/                 chrome components, plus the three imperative controllers:
                       paging, brand (the travel), wordmark-fit
   dev/                flare panel (C) and grid overlay (G) — dropped from production
