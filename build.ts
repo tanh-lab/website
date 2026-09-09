@@ -61,31 +61,41 @@ if (linkMatch?.[1]) {
     html = html.replace(linkMatch[0], `<style>${css}</style>`);
 }
 
-// The favicon, and a preload for the two faces that are above the fold.
+// The icons, and a preload for the two faces that are above the fold.
 //
 // Injected here rather than written into index.html because Bun treats a
 // <link href> in the entry as something to resolve and bundle, and these are
 // deliberately external. Without the hint the fonts are discovered inside the
-// stylesheet, which puts them a full round trip behind it; the favicon would be
-// emitted a second time under a hashed name, when /client/ already needs it at
-// a stable path it can hard-code.
+// stylesheet, which puts them a full round trip behind it; the icons would be
+// emitted a second time under hashed names, when the pages under public/ already
+// hard-code them at stable paths. Writing them into the entry does not merely
+// duplicate them either — it fails the build outright, because nothing on disk
+// resolves from index.html's own directory.
+const ICON_LINKS: Record<string, string> = {
+    "/favicon.svg": '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
+    // What iOS uses when the site is added to a home screen: it ignores the SVG
+    // entirely, so this is the same artwork rendered out at 180px.
+    "/apple-touch-icon.png": '<link rel="apple-touch-icon" href="/apple-touch-icon.png">'
+};
+
 const PRELOAD_FONTS = [
     "/fonts/barlow-semi-condensed-latin-400-normal.woff2",
     "/fonts/instrument-serif-latin-400-normal.woff2"
 ];
 
-for (const href of PRELOAD_FONTS) {
-    // These are static paths, so a rename would otherwise fail silently: the
-    // preload would point at nothing and cost a round trip on every visit.
+// These are static paths, so a rename would otherwise fail silently: a preload
+// would point at nothing and cost a round trip on every visit, and an icon link
+// would leave the tab showing the browser's default.
+for (const href of [...Object.keys(ICON_LINKS), ...PRELOAD_FONTS]) {
     if (!(await Bun.file(join("./public", href)).exists())) {
-        console.error(`Preloaded font not found in public/: ${href}`);
+        console.error(`Referenced asset not found in public/: ${href}`);
         process.exit(1);
     }
 }
 
 html = html.replace(
     "</head>",
-    `<link rel="icon" href="/favicon.svg" type="image/svg+xml">${PRELOAD_FONTS.map(
+    `${Object.values(ICON_LINKS).join("")}${PRELOAD_FONTS.map(
         (href) =>
             `<link rel="preload" as="font" type="font/woff2" href="${href}" crossorigin>`
     ).join("")}</head>`
