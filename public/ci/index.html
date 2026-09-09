@@ -306,6 +306,69 @@
                 background: var(--sunken);
             }
 
+            /* The size picker chooses which file is being made; these choose how
+               it is drawn. Different kind of decision, so they are grouped and
+               labelled in a panel rather than being another row of loose pills
+               that reads as more sizes. */
+            .options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem 2.2rem;
+                align-items: center;
+                margin-bottom: 1.4rem;
+                padding: 1rem 1.3rem;
+                background: var(--sunken);
+                border-radius: 10px;
+            }
+
+            .option {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .option > span {
+                font-size: 13px;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                opacity: 0.55;
+            }
+
+            .option[aria-disabled="true"] {
+                opacity: 0.35;
+                pointer-events: none;
+            }
+
+            .segment {
+                display: flex;
+                border: 1px solid var(--rule);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .segment button {
+                font-family: inherit;
+                font-size: 14px;
+                color: inherit;
+                background: none;
+                border: 0;
+                border-left: 1px solid var(--rule);
+                padding: 0.4rem 0.95rem;
+                cursor: pointer;
+                transition:
+                    background-color 0.2s var(--ease),
+                    color 0.2s var(--ease);
+            }
+
+            .segment button:first-child {
+                border-left: 0;
+            }
+
+            .segment button[aria-pressed="true"] {
+                background: var(--text-positive);
+                color: var(--background);
+            }
+
             .dims {
                 font-size: 14px;
                 opacity: 0.55;
@@ -516,16 +579,15 @@
                 <h2>Headers</h2>
                 <p class="note">
                     The wide artwork, at each platform's own stated pixel size so
-                    an upload is never resampled on the way in. The lockup sits
-                    left, clear of the avatar these platforms park in the
-                    bottom-left corner.
+                    an upload is never resampled on the way in. The lockup can go
+                    left or right, in either ink, with or without the line
+                    underneath. Left is the safer default on all three platforms
+                    only if the artwork is not cropped; every one of them parks
+                    the avatar in the bottom-left corner, so on a short banner
+                    the right-hand setting is the one that stays clear of it.
                 </p>
                 <div class="picker needs-js" id="size-picker" hidden></div>
-                <div class="picker needs-js" hidden>
-                    <button type="button" id="lockup-toggle" aria-pressed="false">
-                        With the lockup
-                    </button>
-                </div>
+                <div class="options needs-js" id="lockup-options" hidden></div>
                 <div class="row">
                     <div class="preview">
                         <canvas id="header-canvas" class="needs-js" hidden></canvas>

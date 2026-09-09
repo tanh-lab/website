@@ -9,8 +9,10 @@
  *
  * The PNGs under /brand/ are the same renders, made ahead of time by
  * tools/render-brand.ts so the page still hands out files with no script and so
- * something stable exists to link at. This only has to agree with that tool, and
- * the numbers below are the ones it uses.
+ * something stable exists to link at. That tool only emits the default
+ * combination — lockup left, dark ink, subtitle on — and this has to agree with
+ * it on that one; the rest of the combinations exist only here, which is why the
+ * page renders its downloads rather than linking them.
  */
 
 /** The sizes each platform actually states. */
@@ -29,10 +31,56 @@ const SIZES = [
 
 /** Wide enough to judge, small enough to redraw while a slider is moving. */
 const PREVIEW_WIDTH = 760;
-/** The mark preview's laid-out size, drawn at twice it so it is not soft. */
+/** The mark preview's laid-out size. */
 const MARK_PREVIEW = 320;
 
-const state = { chroma: 1, size: 2, lockup: false };
+/**
+ * How many device pixels a preview is drawn at per laid-out pixel.
+ *
+ * A canvas is a bitmap, and one sized in CSS pixels gets stretched by the
+ * display like any other image — so on a retina screen a 1:1 preview arrives at
+ * half the resolution it is shown at, and the lockup's type is the first thing
+ * to look soft. Only the preview was ever affected; the downloads are drawn at
+ * their true size. Capped at 2, past which nothing is visible and everything is
+ * four times the work.
+ */
+const previewScale = () => Math.min(2, window.devicePixelRatio || 1);
+
+/** How the lockup is drawn over the artwork. */
+const LOCKUP_OPTIONS = [
+    {
+        key: "lockup",
+        label: "Lockup",
+        choices: [
+            { id: "none", label: "None" },
+            { id: "wordmark", label: "Wordmark" },
+            { id: "full", label: "+ subtitle" }
+        ]
+    },
+    {
+        key: "align",
+        label: "Position",
+        choices: [
+            { id: "left", label: "Left" },
+            { id: "right", label: "Right" }
+        ]
+    },
+    {
+        key: "ink",
+        label: "Ink",
+        choices: [
+            { id: "dark", label: "Black" },
+            { id: "light", label: "White" }
+        ]
+    }
+];
+
+/* The brand's two inks rather than #000 and #fff: these are the values the
+   wordmark SVGs are drawn in, and a lockup that used pure black beside them
+   would not be the same mark. */
+const INK = { dark: "#1c1c1a", light: "#e8e8e6" };
+
+const state = { chroma: 1, size: 2, lockup: "none", align: "left", ink: "dark" };
 
 /* ---------- colour ---------------------------------------------------------
    Chroma scaling in Oklab, which is the whole point of the control.
@@ -218,48 +266,61 @@ function fitLine(context, text, style, family, boxHeight, width) {
     };
 }
 
-function drawLockup(context, width, height) {
+function drawLockup(context, width, height, options) {
+    if (options.lockup === "none") return;
+
     // Mirrors .hero-lockup .lockup at 24vw, taken off the short side so the mark
     // holds its weight at every aspect ratio instead of thinning to a hairline.
     let boxWidth = Math.round(Math.min(width * 0.42, Math.max(height * 1.3, 190)));
     const gutter = Math.round(width * 0.055);
 
-    const lines = () => [
-        fitLine(context, "tanh lab", "400", '"Instrument Serif", serif', 106, boxWidth),
-        fitLine(
-            context,
-            "audio software agency",
-            "italic 200",
-            '"Barlow Semi Condensed", sans-serif',
-            116,
-            boxWidth
-        )
-    ];
+    const lines = () => {
+        const set = [
+            fitLine(context, "tanh lab", "400", '"Instrument Serif", serif', 106, boxWidth)
+        ];
+        if (options.lockup === "full") {
+            set.push(
+                fitLine(
+                    context,
+                    "audio software agency",
+                    "italic 200",
+                    '"Barlow Semi Condensed", sans-serif',
+                    116,
+                    boxWidth
+                )
+            );
+        }
+        return set;
+    };
+
+    const stack = (set) => set.reduce((sum, line) => sum + line.height, 0);
 
     // The lockup is sized by its width, and its height falls out of the fit. On
     // the short banners — 1128x191 is six to one — that lands past the bottom
     // edge, so the box is pulled in until the mark sits inside the frame with
     // room around it.
-    let [title, sub] = lines();
+    let set = lines();
     const limit = height * 0.62;
-    const total = title.height + sub.height;
-    if (total > limit) {
-        boxWidth = (boxWidth * limit) / total;
-        [title, sub] = lines();
+    if (stack(set) > limit) {
+        boxWidth = (boxWidth * limit) / stack(set);
+        set = lines();
     }
 
-    let y = (height - (title.height + sub.height)) / 2;
-    context.fillStyle = "#1c1c1a";
+    // Every line is fitted to the same measure, so one left edge places them all.
+    const x = options.align === "right" ? width - gutter - boxWidth : gutter;
+    let y = (height - stack(set)) / 2;
+
+    context.fillStyle = INK[options.ink];
     context.textBaseline = "alphabetic";
-    for (const line of [title, sub]) {
+    for (const line of set) {
         context.font = line.style + " " + line.size + "px " + line.family;
-        context.fillText(line.text, gutter, y + line.baseline);
+        context.fillText(line.text, x, y + line.baseline);
         y += line.height;
     }
 }
 
 /** One header, at exactly the pixel size asked for. */
-function renderHeader(width, height, amount, lockup) {
+function renderHeader(width, height, amount, options) {
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
@@ -268,7 +329,7 @@ function renderHeader(width, height, amount, lockup) {
     // Stretched, not cropped: the field has no edges or figures to distort, and
     // stretching keeps the whole composition rather than one flat corner of it.
     context.drawImage(enlarge(groundAt(amount), width, height), 0, 0, width, height);
-    if (lockup) drawLockup(context, width, height);
+    drawLockup(context, width, height, options);
     return canvas;
 }
 
@@ -290,6 +351,17 @@ function save(canvas, name) {
 const suffix = () =>
     state.chroma === 1 ? "" : "-chroma" + state.chroma.toFixed(2).replace(".", "");
 
+/** A name that says which of the combinations this particular file is. */
+function headerName(size) {
+    let name = size.file;
+    if (state.lockup !== "none") {
+        name += state.lockup === "full" ? "-lockup" : "-wordmark";
+        if (state.align === "right") name += "-right";
+        if (state.ink === "light") name += "-light";
+    }
+    return name + suffix() + ".png";
+}
+
 /* ---------- wiring -------------------------------------------------------- */
 
 const markCanvas = document.getElementById("mark-canvas");
@@ -306,19 +378,28 @@ function paint(canvas, source) {
 
 async function refresh() {
     const size = SIZES[state.size];
-    paint(markCanvas, await renderMark(MARK_PREVIEW * 2, state.chroma));
+    const dpr = previewScale();
+
+    paint(markCanvas, await renderMark(MARK_PREVIEW * dpr, state.chroma));
     markCanvas.style.width = MARK_PREVIEW + "px";
 
+    // Laid out at most PREVIEW_WIDTH across, drawn at the display's own pixels.
     const scale = Math.min(1, PREVIEW_WIDTH / size.width);
+    const laidOut = {
+        width: Math.round(size.width * scale),
+        height: Math.round(size.height * scale)
+    };
     paint(
         headerCanvas,
         renderHeader(
-            Math.round(size.width * scale),
-            Math.round(size.height * scale),
+            Math.round(laidOut.width * dpr),
+            Math.round(laidOut.height * dpr),
             state.chroma,
-            state.lockup
+            state
         )
     );
+    headerCanvas.style.width = laidOut.width + "px";
+
     headerDims.textContent =
         size.label + " — " + size.width + " x " + size.height + " px";
 }
@@ -350,6 +431,58 @@ function buildSizePicker() {
         });
         picker.append(button);
     });
+}
+
+/**
+ * The lockup's own controls: a labelled segment per decision.
+ *
+ * Built rather than written out, so the markup cannot drift from the options the
+ * renderer actually understands — every button here is one of the values
+ * drawLockup switches on.
+ */
+function buildLockupOptions() {
+    const host = document.getElementById("lockup-options");
+
+    for (const group of LOCKUP_OPTIONS) {
+        const option = document.createElement("div");
+        option.className = "option";
+        option.dataset.key = group.key;
+
+        const label = document.createElement("span");
+        label.textContent = group.label;
+
+        const segment = document.createElement("div");
+        segment.className = "segment";
+        for (const choice of group.choices) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = choice.label;
+            button.setAttribute("aria-pressed", String(state[group.key] === choice.id));
+            button.addEventListener("click", () => {
+                state[group.key] = choice.id;
+                for (const other of segment.children) {
+                    other.setAttribute("aria-pressed", String(other === button));
+                }
+                syncLockupOptions();
+                scheduleRefresh();
+            });
+            segment.append(button);
+        }
+
+        option.append(label, segment);
+        host.append(option);
+    }
+
+    syncLockupOptions();
+}
+
+/** Position and ink have nothing to act on while no lockup is being drawn. */
+function syncLockupOptions() {
+    const off = state.lockup === "none";
+    for (const option of document.querySelectorAll("#lockup-options .option")) {
+        if (option.dataset.key === "lockup") continue;
+        option.setAttribute("aria-disabled", String(off));
+    }
 }
 
 function wireMarkDownloads() {
@@ -393,6 +526,7 @@ async function main() {
     ]);
 
     buildSizePicker();
+    buildLockupOptions();
     wireMarkDownloads();
 
     slider.addEventListener("input", () => {
@@ -408,18 +542,11 @@ async function main() {
         scheduleRefresh();
     });
 
-    const lockupToggle = document.getElementById("lockup-toggle");
-    lockupToggle.addEventListener("click", () => {
-        state.lockup = !state.lockup;
-        lockupToggle.setAttribute("aria-pressed", String(state.lockup));
-        scheduleRefresh();
-    });
-
     document.getElementById("header-download").addEventListener("click", () => {
         const size = SIZES[state.size];
         save(
-            renderHeader(size.width, size.height, state.chroma, state.lockup),
-            size.file + (state.lockup ? "-lockup" : "") + suffix() + ".png"
+            renderHeader(size.width, size.height, state.chroma, state),
+            headerName(size)
         );
     });
 
