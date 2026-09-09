@@ -55,25 +55,23 @@
     font-display: swap;
 }
 
-/* Both cuts, and the upright one is the wordmark's: .wordmark-svg asks for the
-   family without a font-style, so it resolves to this face. Drop it and the
-   request has no exact match — browsers then differ over whether to take the
-   italic below as a last resort within the family or fall through to Times, so
-   the mark renders one way in Firefox and another on iOS. It went missing once
-   already, to an edit that swapped a different family in on top of it. */
+/* The wordmark's face, and now the family's only cut: .wordmark-svg asks for
+   the family without a font-style, so it resolves here. The italic that used to
+   sit below it is gone — nothing ever asked for it once the subtitle moved to
+   Barlow's real 200 italic, and carrying it cost 15KB of the font budget to be
+   downloaded by nobody.
+
+   Keep this one. It went missing once already, to an edit that swapped a
+   different family in on top of it, and a request with no exact match is
+   resolved differently by different browsers — the mark rendered one way in
+   Firefox and another on iOS until it came back. With the italic gone there is
+   no sibling left to be chosen instead, so the failure is now a clean fall
+   through to Times rather than a disagreement, but it is still a failure. */
 @font-face {
     font-family: "Instrument Serif";
     src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Instrument Serif";
-    src: url("/fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
-    font-weight: 400;
-    font-style: italic;
     font-display: swap;
 }
 
