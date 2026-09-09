@@ -29,6 +29,39 @@ const SIZES = [
     { label: "Wide master", width: 2400, height: 800, file: "header-wide" }
 ];
 
+/**
+ * What each place actually asks for as a profile picture.
+ *
+ * Several land on the same number, which is the point of listing them by name
+ * rather than by size: nobody setting up a Mastodon account should have to know
+ * that 400 is also LinkedIn's. The mark is square and carries its own ground, so
+ * every one of these is the same artwork at a different rasterisation.
+ */
+const AVATARS = [
+    { label: "GitHub", size: 500 },
+    { label: "LinkedIn", size: 400 },
+    { label: "Mastodon", size: 400 },
+    { label: "Instagram", size: 320 },
+    { label: "Touch icon", size: 180 }
+];
+
+/** GitHub's social preview, at the size GitHub states. */
+const CARD = { width: 1280, height: 640 };
+
+/**
+ * The largest the second line may be, as a fraction of the first.
+ *
+ * Setting both lines to one measure is the site's rule, and it works because the
+ * site's second line is far longer than its first — "audio software agency" set
+ * to the width of "tanh lab" lands at 0.34 of its size on its own. A repo card's
+ * second line is usually short, and two lines of similar length set to the same
+ * measure come out the same size, which reads as two titles rather than a mark.
+ * So the ratio is a ceiling rather than a target: above it the line is scaled
+ * down and left where it starts, and the site's own lockup, already under it, is
+ * untouched.
+ */
+const SUB_MAX_RATIO = 0.36;
+
 /** Wide enough to judge, small enough to redraw while a slider is moving. */
 const PREVIEW_WIDTH = 760;
 /** The mark preview's laid-out size. */
@@ -81,6 +114,9 @@ const LOCKUP_OPTIONS = [
 const INK = { dark: "#1c1c1a", light: "#e8e8e6" };
 
 const state = { chroma: 1, size: 2, lockup: "none", align: "left", ink: "dark" };
+
+/** The repo card's own state: its two lines are typed rather than fixed. */
+const card = { title: "tanh-lib", sub: "tanh lab", ink: "dark" };
 
 /* ---------- colour ---------------------------------------------------------
    Chroma scaling in Oklab, which is the whole point of the control.
@@ -274,15 +310,21 @@ function drawLockup(context, width, height, options) {
     let boxWidth = Math.round(Math.min(width * 0.42, Math.max(height * 1.3, 190)));
     const gutter = Math.round(width * 0.055);
 
+    // The words are arguments, not constants: a repository card is this same
+    // lockup with a repo name on the first line, which is what makes a card read
+    // as ours without being a second piece of artwork to keep in step.
+    const title = options.title ?? "tanh lab";
+    const sub = options.sub ?? "audio software agency";
+
     const lines = () => {
         const set = [
-            fitLine(context, "tanh lab", "400", '"Instrument Serif", serif', 106, boxWidth)
+            fitLine(context, title, "400", '"Instrument Serif", serif', 106, boxWidth)
         ];
         if (options.lockup === "full") {
             set.push(
                 fitLine(
                     context,
-                    "audio software agency",
+                    sub,
                     "italic 200",
                     '"Barlow Semi Condensed", sans-serif',
                     116,
@@ -293,17 +335,35 @@ function drawLockup(context, width, height, options) {
         return set;
     };
 
+    /** Hold the second line subordinate; see SUB_MAX_RATIO. */
+    const subordinate = (set) => {
+        const [first, second] = set;
+        if (!second) return set;
+        const ceiling = first.size * SUB_MAX_RATIO;
+        if (second.size <= ceiling) return set;
+        const k = ceiling / second.size;
+        return [
+            first,
+            {
+                ...second,
+                size: second.size * k,
+                baseline: second.baseline * k,
+                height: second.height * k
+            }
+        ];
+    };
+
     const stack = (set) => set.reduce((sum, line) => sum + line.height, 0);
 
     // The lockup is sized by its width, and its height falls out of the fit. On
     // the short banners — 1128x191 is six to one — that lands past the bottom
     // edge, so the box is pulled in until the mark sits inside the frame with
     // room around it.
-    let set = lines();
+    let set = subordinate(lines());
     const limit = height * 0.62;
     if (stack(set) > limit) {
         boxWidth = (boxWidth * limit) / stack(set);
-        set = lines();
+        set = subordinate(lines());
     }
 
     // Every line is fitted to the same measure, so one left edge places them all.
@@ -351,6 +411,32 @@ function save(canvas, name) {
 const suffix = () =>
     state.chroma === 1 ? "" : "-chroma" + state.chroma.toFixed(2).replace(".", "");
 
+/**
+ * What to draw over a card, from what has been typed into it.
+ *
+ * An empty line under drops to the wordmark alone rather than leaving a gap, and
+ * an empty name leaves the artwork bare rather than drawing nothing where a name
+ * should be.
+ */
+const cardOptions = () => ({
+    lockup: !card.title.trim() ? "none" : card.sub.trim() ? "full" : "wordmark",
+    align: "left",
+    ink: card.ink,
+    title: card.title.trim(),
+    sub: card.sub.trim()
+});
+
+/** A file name from whatever was typed, rather than from the artwork. */
+const cardName = () => {
+    const slug = card.title
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    return (slug || "repository") + "-card" + (card.ink === "light" ? "-light" : "") +
+        suffix() + ".png";
+};
+
 /** A name that says which of the combinations this particular file is. */
 function headerName(size) {
     let name = size.file;
@@ -367,6 +453,8 @@ function headerName(size) {
 const markCanvas = document.getElementById("mark-canvas");
 const headerCanvas = document.getElementById("header-canvas");
 const headerDims = document.getElementById("header-dims");
+const cardCanvas = document.getElementById("card-canvas");
+const cardDims = document.getElementById("card-dims");
 const slider = document.getElementById("chroma");
 const readout = document.getElementById("chroma-readout");
 
@@ -402,6 +490,21 @@ async function refresh() {
 
     headerDims.textContent =
         size.label + " — " + size.width + " x " + size.height + " px";
+
+    const cardWidth = Math.min(PREVIEW_WIDTH, CARD.width);
+    const cardHeight = Math.round((cardWidth * CARD.height) / CARD.width);
+    paint(
+        cardCanvas,
+        renderHeader(
+            Math.round(cardWidth * dpr),
+            Math.round(cardHeight * dpr),
+            state.chroma,
+            cardOptions()
+        )
+    );
+    cardCanvas.style.width = cardWidth + "px";
+    cardDims.textContent =
+        "GitHub social preview — " + CARD.width + " x " + CARD.height + " px";
 }
 
 /** Coalesced to a frame: the slider fires far faster than a redraw finishes. */
@@ -453,21 +556,11 @@ function buildLockupOptions() {
 
         const segment = document.createElement("div");
         segment.className = "segment";
-        for (const choice of group.choices) {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.textContent = choice.label;
-            button.setAttribute("aria-pressed", String(state[group.key] === choice.id));
-            button.addEventListener("click", () => {
-                state[group.key] = choice.id;
-                for (const other of segment.children) {
-                    other.setAttribute("aria-pressed", String(other === button));
-                }
-                syncLockupOptions();
-                scheduleRefresh();
-            });
-            segment.append(button);
-        }
+        buildSegment(segment, group.choices, state[group.key], (id) => {
+            state[group.key] = id;
+            syncLockupOptions();
+            scheduleRefresh();
+        });
 
         option.append(label, segment);
         host.append(option);
@@ -483,6 +576,84 @@ function syncLockupOptions() {
         if (option.dataset.key === "lockup") continue;
         option.setAttribute("aria-disabled", String(off));
     }
+}
+
+/**
+ * A segmented control, built from a list of choices.
+ *
+ * Shared by the lockup panel and the card's ink, so the two cannot end up
+ * looking or behaving differently for the same kind of decision.
+ */
+function buildSegment(host, choices, selected, onPick) {
+    for (const choice of choices) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = choice.label;
+        button.setAttribute("aria-pressed", String(selected === choice.id));
+        button.addEventListener("click", () => {
+            for (const other of host.children) {
+                other.setAttribute("aria-pressed", String(other === button));
+            }
+            onPick(choice.id);
+        });
+        host.append(button);
+    }
+}
+
+/** One pill per place that wants an avatar, each at that place's own size. */
+function buildAvatarDownloads() {
+    const host = document.getElementById("avatar-files");
+    for (const avatar of AVATARS) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = avatar.label + " " + avatar.size;
+        button.addEventListener("click", async () => {
+            save(
+                await renderMark(avatar.size, state.chroma),
+                "tanh-lab-" +
+                    avatar.label.toLowerCase().replace(/\s+/g, "-") +
+                    "-" +
+                    avatar.size +
+                    suffix() +
+                    ".png"
+            );
+        });
+        host.append(button);
+    }
+}
+
+function wireCard() {
+    buildSegment(
+        document.getElementById("card-ink"),
+        [
+            { id: "dark", label: "Black" },
+            { id: "light", label: "White" }
+        ],
+        card.ink,
+        (id) => {
+            card.ink = id;
+            scheduleRefresh();
+        }
+    );
+
+    for (const [id, key] of [
+        ["card-title", "title"],
+        ["card-sub", "sub"]
+    ]) {
+        const input = document.getElementById(id);
+        input.value = card[key];
+        input.addEventListener("input", () => {
+            card[key] = input.value;
+            scheduleRefresh();
+        });
+    }
+
+    document.getElementById("card-download").addEventListener("click", () => {
+        save(
+            renderHeader(CARD.width, CARD.height, state.chroma, cardOptions()),
+            cardName()
+        );
+    });
 }
 
 function wireMarkDownloads() {
@@ -527,7 +698,9 @@ async function main() {
 
     buildSizePicker();
     buildLockupOptions();
+    buildAvatarDownloads();
     wireMarkDownloads();
+    wireCard();
 
     slider.addEventListener("input", () => {
         state.chroma = Number(slider.value);

@@ -53,8 +53,6 @@ export function ContactPage() {
                     <a href="/legal/">Legal</a>
                     <span className="pub-sep">&middot;</span>
                     <a href="/privacy/">Privacy</a>
-                    <span className="pub-sep">&middot;</span>
-                    <a href="/ci/">Brand</a>
                 </p>
             </div>
         </Page>

@@ -8,8 +8,9 @@
             name="description"
             content="The tanh lab mark, wordmark and header artwork, with the files to download and the rules for using them."
         />
-        <!-- Not something that should turn up ahead of the site itself, but
-             linkable: it exists so it can be sent to someone who needs a logo. -->
+        <!-- Nothing on the site links here, by choice: it is a page you are
+             sent, not one you find. noindex keeps it out of search as well, so
+             the URL is the whole of the access. -->
         <meta name="robots" content="noindex, follow" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -369,6 +370,27 @@
                 color: var(--background);
             }
 
+            .files + .dims {
+                margin-top: 1.6rem;
+            }
+
+            .option input[type="text"] {
+                font-family: inherit;
+                font-size: 14px;
+                color: inherit;
+                background: var(--background);
+                border: 1px solid var(--rule);
+                border-radius: 8px;
+                padding: 0.42rem 0.75rem;
+                min-width: 16ch;
+                transition: border-color 0.2s var(--ease);
+            }
+
+            .option input[type="text"]:focus-visible {
+                outline: none;
+                border-color: currentColor;
+            }
+
             .dims {
                 font-size: 14px;
                 opacity: 0.55;
@@ -571,6 +593,13 @@
                             <a href="/brand/mark-512.png" download>512</a>
                             <a href="/brand/mark-1024.png" download>1024</a>
                         </div>
+
+                        <p class="dims">Or at the size each place asks for.</p>
+                        <div class="files needs-js" id="avatar-files" hidden></div>
+                        <p class="dims no-js">
+                            Those sizes need JavaScript; the three above cover
+                            every one of them.
+                        </p>
                     </div>
                 </div>
             </section>
@@ -614,6 +643,44 @@
                     <a href="/brand/card-social.png" download>Social card</a>
                     <a href="/brand/header-wide.png" download>Wide master</a>
                 </div>
+            </section>
+
+            <section>
+                <h2>Repository cards</h2>
+                <p class="note">
+                    GitHub's social preview: the image that stands in for a repo
+                    wherever its link is posted. 1280 x 640, the size GitHub asks
+                    for. Name it, give it a line underneath if it wants one, and
+                    take the PNG — the artwork and the type are the same as the
+                    headers, so a repo reads as ours at a glance.
+                </p>
+                <div class="options needs-js" id="card-options" hidden>
+                    <label class="option">
+                        <span>Name</span>
+                        <input id="card-title" type="text" value="tanh-lib" />
+                    </label>
+                    <label class="option">
+                        <span>Line under</span>
+                        <input id="card-sub" type="text" value="tanh lab" />
+                    </label>
+                    <div class="option">
+                        <span>Ink</span>
+                        <div class="segment" id="card-ink"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="preview">
+                        <canvas id="card-canvas" class="needs-js" hidden></canvas>
+                    </div>
+                </div>
+                <p class="dims needs-js" id="card-dims" hidden></p>
+                <div class="files needs-js" hidden>
+                    <button type="button" id="card-download">Download PNG</button>
+                </div>
+                <p class="note no-js">
+                    The card carries a name you type, so it is generated here
+                    rather than sitting in a folder — which needs JavaScript.
+                </p>
             </section>
 
             <section>
