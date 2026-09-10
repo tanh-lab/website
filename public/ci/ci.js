@@ -13,7 +13,14 @@
  * combination — lockup left, dark ink, subtitle on — and this has to agree with
  * it on that one; the rest of the combinations exist only here, which is why the
  * page renders its downloads rather than linking them.
+ *
+ * The experimental section at the foot of the page is not drawn from the
+ * artwork at all, and lives in lab.js. It is handed what it needs from here —
+ * the ground, the segmented control, the save — rather than importing it, so
+ * the two modules stay a one-way dependency.
  */
+
+import { initLab } from "./lab.js";
 
 /** The sizes each platform actually states. */
 const SIZES = [
@@ -194,7 +201,7 @@ function scaleChroma(data, amount) {
 
 /* ---------- the artwork --------------------------------------------------- */
 
-function loadImage(src) {
+export function loadImage(src) {
     return new Promise((resolve, reject) => {
         const image = new Image();
         image.onload = () => resolve(image);
@@ -216,7 +223,7 @@ async function loadArtwork() {
 }
 
 /** The mark's ground at the current chroma, at its own small native size. */
-function groundAt(amount) {
+export function groundAt(amount) {
     const canvas = document.createElement("canvas");
     canvas.width = ground.naturalWidth;
     canvas.height = ground.naturalHeight;
@@ -395,7 +402,7 @@ function renderHeader(width, height, amount, options) {
 
 /* ---------- downloads ----------------------------------------------------- */
 
-function save(canvas, name) {
+export function save(canvas, name) {
     canvas.toBlob((blob) => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -455,6 +462,9 @@ const headerCanvas = document.getElementById("header-canvas");
 const headerDims = document.getElementById("header-dims");
 const cardCanvas = document.getElementById("card-canvas");
 const cardDims = document.getElementById("card-dims");
+/* Built at the end of main(); the ground it draws over follows the slider. */
+let lab = null;
+
 const slider = document.getElementById("chroma");
 const readout = document.getElementById("chroma-readout");
 
@@ -505,6 +515,8 @@ async function refresh() {
     cardCanvas.style.width = cardWidth + "px";
     cardDims.textContent =
         "GitHub social preview — " + CARD.width + " x " + CARD.height + " px";
+
+    if (lab) lab.onChroma();
 }
 
 /** Coalesced to a frame: the slider fires far faster than a redraw finishes. */
@@ -584,7 +596,7 @@ function syncLockupOptions() {
  * Shared by the lockup panel and the card's ink, so the two cannot end up
  * looking or behaving differently for the same kind of decision.
  */
-function buildSegment(host, choices, selected, onPick) {
+export function buildSegment(host, choices, selected, onPick) {
     for (const choice of choices) {
         const button = document.createElement("button");
         button.type = "button";
@@ -724,6 +736,10 @@ async function main() {
     });
 
     await refresh();
+
+    // Last, and after the first paint: the sketches are the slowest thing on
+    // the page to draw and the least urgent to see.
+    lab = initLab({ groundAt, save, loadImage, buildSegment, chroma: () => state.chroma });
 }
 
 main();

@@ -397,6 +397,82 @@
                 font-variant-numeric: tabular-nums;
             }
 
+            /* ---------- the experimental grid ----------
+
+               The sketches carry their own ground, so the card is the artwork
+               and nothing else: no inset, no padding, and the corner radius cut
+               from the SVG rather than drawn around it. */
+            .marks {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+                gap: 2rem 1.6rem;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            /* A column, so the download pills line up across a row whatever
+               length each note runs to. */
+            .mark {
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .mark .files {
+                margin-top: auto;
+            }
+
+            /* A hairline inside the corner, so a sketch drawn on the ink
+               ground still has an edge on a dark page. */
+            .mark .preview {
+                padding: 0;
+                overflow: hidden;
+                box-shadow: inset 0 0 0 1px var(--rule);
+            }
+
+            .mark svg {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+
+            .mark h3 {
+                margin: 0.9rem 0 0.2rem;
+                font-family: var(--serif);
+                font-weight: 400;
+                font-size: 21px;
+                line-height: 1.1;
+            }
+
+            .mark p {
+                margin: 0 0 0.8rem;
+                font-size: 14px;
+                line-height: 1.5;
+                opacity: 0.72;
+            }
+
+            .mark .files button {
+                font-size: 13px;
+                padding: 0.3rem 0.9rem;
+            }
+
+            /* Scoped to this section: the generator above has its own range
+               rule, and an unscoped width here would override the width it
+               sizes its sliders by. */
+            #lab-options .option input[type="range"] {
+                width: 148px;
+                accent-color: currentColor;
+            }
+
+            /* A variable, set as one: lower case and italic, not a caption. */
+            #lab-options .option > span.math {
+                text-transform: none;
+                letter-spacing: 0;
+                font-style: italic;
+                font-size: 15px;
+            }
+
             /* ---------- reference tables ---------- */
 
             .swatches {
@@ -971,6 +1047,27 @@
                         <span>The line under the wordmark, and nothing else.</span>
                     </li>
                 </ul>
+            </section>
+
+            <!-- Last on the page, and hidden without the script, because there is
+                 no static fallback to show: the sketches do not exist as files. -->
+            <section id="lab" class="needs-js" hidden>
+                <h2>Experimental</h2>
+                <p class="note">
+                    Sketches, not marks. Nothing here is in use and none of it
+                    replaces the artwork above — the section exists so the
+                    alternatives can be looked at beside it rather than
+                    described. Each one is drawn from the function rather than
+                    from the artwork: the plot itself, its level curves in the
+                    complex plane, and its polar form, all in the same 800-unit
+                    square the mark uses. The geometry is computed in the page,
+                    so a file taken from here is the curve and not a picture of
+                    it. k is the index the plots are tabulated over: on the real
+                    plots it sets how steep the curve is, on the complex ones how
+                    many levels are drawn.
+                </p>
+                <div class="options" id="lab-options"></div>
+                <ul class="marks" id="lab-marks"></ul>
             </section>
         </main>
 
