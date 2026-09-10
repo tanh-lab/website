@@ -349,6 +349,12 @@ export function createPaging(scroller: HTMLElement): Paging {
     scroller.addEventListener("scroll", onScroll, { passive: true });
     disposers.push(() => scroller.removeEventListener("scroll", onScroll));
 
+    // Not necessarily zero: a route document opens at its own section, and a
+    // reload restores wherever you were. `apply` derives this too, but only on
+    // the wide branch, so reading it here is what keeps the first gesture on a
+    // phone going the right way.
+    index = Math.round(position());
+
     apply();
     wide.addEventListener("change", apply);
     disposers.push(() => wide.removeEventListener("change", apply));

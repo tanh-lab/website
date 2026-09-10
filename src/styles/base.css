@@ -42,6 +42,26 @@ p {
     outline-offset: 3px;
 }
 
+/* Text that is present for a screen reader, a crawler and a copy-paste, but
+   not for the eye. Neither `display: none` nor `visibility: hidden`, either of
+   which takes it out of the accessibility tree along with the pixels — which is
+   the one thing it is here for.
+
+   The site's headings live under this class. The lockup, the section names and
+   the partner marks are all artwork, so the document would otherwise have no
+   outline at all: no <h1>, and six sections a screen reader could only reach by
+   scrolling. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
 /* The screen sits inside the frame; everything is clipped to it. */
 .screen {
     position: fixed;
@@ -108,6 +128,53 @@ p {
 .is-ready .header,
 .is-ready .hero-art {
     opacity: 1;
+}
+
+/* ---------- intro failsafe --------------------------------------------- */
+
+/* Three separate things hide this site until the bundle says otherwise: the
+   preloader covering it, and the `opacity: 0` above on the header, the shader
+   and every `.fade`. All three are lifted by JS and by nothing else, so a chunk
+   that 404s or throws before hydration leaves a blank screen sitting on top of
+   a fully pre-rendered page — the one failure pre-rendering exists to survive.
+
+   `body:not(.is-ready)` is the test for "the bundle never ran": App.tsx adds
+   that class the moment the reveal starts. On the normal path these rules stop
+   matching long before their delay is up, so the animations never run and the
+   reveal-on-scroll further down the page keeps its own timing — a blanket
+   animation here would force every off-screen section visible after eight
+   seconds on a working page, which is the reveal it exists to perform.
+
+   Eight seconds because this is a failsafe and not a timeout: a slow connection
+   that is still working should never have its intro cut short.
+
+   The hero lockup is not recoverable this way and is knowingly left out. It is
+   positioned from a width JS measures, so without the bundle there is no
+   sensible place to put it — the first screen degrades to the scroll hint, and
+   everything below it reads. */
+body:not(.is-ready) .preloader {
+    animation: failsafe-uncover 0.55s var(--ease) 8s forwards;
+}
+
+body:not(.is-ready) .header,
+body:not(.is-ready) .hero-art,
+body:not(.is-ready) .fade {
+    animation: failsafe-reveal 0.55s var(--ease) 8s forwards;
+}
+
+/* End state only. With no `from`, the animation contributes nothing during its
+   delay, so the transitions above run the normal reveal unaffected. */
+@keyframes failsafe-uncover {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes failsafe-reveal {
+    to {
+        opacity: 1;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

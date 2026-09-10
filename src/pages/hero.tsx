@@ -13,6 +13,15 @@ export function HeroPage() {
     return (
         <section className="hero module" id="top">
             <div className="hero-content w">
+                {/*
+                    The lockup either side of this is artwork — an SVG, and
+                    aria-hidden on both counts — so this is the only place the
+                    studio's name exists as text. Hidden rather than styled
+                    away: the heading a crawler and a screen reader read, saying
+                    exactly what the mark above it says.
+                */}
+                <h1 className="visually-hidden">tanh lab — audio software agency</h1>
+
                 <div className="hero-lockup is-rig" aria-hidden="true">
                     <div className="lockup">
                         <Wordmark />

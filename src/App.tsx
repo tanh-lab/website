@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { sectionForPath } from "@/data/routes";
 import { onResize } from "@/lib/resize";
 import { AboutPage } from "@/pages/about";
 import { ContactPage } from "@/pages/contact";
@@ -27,14 +28,46 @@ function useBoot() {
         const { open } = useMotionStore.getState();
         useThemeStore.getState().hydrate();
 
+        // A route document is this same document served from its own path, so
+        // the section it names is reached by scrolling rather than by rendering
+        // anything different.
+        //
+        // By page index rather than by offsetTop: the same arithmetic the
+        // paging controller uses, so it lands exactly on a snap page rather
+        // than near one. Re-run rather than run once for the same reason
+        // `fitWordmarks` is — a page is one viewport tall, and at the first
+        // commit the scroller has not been given its height yet, so the first
+        // attempt multiplies the index by a nonsense number. It is safe to
+        // repeat: it only ever runs behind the preloader, and it recomputes the
+        // destination from scratch every time.
+        const openAtRoute = () => {
+            if (useMotionStore.getState().revealed) return;
+
+            const section = sectionForPath(window.location.pathname);
+            const scroller = document.getElementById("scroller");
+            if (!section || !scroller) return;
+
+            const pages = [...scroller.children].filter((el) =>
+                el.matches(".hero, .page")
+            );
+            const target = pages.findIndex((page) => page.id === section);
+            if (target > 0) scroller.scrollTop = target * scroller.clientHeight;
+        };
+
+        openAtRoute();
+
         // A first fit against whatever font resolved synchronously, so the hero
         // is never laid out at the placeholder viewBox.
         fitWordmarks();
 
         if (document.readyState === "complete") {
+            openAtRoute();
             open("loaded");
         } else {
-            const onLoad = () => open("loaded");
+            const onLoad = () => {
+                openAtRoute();
+                open("loaded");
+            };
             window.addEventListener("load", onLoad, { once: true });
         }
 
@@ -45,6 +78,7 @@ function useBoot() {
                 // preloader still covers the page keeps them off the very frame
                 // the intro starts on.
                 fitWordmarks();
+                openAtRoute();
                 open("fonts");
             });
         }

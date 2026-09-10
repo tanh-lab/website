@@ -35,9 +35,9 @@ function People({ people }: { people: Person[] }) {
  */
 export function AboutPage() {
     return (
-        <Page id="about" inverted>
+        <Page id="about" title="About" inverted>
             <Lead>
-                tanh lab is an audio software studio in Berlin, founded by Fares Schulz
+                tanh lab is an audio software studio in Berlin, started by Fares Schulz
                 and Valentin Ackva.
             </Lead>
 

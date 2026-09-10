@@ -56,7 +56,7 @@ export function WorkPage() {
     const { ref, isVisible } = useReveal<HTMLDivElement>();
 
     return (
-        <Page id="work">
+        <Page id="work" title="Work">
             <Lead>We develop audio software for studios and manufacturers.</Lead>
 
             <div ref={ref} className={cn("partners", "fade", isVisible && "is-in")}>

@@ -19,7 +19,7 @@ export function ResearchPage() {
     const { ref, isVisible } = useReveal<HTMLOListElement>();
 
     return (
-        <Page id="research">
+        <Page id="research" title="Research">
             <div className="research-head">
                 <p className="lead">
                     We work at the intersection of audio software, machine learning and

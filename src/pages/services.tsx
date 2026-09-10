@@ -27,11 +27,12 @@ function describe({ description, link }: Service): ReactNode {
 
 export function ServicesPage() {
     return (
-        <Page id="services">
+        <Page id="services" title="Services">
             {/*
-                No page index here: the nav carries "Services" in this same
+                No visible page index: the nav carries "Services" in this same
                 column, underlined as the active page, so a label would repeat
-                the word directly beneath itself.
+                the word directly beneath itself. The heading `Page` renders is
+                hidden for exactly that reason.
             */}
             <Lead>
                 We develop audio software and real-time machine learning for audio and

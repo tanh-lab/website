@@ -1,0 +1,9 @@
+# /client/ and /ci/ are deliberately absent here. Both carry a `noindex` meta
+# tag, and a Disallow would stop a crawler fetching the page it is written on —
+# leaving the URL indexable on the strength of inbound links alone, which is the
+# opposite of what it asks for. Let them be crawled; the tag does the work.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://tanh-lab.com/sitemap.xml

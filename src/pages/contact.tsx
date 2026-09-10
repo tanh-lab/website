@@ -29,10 +29,10 @@ export function ContactPage() {
     const { ref: reachRef, isVisible: reachVisible } = useReveal<HTMLDivElement>();
 
     return (
-        <Page id="contact">
+        <Page id="contact" title="Contact">
             <div ref={ref} className={cn("contact-head", "fade", isVisible && "is-in")}>
                 <p className="contact-eyebrow">Get in touch</p>
-                <h2 className="contact-title">We love a challenge.</h2>
+                <h3 className="contact-title">We love a challenge.</h3>
                 <p className="contact-copy">
                     We are always on the lookout for new challenges. Please reach out, we
                     would be happy to help.

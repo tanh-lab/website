@@ -25,7 +25,7 @@ export function OpenSourcePage() {
     const { ref: stripRef, isVisible: stripVisible } = useReveal<HTMLDivElement>();
 
     return (
-        <Page id="open-source">
+        <Page id="open-source" title="Open Source">
             <Lead>
                 We believe the infrastructure under audio software should be shared. Code
                 that others can read improves, and it is easier to trust in something you
