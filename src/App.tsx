@@ -106,6 +106,9 @@ export function App() {
 
     return (
         <ScrollerContext.Provider value={scroller}>
+            <a className="skip-link" href="#scroller">
+                Skip to main content
+            </a>
             <Preloader />
 
             <div className="screen">

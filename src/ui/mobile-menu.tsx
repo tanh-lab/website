@@ -18,9 +18,9 @@ const NARROW = "(max-width: 620px)";
  * trying not to be. Out here it paints on the theme's own background.
  *
  * It stays mounted at every width and is only hidden, so opening and closing
- * can be a transition rather than a mount; `inert` is what keeps the hidden
- * copy out of the tab order and away from screen readers, so there is no second
- * set of links for a desktop keyboard user to walk through.
+ * can be a transition rather than a mount; `inert` on the closed panel keeps
+ * that copy out of the tab order, and `inert` on `#root` while open makes the
+ * dialog a real modal — Tab cannot leave into the page behind it.
  */
 export function MobileMenu() {
     const [open, setOpen] = useState(false);
@@ -30,7 +30,23 @@ export function MobileMenu() {
 
     useEffect(() => {
         if (!open) return;
-        return onKeys(["Escape"], () => setOpen(false));
+        return onKeys(["Escape"], (event) => {
+            event.preventDefault();
+            setOpen(false);
+        });
+    }, [open]);
+
+    // The panel is a body sibling of `#root`. Marking the root inert while the
+    // menu is open is what contains Tab: only the portalled dialog remains
+    // interactive, which is what `aria-modal` claims.
+    useEffect(() => {
+        if (!open) return;
+        const root = document.getElementById("root");
+        if (!root) return;
+        root.inert = true;
+        return () => {
+            root.inert = false;
+        };
     }, [open]);
 
     // A rotation into landscape can carry the viewport back past the breakpoint
@@ -48,10 +64,17 @@ export function MobileMenu() {
     // Focus follows the panel in and comes back out with it. Skipped on the
     // first run: the panel starts closed, and moving focus to the burger on
     // load would scroll it into view and steal it from the document.
+    // Landscape close can leave the burger `display: none` — do not focus a
+    // hidden control; park on body instead.
     const wasOpen = useRef(false);
     useEffect(() => {
-        if (open) closeRef.current?.focus();
-        else if (wasOpen.current) buttonRef.current?.focus();
+        if (open) {
+            closeRef.current?.focus();
+        } else if (wasOpen.current) {
+            const burger = buttonRef.current;
+            if (burger && burger.getClientRects().length > 0) burger.focus();
+            else document.body.focus({ preventScroll: true });
+        }
         wasOpen.current = open;
     }, [open]);
 

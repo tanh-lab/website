@@ -66,7 +66,7 @@ export function Scroller({
     }, [element]);
 
     return (
-        <main className="scroller" id="scroller" ref={ref}>
+        <main className="scroller" id="scroller" ref={ref} tabIndex={-1}>
             {children}
         </main>
     );
