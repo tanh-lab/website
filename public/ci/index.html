@@ -729,9 +729,19 @@
                     scales L on its own. Contrast spreads L about the ground's
                     own mean, so the field's falloff steepens or flattens and
                     1.00 is a true no-op rather than an approximate one. Every
-                    axis at rest is what the files ship at; the artwork itself
-                    already sits at 55% of the chroma the original render
-                    carried.
+                    axis at rest is what the files ship at, and the artwork
+                    itself already carries three grades of its own.
+                </p>
+                <p class="note">
+                    Ground picks which artwork the whole page is drawn from.
+                    Light is the mark — the file the site serves as its icon.
+                    Dark is the dark theme's own flare, rendered from the
+                    shader rather than recoloured from the light one, because
+                    the light ground never came off that shader in the first
+                    place. So the two are a pair by theme rather than the same
+                    gradient twice, and the dark one is an asset to reach for
+                    rather than something a tab switches to: it is not linked
+                    as an icon anywhere.
                 </p>
                 <p class="note">
                     Width runs over the swash. The exported outline is read back
@@ -779,7 +789,13 @@
                     <div>
                         <p class="dims">SVG, and PNG at three sizes.</p>
                         <div class="files" id="mark-files">
-                            <a href="/favicon.svg" download="tanh-lab-mark.svg">
+                            <!-- The href follows the Ground toggle; marked so
+                                 the script can find it once it has moved. -->
+                            <a
+                                data-mark-svg
+                                href="/favicon.svg"
+                                download="tanh-lab-mark.svg"
+                            >
                                 SVG
                             </a>
                             <a href="/brand/mark-256.png" download>256</a>

@@ -144,6 +144,7 @@ const CONTROLS = [
 
 const state = {
     ...Object.fromEntries(CONTROLS.map((c) => [c.key, c.rest])),
+    artwork: "light",
     size: 2,
     lockup: "none",
     align: "left",
@@ -293,33 +294,54 @@ const GROUND_IN_SVG = /href="data:image\/png;base64,([^"]+)"/;
 /* The only path in the file, and the whole of the drawn artwork: the swash. */
 const SWASH_IN_SVG = /(<path[^>]*\bd=")([^"]+)(")/;
 
-let markSvg = "";
-let ground = null;
-/** The ground's own mean Oklab lightness. Measured once; see regrade. */
-let groundPivot = 0.5;
-/** The swash outline at any width; see swash.js. Read once, on load. */
-let swashAt = null;
+/**
+ * The two grounds the page can draw on.
+ *
+ * The light one is the mark, and is read out of favicon.svg so the page cannot
+ * drift from the icon the site actually serves. The dark one is a second piece
+ * of artwork rather than the same one recoloured — it is the dark theme's own
+ * flare, and the fit in tools/render-brand.ts established that the light
+ * ground never came off that shader — so it lives in its own file and is not
+ * linked as an icon anywhere. Everything downstream reads whichever is picked,
+ * which is why the sliders, the headers and the downloads all follow the
+ * toggle without knowing about it.
+ */
+const ARTWORK = [
+    { id: "light", label: "Light", file: "/favicon.svg" },
+    { id: "dark", label: "Dark", file: "/brand/mark-dark.svg" }
+];
+
+/** Everything read out of one artwork file, keyed by ARTWORK id. */
+const artwork = new Map();
+
+/** The one the page is drawing with. */
+const drawn = () => artwork.get(state.artwork);
 
 async function loadArtwork() {
-    markSvg = await (await fetch("/favicon.svg")).text();
-    const match = markSvg.match(GROUND_IN_SVG);
-    if (!match) throw new Error("no ground inlined in favicon.svg");
-    ground = await loadImage("data:image/png;base64," + match[1]);
+    for (const variant of ARTWORK) {
+        const svg = await (await fetch(variant.file)).text();
 
-    const outline = markSvg.match(SWASH_IN_SVG);
-    if (!outline) throw new Error("no swash outlined in favicon.svg");
-    swashAt = swash(outline[2]);
+        const match = svg.match(GROUND_IN_SVG);
+        if (!match) throw new Error("no ground inlined in " + variant.file);
+        const ground = await loadImage("data:image/png;base64," + match[1]);
 
-    const { data } = groundPixels().read();
-    let sum = 0;
-    for (let i = 0; i < data.length; i += 4) {
-        sum += lightnessOf(data[i], data[i + 1], data[i + 2]);
+        const outline = svg.match(SWASH_IN_SVG);
+        if (!outline) throw new Error("no swash outlined in " + variant.file);
+
+        const entry = { ...variant, svg, ground, swashAt: swash(outline[2]) };
+        artwork.set(variant.id, entry);
+
+        const { data } = groundPixels(ground).read();
+        let sum = 0;
+        for (let i = 0; i < data.length; i += 4) {
+            sum += lightnessOf(data[i], data[i + 1], data[i + 2]);
+        }
+        entry.pivot = sum / (data.length / 4);
     }
-    groundPivot = sum / (data.length / 4);
 }
 
-/** The ground drawn to a canvas at its own size, with its pixels to hand. */
-function groundPixels() {
+/** A ground drawn to a canvas at its own size, with its pixels to hand. */
+function groundPixels(ground) {
     const canvas = document.createElement("canvas");
     canvas.width = ground.naturalWidth;
     canvas.height = ground.naturalHeight;
@@ -332,12 +354,13 @@ function groundPixels() {
     };
 }
 
-/** The mark's ground at the current grade, at its own small native size. */
+/** The chosen ground at the current grade, at its own small native size. */
 export function groundAt(grade) {
-    const surface = groundPixels();
+    const chosen = drawn();
+    const surface = groundPixels(chosen.ground);
     if (!isNeutral(grade)) {
         const pixels = surface.read();
-        regrade(pixels.data, grade, groundPivot);
+        regrade(pixels.data, grade, chosen.pivot);
         surface.write(pixels);
     }
     return surface.canvas;
@@ -379,8 +402,12 @@ function enlarge(source, width, height) {
  * the artwork itself and not a copy of it.
  */
 function markAt(colour, width) {
-    return markSvg
-        .replace(SWASH_IN_SVG, (whole, head, d, tail) => head + swashAt(width) + tail)
+    return drawn()
+        .svg
+        .replace(
+            SWASH_IN_SVG,
+            (whole, head, d, tail) => head + drawn().swashAt(width) + tail
+        )
         .replace(GROUND_IN_SVG, () => 'href="' + groundAt(colour).toDataURL("image/png") + '"');
 }
 
@@ -559,8 +586,12 @@ const setting = (control) => {
 
 const isWidth = (control) => control.key === "width";
 
+/** Light is the mark, so only the other one has to say which it is. */
+const variant = () => (state.artwork === "light" ? "" : "-" + state.artwork);
+
 /** For the ground artwork: the headers and the cards carry no swash. */
-const suffix = () => CONTROLS.filter((c) => !isWidth(c)).map(setting).join("");
+const suffix = () =>
+    variant() + CONTROLS.filter((c) => !isWidth(c)).map(setting).join("");
 
 /** For the mark and the avatars, which carry both. */
 const markSuffix = () => suffix() + setting(CONTROLS.find(isWidth));
@@ -808,6 +839,25 @@ function buildControls() {
         row.append(name, slider, readout, reset);
         host.append(row);
     }
+
+    // A row of the same shape, but the choice is which artwork rather than how
+    // much of it: everything that draws a ground reads whichever is picked.
+    const row = document.createElement("div");
+    row.className = "control-row";
+
+    const name = document.createElement("label");
+    name.textContent = "Ground";
+
+    const segment = document.createElement("div");
+    segment.className = "segment";
+    buildSegment(segment, ARTWORK, state.artwork, (id) => {
+        state.artwork = id;
+        markLinks();
+        scheduleRefresh();
+    });
+
+    row.append(name, segment);
+    host.append(row);
 }
 
 /** One pill per place that wants an avatar, each at that place's own size. */
@@ -866,6 +916,20 @@ function wireCard() {
     });
 }
 
+/**
+ * Point the static SVG link at whichever artwork is being drawn.
+ *
+ * Only this one link: the PNG links are taken over by the script anyway, and
+ * there is no pre-rendered dark PNG to point at — a dark PNG is rendered on
+ * demand here like every other combination the page offers.
+ */
+function markLinks() {
+    const chosen = drawn();
+    const link = document.querySelector("#mark-files a[data-mark-svg]");
+    link.href = chosen.file;
+    link.download = "tanh-lab-mark" + variant() + ".svg";
+}
+
 function wireMarkDownloads() {
     // The static links are correct only at full strength. Once the slider has
     // moved they would hand over a file that does not match what is on screen,
@@ -881,9 +945,9 @@ function wireMarkDownloads() {
         });
     }
 
-    const svgLink = document.querySelector("#mark-files a[href='/favicon.svg']");
+    const svgLink = document.querySelector("#mark-files a[data-mark-svg]");
     svgLink.addEventListener("click", (event) => {
-        // The file on disk is already both defaults; let the href stand.
+        // The file on disk is already every default; let the href stand.
         if (isNeutral(grade()) && state.width === 1) return;
         event.preventDefault();
         const svg = markAt(grade(), state.width);
@@ -905,6 +969,7 @@ async function main() {
     ]);
 
     buildControls();
+    markLinks();
     buildSizePicker();
     buildLockupOptions();
     buildAvatarDownloads();
