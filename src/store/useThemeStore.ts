@@ -24,6 +24,30 @@ function readStored(): Theme | null {
     }
 }
 
+/**
+ * Put a theme on the document: the attribute the tokens key off, and the
+ * browser's own chrome behind the page.
+ *
+ * The attribute is written before the store's state so that subscribers — the
+ * globe and the preloader curve, both of which read their ink back out of CSS
+ * with `getComputedStyle` — see the incoming theme rather than the outgoing
+ * one. Handed the outgoing ink, the globe was drawn in exactly the colour the
+ * new ground then became, and vanished.
+ *
+ * The chrome colour is read back off `--background` rather than mapped from a
+ * table here, so the tokens stay the single definition of the two grounds. The
+ * boot script in index.html carries its own copy only because it has to run
+ * before any stylesheet exists.
+ */
+function paint(theme: Theme) {
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const ground = getComputedStyle(root).getPropertyValue("--background").trim();
+    if (meta && ground) meta.setAttribute("content", ground);
+}
+
 function persist(theme: Theme) {
     try {
         localStorage.setItem(STORAGE_KEY, theme);
@@ -53,8 +77,8 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
     setTheme: (theme) => {
         if (get().theme === theme) return;
+        paint(theme);
         set({ theme });
-        document.documentElement.dataset.theme = theme;
         persist(theme);
     },
 
@@ -62,7 +86,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
     hydrate: () => {
         const theme = readStored() ?? "light";
+        paint(theme);
         set({ theme });
-        document.documentElement.dataset.theme = theme;
     }
 }));

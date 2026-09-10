@@ -106,6 +106,40 @@ for (const href of [
     }
 }
 
+/*
+ * The theme-color tag carries its own copy of the two grounds, because the boot
+ * script that reads them runs before any stylesheet exists. Nothing else would
+ * catch them drifting: the page would simply be one colour and the phone's
+ * status bar above it another, on one theme only, on mobile only.
+ *
+ * --background in tokens.css is the definition. Light is the bare :root, dark
+ * the override, so the two declarations are in that order.
+ */
+const tokens = await readFile("./src/styles/tokens.css", "utf8");
+const grounds = [...tokens.matchAll(/--background:\s*([^;]+);/g)].map((match) =>
+    match[1]!.trim()
+);
+if (grounds.length !== 2) {
+    console.error(
+        `Expected two --background declarations in tokens.css, found ${grounds.length}`
+    );
+    process.exit(1);
+}
+for (const [attribute, expected] of [
+    ["data-light", grounds[0]!],
+    ["data-dark", grounds[1]!]
+] as const) {
+    const declared = html
+        .match(new RegExp(`<meta[^>]*name="theme-color"[^>]*>`))?.[0]
+        .match(new RegExp(`${attribute}="([^"]*)"`))?.[1];
+    if (declared !== expected) {
+        console.error(
+            `theme-color ${attribute} is ${declared ?? "missing"}, but tokens.css says ${expected}`
+        );
+        process.exit(1);
+    }
+}
+
 // The same accounts the JSON-LD claims, as the link relation that claims
 // them. Mastodon only shows a website as verified when the site links back.
 const ME_LINKS = organization.sameAs

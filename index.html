@@ -3,6 +3,47 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!--
+            The ground the browser paints its own chrome with — the phone's
+            status bar and the address bar behind it. It is one tag rather than
+            two `prefers-color-scheme` variants because the site deliberately
+            does not consult the OS: only a stored choice moves it, so the value
+            has to be set from that choice rather than matched by a media query.
+
+            The two grounds are `--background` in tokens.css. This tag carries
+            its own copy because the script below runs before any stylesheet
+            exists; build.ts fails the build if the two drift apart.
+        -->
+        <meta name="theme-color" content="#fff" data-light="#fff" data-dark="#1c1c1a" />
+
+        <!--
+            The theme, before first paint.
+
+            Blocking and inline, which is the whole point: `dist/index.html`
+            carries the pre-rendered page and its stylesheet inline, so it is
+            painted long before the bundle has parsed. Adopting the stored
+            choice from the store's `hydrate` — where it used to happen alone —
+            meant a returning dark-theme visitor watched the entire document
+            render white and then invert.
+
+            The key is the one useThemeStore.ts persists under.
+        -->
+        <script>
+            (function () {
+                var theme = "light";
+                try {
+                    var saved = localStorage.getItem("tanh-theme");
+                    if (saved === "light" || saved === "dark") theme = saved;
+                } catch (error) {
+                    // Private browsing denies access to localStorage outright.
+                }
+                document.documentElement.dataset.theme = theme;
+                var meta = document.querySelector('meta[name="theme-color"]');
+                if (meta) meta.setAttribute("content", meta.dataset[theme]);
+            })();
+        </script>
+
         <title>tanh lab — audio software agency</title>
         <meta
             name="description"
