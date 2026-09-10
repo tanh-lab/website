@@ -46,10 +46,10 @@
 }
 
 .person .links a {
-    font-size: clamp(12px, 1.55vh, 13px);
+    font-size: clamp(11px, 1.55vh, 13px);
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
 .person .links a:hover {

@@ -23,21 +23,20 @@
     font-family: var(--ui);
     font-size: clamp(34px, 7.4vh, 68px);
     font-weight: var(--header-weight);
-    line-height: 1.05;
+    line-height: 1.15;
     letter-spacing: -0.02em;
     max-width: 14ch;
 }
 
-/* Deliberately not .lead: the lead is the sentence a section opens with, above
-   its rows, and this one sits below the headline as its second half. Same size
-   so the two still read as one voice. */
+/* Same Lead clamp as .lead — sits under the headline as its second half, so the
+   two still read as one voice without sharing the class. */
 .contact-copy {
     margin: clamp(1rem, 2.6vh, 1.8rem) 0 0;
     font-family: var(--ui);
     font-size: clamp(16px, 2.2vh, 19px);
     line-height: 1.5;
     max-width: 44ch;
-    opacity: 0.88;
+    opacity: 0.85;
 }
 
 .contact-reach {
@@ -59,7 +58,7 @@
     display: inline-block;
     font-family: var(--ui);
     font-size: clamp(21px, 3.4vh, 34px);
-    line-height: 1.2;
+    line-height: 1.15;
     letter-spacing: -0.01em;
     border-bottom: 1px solid currentColor;
     opacity: 0.9;
@@ -79,13 +78,14 @@
     gap: 0.5rem;
     margin: clamp(0.9rem, 2.2vh, 1.5rem) 0 0;
     font-family: var(--ui);
-    font-size: clamp(12px, 1.55vh, 13px);
+    font-size: clamp(11px, 1.55vh, 13px);
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
 .contact-elsewhere a {
-    opacity: 0.6;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.85;
     transition: opacity 0.25s var(--ease);
 }
 

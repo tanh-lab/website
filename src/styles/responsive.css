@@ -111,10 +111,6 @@
         max-width: none;
     }
 
-    #about .person .name {
-        font-size: 21px;
-    }
-
     #about .row {
         padding: 1.3rem 0;
     }
@@ -126,7 +122,7 @@
 
     /* ---------- contact ---------- */
 
-    /* Full width, and the vh-clamped display sizes get a floor: on a short
+    /* Full width, and the vh-clamped display sizes get a width clamp: on a short
        phone viewport they collapse to their minimum, which leaves the one line
        carrying the page barely larger than the copy under it. */
     .contact-head,
@@ -140,7 +136,6 @@
     }
 
     .contact-copy {
-        font-size: 17px;
         max-width: none;
     }
 
