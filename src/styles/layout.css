@@ -338,7 +338,7 @@ body.is-brand-inverted .brand {
        always respected. */
     align-content: safe center;
     align-items: end;
-    row-gap: 5vh;
+    row-gap: clamp(1.6rem, 5vh, 2.6rem);
     /* The nav keeps its full stacked height on every page and owns the left
        gutter all the way down, so content has to start below it rather than at a
        fixed fraction of the viewport — at shorter heights 18vh ran straight into
