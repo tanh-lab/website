@@ -36,7 +36,7 @@ export function ResearchPage() {
                     ended up restating the sentence beneath it.
                 */}
                 <div className="research-aside">
-                    <h3>Background</h3>
+                    <h3 className="section-label">Background</h3>
                     <p>
                         Our roots lie in research, and we are always looking for new
                         problems to solve.

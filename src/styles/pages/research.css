@@ -27,11 +27,6 @@
 
 .research-aside h3 {
     margin: 0 0 0.7rem;
-    font-size: clamp(11.5px, 1.45vh, 12.5px);
-    font-weight: var(--header-weight);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    opacity: 0.6;
 }
 
 /* Set above the lead: this is the page's one claim on the reader, and at lead

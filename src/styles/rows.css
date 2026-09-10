@@ -15,6 +15,19 @@
     max-width: 48ch;
 }
 
+/* Small uppercase caption above a band, aside, or contact block. One voice for
+   Partners, adopters, Contact, and Research Background — still vh-clamped so a
+   short window can compact the page. */
+.section-label {
+    font-family: var(--ui);
+    font-size: clamp(11.5px, 1.45vh, 12.5px);
+    font-weight: var(--header-weight);
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+}
+
 .rows {
     grid-column: 1 / -1;
     list-style: none;

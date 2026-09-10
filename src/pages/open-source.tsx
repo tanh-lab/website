@@ -41,7 +41,7 @@ export function OpenSourcePage() {
                 ref={stripRef}
                 className={cn("adopters", "fade", stripVisible && "is-in")}
             >
-                <h3>Companies using our open source libraries</h3>
+                <h3 className="section-label">Companies using our open source libraries</h3>
                 <ul>
                     {adopters.map((adopter) => (
                         <li key={adopter.name}>

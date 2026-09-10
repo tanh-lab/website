@@ -60,7 +60,7 @@ export function WorkPage() {
             <Lead>We develop audio software for studios and manufacturers.</Lead>
 
             <div ref={ref} className={cn("partners", "fade", isVisible && "is-in")}>
-                <h3>Partners</h3>
+                <h3 className="section-label">Partners</h3>
 
                 <ul>
                     {partners.map((partner) => (

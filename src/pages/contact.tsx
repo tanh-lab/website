@@ -31,7 +31,7 @@ export function ContactPage() {
     return (
         <Page id="contact" title="Contact">
             <div ref={ref} className={cn("contact-head", "fade", isVisible && "is-in")}>
-                <p className="contact-eyebrow">Get in touch</p>
+                <p className="contact-eyebrow section-label">Get in touch</p>
                 <h3 className="contact-title">We love a challenge.</h3>
                 <p className="contact-copy">
                     We are always on the lookout for new challenges. Please reach out, we

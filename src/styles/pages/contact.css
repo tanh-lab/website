@@ -9,17 +9,9 @@
     grid-column: 1 / span 11;
 }
 
-/* The section marker Research already uses for its aside, at the same size and
-   tracking: this is the same kind of small label, and a second one would be a
-   second voice for one job. */
+/* Layout only — type is .section-label. */
 .contact-eyebrow {
     margin: 0 0 clamp(0.7rem, 1.6vh, 1.1rem);
-    font-family: var(--ui);
-    font-size: clamp(11.5px, 1.45vh, 12.5px);
-    font-weight: var(--header-weight);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    opacity: 0.6;
 }
 
 /* The largest type on the site after the wordmark, and the only line set this

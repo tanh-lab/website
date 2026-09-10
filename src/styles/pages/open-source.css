@@ -136,11 +136,6 @@
 .adopters h3 {
     grid-column: 1;
     margin: 0;
-    font-size: clamp(11px, 1.4vh, 12px);
-    font-weight: var(--header-weight);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    opacity: 0.55;
 }
 
 .adopters ul {
