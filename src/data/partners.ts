@@ -40,10 +40,10 @@ export interface Partner {
      *
      * `aspect` is the mark's own width ÷ height, measured off the artwork.
      *
-     * `scale` is a per-mark trim, and unset everywhere by default: the strip
-     * sets one height for all of them. A dense mark reads heavier than an open
-     * one at the same height, so this is here for the case where one visibly
-     * breaks the set — not as a general sizing knob.
+     * `scale` is a height factor against the strip's base, roughly `aspect^-0.35`,
+     * so a wide wordmark does not dominate a compact filled one. Black Salt sits
+     * at 1 on purpose: a solid mark reads heavier than a wordmark of the same
+     * area, so it stays at the full base rather than the computed value.
      */
     logo?: { src: string; aspect: number; scale?: number };
 }
@@ -57,7 +57,8 @@ export const partners: Partner[] = [
         href: "https://suturesound.com/",
         logo: {
             src: "/logos/partners/suturesound-tight.svg",
-            aspect: 8.38
+            aspect: 7.07,
+            scale: 21 / 24
         }
     },
     {
@@ -65,7 +66,8 @@ export const partners: Partner[] = [
         href: "https://www.blacksaltaudio.com/",
         logo: {
             src: "/logos/partners/bsa-tight.svg",
-            aspect: 2.96
+            aspect: 2.96,
+            scale: 24 / 24
         }
     },
     {
@@ -74,7 +76,7 @@ export const partners: Partner[] = [
         logo: {
             src: "/logos/partners/Tonsturm-tight.svg",
             aspect: 5.26,
-            scale: 1.22
+            scale: 22.9 / 24
         }
     },
     // Lowercase and one word, as they set it themselves.
@@ -83,8 +85,8 @@ export const partners: Partner[] = [
         href: "https://www.meltedsounds.com/",
         logo: {
             src: "/logos/partners/meltedsounds-tight.svg",
-            aspect: 13.53,
-            scale: 0.82
+            aspect: 13.71,
+            scale: 16.4 / 24
         }
     },
     // Trades as Elastic Instruments; elasticinstruments.com redirects here.
@@ -94,7 +96,7 @@ export const partners: Partner[] = [
         logo: {
             src: "/logos/partners/ElasticInstruments-tight.svg",
             aspect: 14.14,
-            scale: 0.78
+            scale: 15.4 / 24
         }
     }
 ];

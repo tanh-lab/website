@@ -10,11 +10,11 @@ import { PartnerLogo } from "@/ui/partner-logo";
  * What a row carries: the mark where there is one, the name in type where there
  * is not.
  *
- * The name is always in the markup either way. Behind a mark it is visually
- * hidden rather than dropped — a row whose only content is a mask has no
- * accessible name at all, so the link would be announced as its URL, and the
- * page would read as five anonymous links. Hidden text is also what a partner
- * gets if their file ever fails to load.
+ * The name is always in the markup either way. Behind a mark it sits under
+ * the logo on hover rather than being dropped — a row whose only content is a
+ * mask has no accessible name at all, so the link would be announced as its
+ * URL, and the page would read as five anonymous links. The same text is what
+ * a partner gets if their file ever fails to load.
  */
 function PartnerRow({ partner }: { partner: Partner }) {
     return (
@@ -44,9 +44,9 @@ function PartnerRow({ partner }: { partner: Partner }) {
  * in someone else's typeface cannot, which is the whole reason a partner list
  * is worth showing.
  *
- * They run as a strip rather than down the page, all at one height, so they
- * read as a set of equals — which is the claim a partner list is making.
- * Widths follow from each mark's own proportions and are left alone.
+ * They run as a strip rather than down the page. Heights are optical — wide
+ * wordmarks sit shorter — so they read as a set of equals rather than as two
+ * giants and three small ones. Widths follow each mark's own proportions.
  *
  * Partners only, for now. Released products join this page as a second block
  * under their own label once any of them are out — which is why the list

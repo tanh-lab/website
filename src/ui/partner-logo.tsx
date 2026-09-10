@@ -9,11 +9,10 @@ import type { Partner } from "@/data/partners";
  * SVG. Every export we were sent is white-on-transparent — a dark-theme
  * version — so drawn as images they would be invisible on the light ground,
  * and two of them could not be recoloured from the outside anyway: Tonsturm
- * keeps its fill in an internal `<style>` block, and Suture Sound's symbol is
- * an embedded raster. A mask reads only the alpha, so all five behave alike,
- * take the page's own ink in both themes, and none of the artwork is modified
- * — which matters, because recolouring a trademark is the change most brand
- * guidelines refuse.
+ * keeps its fill in an internal `<style>` block. A mask reads only the alpha,
+ * so all five behave alike, take the page's own ink in both themes, and none
+ * of the artwork is modified — which matters, because recolouring a trademark
+ * is the change most brand guidelines refuse.
  *
  * The URL is passed as a custom property rather than written into work.css
  * because it comes from the data. That also keeps it out of the bundler's
@@ -26,9 +25,9 @@ import type { Partner } from "@/data/partners";
  * so the mask fills it exactly — the files are cropped to their ink for this.
  * See `Partner.logo` for where the numbers come from.
  *
- * `aria-hidden`, and deliberately: the name travels with the mark as visually
- * hidden text in the row, which is what the link is announced as. A label here
- * would say it twice.
+ * `aria-hidden`, and deliberately: the name travels with the mark as a label
+ * in the row, which is what the link is announced as. A label here would say
+ * it twice.
  */
 export function PartnerLogo({ logo }: { logo: NonNullable<Partner["logo"]> }) {
     const style = {

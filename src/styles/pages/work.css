@@ -2,15 +2,14 @@
    A strip of partner marks, running left to right, and for now that is the
    whole page.
 
-   Full width rather than the 8–18 body column the other sections use: the marks
-   are set to one height and their widths follow from their own proportions, so
-   the strip needs every column there is to hold five of them on one line at a
-   size worth showing. The label goes above it rather than beside it, which is
-   the one place this page departs from the shared spine.
+   Full width rather than the 8–18 body column the other sections use. Heights
+   are optical, not equal: wide wordmarks sit shorter so they do not dominate a
+   compact filled mark. Widths still follow each artwork's own proportions. The
+   label goes above the strip rather than beside it, which is the one place this
+   page departs from the shared spine.
 
-   Ruled top and bottom, as the adopters band on Open Source is: it has to read
-   as a band in its own right rather than as a heading for whatever follows.
-   Released products land under it as their own block.
+   Ruled on the top edge only, under the heading. Released products land under
+   the strip as their own block.
 --------------------------------------------------------------------- */
 
 .partners {
@@ -37,20 +36,21 @@
 .partners ul {
     list-style: none;
     margin: 0;
-    padding: clamp(1rem, 2.6vh, 1.8rem) 0;
+    padding: clamp(1.9rem, 4.2vh, 2.9rem) 0 clamp(1.6rem, 3.6vh, 2.4rem);
     border-top: 1px solid rgba(183, 183, 183, 0.22);
-    border-bottom: 1px solid rgba(183, 183, 183, 0.22);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     /* Two gaps, not one: the row gap only shows once the strip wraps, where it
        separates two lines rather than two marks and wants more air. */
-    gap: clamp(1.4rem, 3.4vh, 2.4rem) clamp(1.8rem, 3.2vw, 3.4rem);
+    gap: clamp(2.2rem, 4.6vh, 3.4rem) clamp(2.2rem, 4vw, 4rem);
 }
 
 .partner {
+    position: relative;
     display: flex;
     align-items: center;
+    transform: translateY(-3px);
 }
 
 .partner a,
@@ -58,21 +58,17 @@
     display: block;
 }
 
-/* One height for every mark, with the width following from the artwork's own
-   aspect ratio — which is what makes them read as a set rather than as five
-   separate pictures. The files under public/logos/partners are cropped to their
-   ink so the mask fills its box exactly and this arithmetic holds.
-
-   A dense mark reads heavier than an open one at the same height — BSA against
-   Elastic Instruments is the extreme here — so `--mark-scale` stays available
-   as a per-mark trim. It is 1 everywhere by default: equal height is the rule,
-   and the trim is for when one mark visibly breaks it.
+/* Height follows `--mark-scale` against one base, so a wide wordmark sits
+   shorter than a compact filled one and the strip reads as a set of equals.
+   Width still comes from the artwork's own aspect. The files under
+   public/logos/partners are cropped to their ink so the mask fills its box
+   exactly and this arithmetic holds.
 
    Clamped against viewport height, like everything else that has to fit a page
    rather than a document. */
 .partner-logo {
     display: block;
-    height: calc(clamp(16px, 2.4vh, 28px) * var(--mark-scale, 1));
+    height: calc(clamp(17px, 2.5vh, 29px) * var(--mark-scale, 1));
     aspect-ratio: var(--mark-aspect);
     background-color: currentColor;
     /* Barely recessive, like the row copy elsewhere: at full strength a solid
@@ -89,23 +85,30 @@
     mask-size: contain;
 }
 
-.partner a:hover .partner-logo {
+.partner:hover .partner-logo {
     opacity: 1;
 }
 
-/* The name behind a mark: present for a screen reader and for a copy-paste,
-   off the page for everyone else. Not `display: none` and not `visibility`,
-   either of which takes it out of the accessibility tree along with the
-   pixels — which is the one thing it is here for. */
+/* The name under a mark. Off at rest so the strip stays a row of silhouettes;
+   on hover it fades in, absolutely positioned so the layout never shifts.
+   Still in the tree for a screen reader and for a copy-paste — not
+   `display: none`. Opacity lives in the stylesheet so the hover rule can win. */
 .partner-label {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
+    left: 50%;
+    top: calc(100% + 10px);
+    transform: translateX(-50%);
     white-space: nowrap;
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s var(--ease);
+}
+
+.partner:hover .partner-label {
+    opacity: 0.7;
 }
 
 /* The fallback when a partner has no mark: their name, set in Barlow's regular
