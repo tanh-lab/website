@@ -1,15 +1,15 @@
 {
-  "ci": {
-    "collect": {
-      "staticDistDir": "./dist",
-      "url": ["http://localhost/"],
-      "numberOfRuns": 3
-    },
-    "assert": {
-      "preset": "lighthouse:no-pwa"
-    },
-    "upload": {
-      "target": "temporary-public-storage"
+    "ci": {
+        "collect": {
+            "staticDistDir": "./dist",
+            "url": ["http://localhost/"],
+            "numberOfRuns": 3
+        },
+        "assert": {
+            "preset": "lighthouse:no-pwa"
+        },
+        "upload": {
+            "target": "temporary-public-storage"
+        }
     }
-  }
 }

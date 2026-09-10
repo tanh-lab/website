@@ -124,12 +124,7 @@ export function Preloader() {
             id="preloader"
             aria-hidden="true"
         >
-            <canvas
-                ref={canvasRef}
-                className="loader"
-                width={SIZE}
-                height={SIZE}
-            />
+            <canvas ref={canvasRef} className="loader" width={SIZE} height={SIZE} />
         </div>
     );
 }
