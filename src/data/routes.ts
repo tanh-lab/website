@@ -48,7 +48,7 @@ export const routes: Route[] = [
         path: "/work/",
         title: "Work — tanh lab",
         description:
-            "Audio software developed for studios and manufacturers, among them Suture Sound, Black Salt Audio, Tonsturm, meltedsounds and Elastic Instruments.",
+            "Audio software developed for studios and manufacturers, among them Suture Sound, Tonsturm, meltedsounds and Elastic Instruments.",
         ownContent: false
     },
     {

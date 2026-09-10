@@ -41,9 +41,9 @@ export interface Partner {
      * `aspect` is the mark's own width ÷ height, measured off the artwork.
      *
      * `scale` is a height factor against the strip's base, roughly `aspect^-0.35`,
-     * so a wide wordmark does not dominate a compact filled one. Black Salt sits
-     * at 1 on purpose: a solid mark reads heavier than a wordmark of the same
-     * area, so it stays at the full base rather than the computed value.
+     * so a wide wordmark does not dominate a compact filled one. A solid mark
+     * reads heavier than a wordmark of the same area, so one of those would
+     * stay at the full base rather than the computed value.
      */
     logo?: { src: string; aspect: number; scale?: number };
 }
@@ -61,15 +61,10 @@ export const partners: Partner[] = [
             scale: 21 / 24
         }
     },
-    {
-        name: "Black Salt Audio",
-        href: "https://www.blacksaltaudio.com/",
-        logo: {
-            src: "/logos/partners/bsa-tight.svg",
-            aspect: 2.96,
-            scale: 24 / 24
-        }
-    },
+    // Black Salt Audio is left out until we have confirmed we may name them.
+    // Their mark is still under public/logos/partners/bsa-tight.svg (aspect
+    // 2.96, scale 1 — a solid mark, see above) and goes back in here after
+    // Suture Sound once that is settled.
     {
         name: "Tonsturm",
         href: "https://tonsturm.com/",
