@@ -1,5 +1,8 @@
 export interface Publication {
-    /** Where and when it was accepted, phrased for the citation line. */
+    /**
+     * The venue and year, as on a citation line. No "accepted to": every
+     * paper on the page was, so the words said nothing.
+     */
     venue: string;
     title: string;
     authors: string;
@@ -36,7 +39,7 @@ export interface Publication {
 /** Newest first. */
 export const publications: Publication[] = [
     {
-        venue: "Accepted to Linux Audio Conference 2026",
+        venue: "Linux Audio Conference 2026",
         title: "SeamLess: Distributed Spatial Audio Rendering on the Linux Audio Stack",
         authors: "Fares Schulz, Max Weidauer, Stefan Weinzierl, Henrik von Coler",
         summary:
@@ -51,7 +54,7 @@ export const publications: Publication[] = [
         cover: { src: "/covers/seamless.webp", width: 176, height: 248 }
     },
     {
-        venue: "Accepted to DAFx 2025 — Int. Conf. on Digital Audio Effects",
+        venue: "DAFx 2025 — Int. Conf. on Digital Audio Effects",
         title: "Pitch-Conditioned Instrument Sound Synthesis From an Interactive Timbre Latent Space",
         authors: "Christian Limberg, Fares Schulz, Zhe Zhang, Stefan Weinzierl",
         summary:
@@ -64,7 +67,7 @@ export const publications: Publication[] = [
         cover: { src: "/covers/pitch-conditioned.webp", width: 176, height: 248 }
     },
     {
-        venue: "Accepted to IS² 2024 — IEEE Int. Symposium on the Internet of Sounds",
+        venue: "IS² 2024 — IEEE Int. Symposium on the Internet of Sounds",
         title: "anira: An Architecture for Neural Network Inference in Real-Time Audio Applications",
         authors: "Valentin Ackva, Fares Schulz",
         summary:
