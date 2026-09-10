@@ -127,12 +127,7 @@ page keys / Home / End page through (dev overlays are development-only).
 `bun run build` emits a static `dist/`. The GitHub Actions workflow builds on
 push to `main` and on pull requests; only `main` publishes to GitHub Pages.
 
-After the build, [Lighthouse CI](https://github.com/marketplace/actions/lighthouse-ci-action)
-audits `dist/` locally (no deploy or private LHCI server). Config lives in
-`lighthouserc.json`: three runs on `/`, the `lighthouse:no-pwa` assertion
-preset, reports as workflow artifacts plus temporary public storage. If an
-audit fails the build, treat it as a burndown list — turn individual audits
-`off` or `warn` in that file until they are fixed.
+After the build, [Lighthouse CI](https://github.com/marketplace/actions/lighthouse-ci-action) automatically measures and enforces web performance, accessibility and quality standards.
 
 Two things about that deployment are easy to break:
 
