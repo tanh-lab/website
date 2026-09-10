@@ -55,7 +55,9 @@ export function ResearchPage() {
                         <div className="paper-cover" aria-hidden="true">
                             {publication.cover ? (
                                 <img
-                                    src={publication.cover}
+                                    src={publication.cover.src}
+                                    width={publication.cover.width}
+                                    height={publication.cover.height}
                                     alt=""
                                     loading="lazy"
                                     decoding="async"

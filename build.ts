@@ -245,7 +245,7 @@ function structuredData(description: string): string {
                 author: authorsOf(publication.authors),
                 ...(year ? { datePublished: year } : {}),
                 ...(publication.links[0] ? { url: publication.links[0].href } : {}),
-                ...(publication.cover ? { image: absolute(publication.cover) } : {})
+                ...(publication.cover ? { image: absolute(publication.cover.src) } : {})
             };
         })
     ];
