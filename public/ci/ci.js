@@ -14,13 +14,16 @@
  * it on that one; the rest of the combinations exist only here, which is why the
  * page renders its downloads rather than linking them.
  *
- * The experimental section at the foot of the page is not drawn from the
+ * The swash is read back out of that same SVG as a brush stroke so its width
+ * can be turned, which is swash.js; the ground and the wordmark are untouched
+ * by it. The experimental section at the foot of the page is not drawn from the
  * artwork at all, and lives in lab.js. It is handed what it needs from here —
  * the ground, the segmented control, the save — rather than importing it, so
  * the two modules stay a one-way dependency.
  */
 
 import { initLab } from "./lab.js";
+import { swash } from "./swash.js";
 
 /** The sizes each platform actually states. */
 const SIZES = [
@@ -120,7 +123,14 @@ const LOCKUP_OPTIONS = [
    would not be the same mark. */
 const INK = { dark: "#1c1c1a", light: "#e8e8e6" };
 
-const state = { chroma: 1, size: 2, lockup: "none", align: "left", ink: "dark" };
+const state = {
+    chroma: 1,
+    width: 1,
+    size: 2,
+    lockup: "none",
+    align: "left",
+    ink: "dark"
+};
 
 /** The repo card's own state: its two lines are typed rather than fixed. */
 const card = { title: "tanh-lib", sub: "tanh lab", ink: "dark" };
@@ -212,14 +222,23 @@ export function loadImage(src) {
 
 const GROUND_IN_SVG = /href="data:image\/png;base64,([^"]+)"/;
 
+/* The only path in the file, and the whole of the drawn artwork: the swash. */
+const SWASH_IN_SVG = /(<path[^>]*\bd=")([^"]+)(")/;
+
 let markSvg = "";
 let ground = null;
+/** The swash outline at any width; see swash.js. Read once, on load. */
+let swashAt = null;
 
 async function loadArtwork() {
     markSvg = await (await fetch("/favicon.svg")).text();
     const match = markSvg.match(GROUND_IN_SVG);
     if (!match) throw new Error("no ground inlined in favicon.svg");
     ground = await loadImage("data:image/png;base64," + match[1]);
+
+    const outline = markSvg.match(SWASH_IN_SVG);
+    if (!outline) throw new Error("no swash outlined in favicon.svg");
+    swashAt = swash(outline[2]);
 }
 
 /** The mark's ground at the current chroma, at its own small native size. */
@@ -263,13 +282,26 @@ function enlarge(source, width, height) {
     return current;
 }
 
-/** The mark, rasterised by the browser from the SVG with the ground swapped in. */
-async function renderMark(size, amount) {
-    const swapped = markSvg.replace(
-        GROUND_IN_SVG,
-        () => 'href="' + groundAt(amount).toDataURL("image/png") + '"'
-    );
-    const url = URL.createObjectURL(new Blob([swapped], { type: "image/svg+xml" }));
+/**
+ * The mark's SVG at a chroma and a width.
+ *
+ * Both controls are substitutions into the file rather than a redraw of it: the
+ * ground is re-encoded at the chroma asked for, the swash re-emitted at the
+ * width, and everything else in the file is the file. At 1 and 1 neither
+ * replacement changes a byte, so what the page shows and hands out is the
+ * artwork itself and not a copy of it.
+ */
+function markAt(amount, width) {
+    return markSvg
+        .replace(SWASH_IN_SVG, (whole, head, d, tail) => head + swashAt(width) + tail)
+        .replace(GROUND_IN_SVG, () => 'href="' + groundAt(amount).toDataURL("image/png") + '"');
+}
+
+/** The mark, rasterised by the browser from that SVG. */
+async function renderMark(size, amount, width) {
+    const url = URL.createObjectURL(new Blob([markAt(amount, width)], {
+        type: "image/svg+xml"
+    }));
     try {
         const image = await loadImage(url);
         const canvas = document.createElement("canvas");
@@ -415,8 +447,14 @@ export function save(canvas, name) {
     }, "image/png");
 }
 
-const suffix = () =>
-    state.chroma === 1 ? "" : "-chroma" + state.chroma.toFixed(2).replace(".", "");
+const setting = (name, value) =>
+    value === 1 ? "" : "-" + name + value.toFixed(2).replace(".", "");
+
+/** For the ground artwork: the headers and the cards carry no swash. */
+const suffix = () => setting("chroma", state.chroma);
+
+/** For the mark and the avatars, which carry both. */
+const markSuffix = () => suffix() + setting("width", state.width);
 
 /**
  * What to draw over a card, from what has been typed into it.
@@ -467,6 +505,8 @@ let lab = null;
 
 const slider = document.getElementById("chroma");
 const readout = document.getElementById("chroma-readout");
+const widthSlider = document.getElementById("swash");
+const widthReadout = document.getElementById("swash-readout");
 
 function paint(canvas, source) {
     canvas.width = source.width;
@@ -478,7 +518,7 @@ async function refresh() {
     const size = SIZES[state.size];
     const dpr = previewScale();
 
-    paint(markCanvas, await renderMark(MARK_PREVIEW * dpr, state.chroma));
+    paint(markCanvas, await renderMark(MARK_PREVIEW * dpr, state.chroma, state.width));
     markCanvas.style.width = MARK_PREVIEW + "px";
 
     // Laid out at most PREVIEW_WIDTH across, drawn at the display's own pixels.
@@ -621,12 +661,12 @@ function buildAvatarDownloads() {
         button.textContent = avatar.label + " " + avatar.size;
         button.addEventListener("click", async () => {
             save(
-                await renderMark(avatar.size, state.chroma),
+                await renderMark(avatar.size, state.chroma, state.width),
                 "tanh-lab-" +
                     avatar.label.toLowerCase().replace(/\s+/g, "-") +
                     "-" +
                     avatar.size +
-                    suffix() +
+                    markSuffix() +
                     ".png"
             );
         });
@@ -677,24 +717,22 @@ function wireMarkDownloads() {
         link.addEventListener("click", async (event) => {
             event.preventDefault();
             save(
-                await renderMark(size, state.chroma),
-                "tanh-lab-mark-" + size + suffix() + ".png"
+                await renderMark(size, state.chroma, state.width),
+                "tanh-lab-mark-" + size + markSuffix() + ".png"
             );
         });
     }
 
     const svgLink = document.querySelector("#mark-files a[href='/favicon.svg']");
     svgLink.addEventListener("click", (event) => {
-        if (state.chroma === 1) return; // the file on disk is already this
+        // The file on disk is already both defaults; let the href stand.
+        if (state.chroma === 1 && state.width === 1) return;
         event.preventDefault();
-        const swapped = markSvg.replace(
-            GROUND_IN_SVG,
-            () => 'href="' + groundAt(state.chroma).toDataURL("image/png") + '"'
-        );
-        const url = URL.createObjectURL(new Blob([swapped], { type: "image/svg+xml" }));
+        const svg = markAt(state.chroma, state.width);
+        const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
         const link = document.createElement("a");
         link.href = url;
-        link.download = "tanh-lab-mark" + suffix() + ".svg";
+        link.download = "tanh-lab-mark" + markSuffix() + ".svg";
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 30000);
     });
@@ -724,6 +762,19 @@ async function main() {
         slider.value = "1";
         state.chroma = 1;
         readout.textContent = "1.00";
+        scheduleRefresh();
+    });
+
+    widthSlider.addEventListener("input", () => {
+        state.width = Number(widthSlider.value);
+        widthReadout.textContent = state.width.toFixed(2);
+        scheduleRefresh();
+    });
+
+    document.getElementById("swash-reset").addEventListener("click", () => {
+        widthSlider.value = "1";
+        state.width = 1;
+        widthReadout.textContent = "1.00";
         scheduleRefresh();
     });
 

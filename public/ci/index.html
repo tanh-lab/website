@@ -185,19 +185,26 @@
                 opacity: 0.72;
             }
 
-            /* ---------- the chroma control ---------- */
+            /* ---------- the chroma and width controls ---------- */
 
             .control {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                gap: 1.2rem 2rem;
+                display: grid;
+                gap: 1.1rem;
                 padding: 1.4rem 1.6rem;
                 background: var(--sunken);
                 border-radius: 10px;
             }
 
+            .control-row {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 1.2rem 2rem;
+            }
+
+            /* One measure for both names, so the two sliders start level. */
             .control label {
+                min-width: 5.5rem;
                 font-size: 14px;
                 text-transform: uppercase;
                 letter-spacing: 0.04em;
@@ -711,32 +718,60 @@
             </p>
 
             <section>
-                <h2>Colour strength</h2>
+                <h2>Colour and width</h2>
                 <p class="note">
-                    One control over the whole page. It scales the artwork's
+                    Chroma runs over the whole page. It scales the artwork's
                     chroma while holding its lightness, so the curve keeps its
                     contrast against the ground at every setting — turning it
                     down makes the magenta quieter, not the mark fainter. 1.00 is
                     what the files ship at; the artwork itself already sits at
                     55% of the strength the original render carried.
                 </p>
+                <p class="note">
+                    Width runs over the swash. The exported outline is read back
+                    as the brush stroke it is — the two sides paired off along
+                    it, and the line through the middle taken as its spine — and
+                    the control moves each side toward or away from that spine.
+                    So the curve keeps its path, its reach and its taper, and
+                    only its body thins or fills out. The outline stays curves
+                    rather than a traced polygon, and at 1.00 it is the path in
+                    the file, untouched. It reaches the mark and the avatars; the
+                    headers and the cards carry the ground alone.
+                </p>
                 <div class="control needs-js" hidden>
-                    <label for="chroma">Chroma</label>
-                    <input
-                        id="chroma"
-                        type="range"
-                        min="0"
-                        max="1.5"
-                        step="0.01"
-                        value="1"
-                    />
-                    <output class="readout" id="chroma-readout">1.00</output>
-                    <button class="reset" type="button" id="chroma-reset">
-                        Reset
-                    </button>
+                    <div class="control-row">
+                        <label for="chroma">Chroma</label>
+                        <input
+                            id="chroma"
+                            type="range"
+                            min="0"
+                            max="1.5"
+                            step="0.01"
+                            value="1"
+                        />
+                        <output class="readout" id="chroma-readout">1.00</output>
+                        <button class="reset" type="button" id="chroma-reset">
+                            Reset
+                        </button>
+                    </div>
+                    <div class="control-row">
+                        <label for="swash">Width</label>
+                        <input
+                            id="swash"
+                            type="range"
+                            min="0.25"
+                            max="1.5"
+                            step="0.01"
+                            value="1"
+                        />
+                        <output class="readout" id="swash-readout">1.00</output>
+                        <button class="reset" type="button" id="swash-reset">
+                            Reset
+                        </button>
+                    </div>
                 </div>
                 <p class="note no-js">
-                    The control needs JavaScript. The files linked below are the
+                    The controls need JavaScript. The files linked below are the
                     artwork as it ships.
                 </p>
             </section>
