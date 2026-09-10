@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -37,18 +38,30 @@ jobs:
       - name: Build
         run: bun run build
 
+      # Audits the production build in-place (no live deploy or LHCI server).
+      # Reports go to workflow artifacts and temporary public storage (~7 days).
+      - name: Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
       # Pages serves the workflow artifact, not a branch, and the custom domain
       # is bound by this file rather than a committed CNAME. Dropping this step
       # unbinds tanh-lab.com on the next deploy.
       - name: Custom domain (CNAME)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: echo "tanh-lab.com" > dist/CNAME
 
       - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
