@@ -51,227 +51,534 @@
         <a class="brand" href="/">tanh lab</a>
 
         <main>
-            <p class="label">Privacy policy</p>
-            <h1>Privacy.</h1>
-            <p class="lead">
-                Information pursuant to Art.&nbsp;13 GDPR on the processing of personal
-                data at tanh-lab.com. This site has no accounts, no forms, no cookies
-                and no analytics, so most of what follows describes what does
-                <em>not</em> happen.
-            </p>
+            <!--
+                EN/DE on the same terms as /legal/: two radios and a sibling
+                selector in doc.css, no script. Art. 12 (1) GDPR wants this
+                intelligible to the person reading it, which for a German
+                audience means German — so the translation is a requirement
+                here, not a courtesy.
+            -->
+            <input
+                class="lang-input"
+                type="radio"
+                name="lang"
+                id="lang-en"
+                checked
+            />
+            <input class="lang-input" type="radio" name="lang" id="lang-de" />
 
-            <div class="rows">
-                <section class="row">
-                    <h2 class="row-label">Controller</h2>
-                    <div class="row-body">
-                        <p>
-                            Valentin Ackva<br />
-                            Harzer Str. 39<br />
-                            12059 Berlin, Germany<br />
-                            <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>
-                        </p>
-                        <p>
-                            We are not required to appoint a data protection officer
-                            (§ 38 BDSG). Questions about this policy go to the address
-                            above.
-                        </p>
-                    </div>
-                </section>
+            <div class="lang-switch" role="group" aria-label="Language / Sprache">
+                <label for="lang-en" lang="en">EN</label>
+                <label for="lang-de" lang="de">DE</label>
+            </div>
 
-                <section class="row">
-                    <h2 class="row-label">
-                        <span>What this site does</span>
-                        <span class="sub">and does not do</span>
-                    </h2>
-                    <div class="row-body">
-                        <p>
-                            tanh-lab.com is a static website. It sets no cookies, runs no
-                            analytics or tracking, embeds no third-party content, and
-                            asks for no personal data. There is no contact form and no
-                            newsletter.
-                        </p>
-                        <p>
-                            Everything the page loads — fonts, images and code — is
-                            served from this domain. The two typefaces are hosted here
-                            rather than fetched from a font service, so opening the site
-                            sends your IP address to no one but the host below.
-                        </p>
-                    </div>
-                </section>
+            <div class="doc" lang="en">
+                <p class="label">Privacy policy</p>
+                <h1>Privacy.</h1>
+                <p class="lead">
+                    Information pursuant to Art.&nbsp;13 GDPR on the processing of personal
+                    data at tanh-lab.com. This site has no accounts, no forms, no cookies
+                    and no analytics, so most of what follows describes what does
+                    <em>not</em> happen.
+                </p>
 
-                <section class="row">
-                    <h2 class="row-label">
-                        <span>Hosting and server logs</span>
-                        <span class="sub">Art. 6 (1)(f) GDPR</span>
-                    </h2>
-                    <div class="row-body">
-                        <p>
-                            The site is hosted on GitHub Pages, a service of GitHub, Inc.,
-                            United States, acting as our processor. Delivering a web page
-                            requires your IP address to be processed, and GitHub records
-                            access data for that purpose and for the security of the
-                            service — typically the IP address, the date and time of the
-                            request, the file requested, the referring page and the
-                            browser and operating system in use.
-                        </p>
-                        <p>
-                            We have no access to these logs and receive no reports from
-                            them. The legal basis is our legitimate interest in a site
-                            that can be delivered and kept secure. Processing takes place
-                            in part in the United States; GitHub's own statement sets out
-                            the safeguards, including the standard contractual clauses:
-                            <a
-                                href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                >GitHub privacy statement
-                                <span aria-hidden="true">&#8599;</span></a
-                            >
-                        </p>
-                    </div>
-                </section>
+                <div class="rows">
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Controllers</span>
+                            <span class="sub">Art. 26 GDPR</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                Valentin Ackva<br />
+                                Spessartstra&szlig;e 4<br />
+                                14197 Berlin, Germany
+                            </p>
+                            <p>
+                                Fares Schulz<br />
+                                Karl-Marx-Allee 135<br />
+                                10243 Berlin, Germany
+                            </p>
+                            <p>
+                                We run this site jointly and are joint controllers for it.
+                                Either of us can be reached at
+                                <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a
+                                >, and you may exercise your rights against either of us; we
+                                will answer whichever of us you write to.
+                            </p>
+                            <p>
+                                We are not required to appoint a data protection officer
+                                (§ 38 BDSG). Questions about this policy go to the address
+                                above.
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">
-                        <span>Theme setting</span>
-                        <span class="sub">§ 25 (2) TDDDG</span>
-                    </h2>
-                    <div class="row-body">
-                        <p>
-                            Choosing light or dark stores one value in your browser's
-                            local storage, under the key <code>tanh-theme</code>. It holds
-                            the word "light" or "dark" and nothing else. It stays on your
-                            device, is never transmitted to us, and identifies no one.
-                        </p>
-                        <p>
-                            Storage of this kind is strictly necessary to provide the
-                            function you asked for, so it needs no consent and there is
-                            no banner. You can remove it at any time by clearing site data
-                            for this domain in your browser.
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>What this site does</span>
+                            <span class="sub">and does not do</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                tanh-lab.com is a static website. It sets no cookies, runs no
+                                analytics or tracking, embeds no third-party content, and
+                                asks for no personal data. There is no contact form and no
+                                newsletter.
+                            </p>
+                            <p>
+                                Everything the page loads — fonts, images and code — is
+                                served from this domain. The two typefaces are hosted here
+                                rather than fetched from a font service, so opening the site
+                                sends your IP address to no one but the host below.
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">
-                        <span>Contacting us</span>
-                        <span class="sub">Art. 6 (1)(b), (f) GDPR</span>
-                    </h2>
-                    <div class="row-body">
-                        <p>
-                            If you write to us, we process what your message contains —
-                            your address, your name if you give it, and the content — in
-                            order to answer it. The legal basis is the performance of a
-                            contract or steps taken before entering one where your enquiry
-                            concerns work; otherwise it is our legitimate interest in
-                            answering the people who write to us.
-                        </p>
-                        <p>
-                            We keep correspondence for as long as the matter is live and
-                            delete it afterwards, except where commercial or tax law
-                            requires it to be retained for longer.
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Hosting and server logs</span>
+                            <span class="sub">Art. 6 (1)(f) GDPR</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                The site is hosted on GitHub Pages, a service of GitHub, Inc.,
+                                United States, acting as our processor. Delivering a web page
+                                requires your IP address to be processed, and GitHub records
+                                access data for that purpose and for the security of the
+                                service — typically the IP address, the date and time of the
+                                request, the file requested, the referring page and the
+                                browser and operating system in use.
+                            </p>
+                            <p>
+                                We have no access to these logs and receive no reports from
+                                them. The legal basis is our legitimate interest in a site
+                                that can be delivered and kept secure. Processing takes place
+                                in part in the United States; GitHub's own statement sets out
+                                the safeguards, including the standard contractual clauses:
+                                <a
+                                    href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >GitHub privacy statement
+                                    <span aria-hidden="true">&#8599;</span></a
+                                >
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">Client area</h2>
-                    <div class="row-body">
-                        <p>
-                            The client area at /client/ is not open yet. It holds no
-                            login, no accounts and no data; the page states as much and
-                            processes nothing beyond the server logs above. This section
-                            will be updated before it opens.
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Theme setting</span>
+                            <span class="sub">§ 25 (2) TDDDG</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                Choosing light or dark stores one value in your browser's
+                                local storage, under the key <code>tanh-theme</code>. It holds
+                                the word "light" or "dark" and nothing else. It stays on your
+                                device, is never transmitted to us, and identifies no one.
+                            </p>
+                            <p>
+                                Storage of this kind is strictly necessary to provide the
+                                function you asked for, so it needs no consent and there is
+                                no banner. You can remove it at any time by clearing site data
+                                for this domain in your browser.
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">Links to other sites</h2>
-                    <div class="row-body">
-                        <p>
-                            The site links out to repositories, papers, profiles and
-                            companies. Nothing from those sites is embedded here, so
-                            following a link is what first contacts them — from that point
-                            their own privacy policies apply, and we have no influence
-                            over them.
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Contacting us</span>
+                            <span class="sub">Art. 6 (1)(b), (f) GDPR</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                If you write to us, we process what your message contains —
+                                your address, your name if you give it, and the content — in
+                                order to answer it. The legal basis is the performance of a
+                                contract or steps taken before entering one where your enquiry
+                                concerns work; otherwise it is our legitimate interest in
+                                answering the people who write to us.
+                            </p>
+                            <p>
+                                We keep correspondence for as long as the matter is live and
+                                delete it afterwards, except where commercial or tax law
+                                requires it to be retained for longer.
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">
-                        <span>Your rights</span>
-                        <span class="sub">Art. 15–21 GDPR</span>
-                    </h2>
-                    <div class="row-body">
-                        <p>You have the right to:</p>
-                        <ul>
-                            <li>access the personal data we hold about you (Art. 15),</li>
-                            <li>have inaccurate data corrected (Art. 16),</li>
-                            <li>have data erased (Art. 17),</li>
-                            <li>have processing restricted (Art. 18),</li>
-                            <li>
-                                receive the data you gave us in a portable form (Art. 20),
-                                and
-                            </li>
-                            <li>
-                                object to processing based on our legitimate interest,
-                                on grounds relating to your situation (Art. 21).
-                            </li>
-                        </ul>
-                        <p>
-                            To exercise any of them, write to
-                            <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>.
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">Client area</h2>
+                        <div class="row-body">
+                            <p>
+                                The client area at /client/ is not open yet. It holds no
+                                login, no accounts and no data; the page states as much and
+                                processes nothing beyond the server logs above. This section
+                                will be updated before it opens.
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">
-                        <span>Complaints</span>
-                        <span class="sub">Art. 77 GDPR</span>
-                    </h2>
-                    <div class="row-body">
-                        <p>
-                            You can lodge a complaint with a supervisory authority. The
-                            one responsible for us is:
-                        </p>
-                        <p>
-                            Berliner Beauftragte für Datenschutz und Informationsfreiheit<br />
-                            Alt-Moabit 59–61<br />
-                            10555 Berlin, Germany<br />
-                            <a
-                                href="https://www.datenschutz-berlin.de/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                >datenschutz-berlin.de
-                                <span aria-hidden="true">&#8599;</span></a
-                            >
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">Links to other sites</h2>
+                        <div class="row-body">
+                            <p>
+                                The site links out to repositories, papers, profiles and
+                                companies. Nothing from those sites is embedded here, so
+                                following a link is what first contacts them — from that point
+                                their own privacy policies apply, and we have no influence
+                                over them.
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">Transport security</h2>
-                    <div class="row-body">
-                        <p>
-                            The site is served over HTTPS. Requests between your browser
-                            and the host are encrypted in transit.
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Your rights</span>
+                            <span class="sub">Art. 15–21 GDPR</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>You have the right to:</p>
+                            <ul>
+                                <li>access the personal data we hold about you (Art. 15),</li>
+                                <li>have inaccurate data corrected (Art. 16),</li>
+                                <li>have data erased (Art. 17),</li>
+                                <li>have processing restricted (Art. 18),</li>
+                                <li>
+                                    receive the data you gave us in a portable form (Art. 20),
+                                    and
+                                </li>
+                                <li>
+                                    object to processing based on our legitimate interest,
+                                    on grounds relating to your situation (Art. 21).
+                                </li>
+                            </ul>
+                            <p>
+                                To exercise any of them, write to
+                                <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>.
+                            </p>
+                        </div>
+                    </section>
 
-                <section class="row">
-                    <h2 class="row-label">Status</h2>
-                    <div class="row-body">
-                        <p>
-                            This policy describes the site as it stands in September 2026.
-                            It will be updated when what the site does changes — the
-                            client area opening is the next such change.
-                        </p>
-                    </div>
-                </section>
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Complaints</span>
+                            <span class="sub">Art. 77 GDPR</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                You can lodge a complaint with a supervisory authority. The
+                                one responsible for us is:
+                            </p>
+                            <p>
+                                Berliner Beauftragte für Datenschutz und Informationsfreiheit<br />
+                                Alt-Moabit 59–61<br />
+                                10555 Berlin, Germany<br />
+                                <a
+                                    href="https://www.datenschutz-berlin.de/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >datenschutz-berlin.de
+                                    <span aria-hidden="true">&#8599;</span></a
+                                >
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">Transport security</h2>
+                        <div class="row-body">
+                            <p>
+                                The site is served over HTTPS. Requests between your browser
+                                and the host are encrypted in transit.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">Status</h2>
+                        <div class="row-body">
+                            <p>
+                                This policy describes the site as it stands in September 2026.
+                                It will be updated when what the site does changes — the
+                                client area opening is the next such change.
+                            </p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="doc" lang="de">
+                <p class="label">Datenschutzerklärung</p>
+                <h1>Datenschutz.</h1>
+                <p class="lead">
+                    Informationen gemäß Art.&nbsp;13 DSGVO über die Verarbeitung
+                    personenbezogener Daten auf tanh-lab.com. Diese Website hat keine
+                    Benutzerkonten, keine Formulare, keine Cookies und keine Analyse,
+                    sodass das Meiste im Folgenden beschreibt, was <em>nicht</em>
+                    geschieht.
+                </p>
+
+                <div class="rows">
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Verantwortliche</span>
+                            <span class="sub">Art. 26 DSGVO</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                Valentin Ackva<br />
+                                Spessartstraße 4<br />
+                                14197 Berlin, Deutschland
+                            </p>
+                            <p>
+                                Fares Schulz<br />
+                                Karl-Marx-Allee 135<br />
+                                10243 Berlin, Deutschland
+                            </p>
+                            <p>
+                                Wir betreiben diese Website gemeinsam und sind gemeinsam
+                                Verantwortliche. Sie erreichen uns beide unter
+                                <a href="mailto:contact@tanh-lab.com"
+                                    >contact@tanh-lab.com</a
+                                >
+                                und können Ihre Rechte gegenüber jedem von uns geltend
+                                machen; wer von uns angeschrieben wird, antwortet.
+                            </p>
+                            <p>
+                                Wir sind nicht verpflichtet, einen
+                                Datenschutzbeauftragten zu benennen (§ 38 BDSG). Fragen
+                                zu dieser Erklärung richten Sie bitte an die oben
+                                genannte Adresse.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Was diese Website tut</span>
+                            <span class="sub">und was nicht</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                tanh-lab.com ist eine statische Website. Sie setzt keine
+                                Cookies, führt keine Analyse und kein Tracking durch,
+                                bindet keine Inhalte Dritter ein und fragt keine
+                                personenbezogenen Daten ab. Es gibt kein Kontaktformular
+                                und keinen Newsletter.
+                            </p>
+                            <p>
+                                Alles, was die Seite lädt — Schriften, Bilder und Code —
+                                wird von dieser Domain ausgeliefert. Die beiden
+                                Schriftarten sind hier gehostet und werden nicht von
+                                einem Schriftdienst abgerufen; das Öffnen der Seite
+                                übermittelt Ihre IP-Adresse daher an niemanden außer dem
+                                unten genannten Hoster.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Hosting und Server-Protokolle</span>
+                            <span class="sub">Art. 6 Abs. 1 lit. f DSGVO</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                Die Website wird auf GitHub Pages gehostet, einem Dienst
+                                der GitHub, Inc., Vereinigte Staaten, die als unser
+                                Auftragsverarbeiter tätig wird. Die Auslieferung einer
+                                Webseite erfordert die Verarbeitung Ihrer IP-Adresse, und
+                                GitHub protokolliert Zugriffsdaten zu diesem Zweck und
+                                zur Sicherheit des Dienstes — in der Regel die
+                                IP-Adresse, Datum und Uhrzeit der Anfrage, die
+                                angeforderte Datei, die verweisende Seite sowie den
+                                verwendeten Browser und das Betriebssystem.
+                            </p>
+                            <p>
+                                Wir haben keinen Zugriff auf diese Protokolle und
+                                erhalten daraus keine Auswertungen. Rechtsgrundlage ist
+                                unser berechtigtes Interesse an einer auslieferbaren und
+                                sicheren Website. Die Verarbeitung findet teilweise in
+                                den Vereinigten Staaten statt; die Erklärung von GitHub
+                                führt die Garantien auf, einschließlich der
+                                Standardvertragsklauseln:
+                                <a
+                                    href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >GitHub-Datenschutzerklärung
+                                    <span aria-hidden="true">&#8599;</span></a
+                                >
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Design-Einstellung</span>
+                            <span class="sub">§ 25 Abs. 2 TDDDG</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                Die Wahl zwischen hell und dunkel speichert einen Wert im
+                                lokalen Speicher Ihres Browsers unter dem Schlüssel
+                                <code>tanh-theme</code>. Er enthält das Wort „light“ oder
+                                „dark“ und sonst nichts. Er verbleibt auf Ihrem Gerät,
+                                wird nie an uns übermittelt und identifiziert niemanden.
+                            </p>
+                            <p>
+                                Eine solche Speicherung ist unbedingt erforderlich, um
+                                die von Ihnen gewünschte Funktion bereitzustellen; sie
+                                bedarf daher keiner Einwilligung, und es gibt kein
+                                Banner. Sie können den Wert jederzeit entfernen, indem
+                                Sie die Websitedaten für diese Domain in Ihrem Browser
+                                löschen.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Kontaktaufnahme</span>
+                            <span class="sub">Art. 6 Abs. 1 lit. b, f DSGVO</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                Wenn Sie uns schreiben, verarbeiten wir, was Ihre
+                                Nachricht enthält — Ihre Adresse, Ihren Namen, sofern Sie
+                                ihn angeben, und den Inhalt —, um sie zu beantworten.
+                                Rechtsgrundlage ist die Erfüllung eines Vertrags oder die
+                                Durchführung vorvertraglicher Maßnahmen, soweit Ihre
+                                Anfrage Aufträge betrifft; im Übrigen unser berechtigtes
+                                Interesse daran, den Menschen zu antworten, die uns
+                                schreiben.
+                            </p>
+                            <p>
+                                Wir bewahren Korrespondenz so lange auf, wie der Vorgang
+                                läuft, und löschen sie danach, soweit nicht handels- oder
+                                steuerrechtliche Vorschriften eine längere Aufbewahrung
+                                verlangen.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">Kundenbereich</h2>
+                        <div class="row-body">
+                            <p>
+                                Der Kundenbereich unter /client/ ist noch nicht geöffnet.
+                                Er enthält keinen Login, keine Konten und keine Daten;
+                                die Seite sagt dies auch, und es findet keine
+                                Verarbeitung über die oben genannten Server-Protokolle
+                                hinaus statt. Dieser Abschnitt wird vor der Öffnung
+                                aktualisiert.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">Links zu anderen Websites</h2>
+                        <div class="row-body">
+                            <p>
+                                Die Website verlinkt auf Repositories, Veröffentlichungen,
+                                Profile und Unternehmen. Von diesen Seiten ist hier nichts
+                                eingebettet; erst das Folgen eines Links stellt den
+                                Kontakt zu ihnen her. Ab diesem Zeitpunkt gelten deren
+                                eigene Datenschutzerklärungen, auf die wir keinen Einfluss
+                                haben.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Ihre Rechte</span>
+                            <span class="sub">Art. 15–21 DSGVO</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>Sie haben das Recht,</p>
+                            <ul>
+                                <li>
+                                    Auskunft über die zu Ihrer Person gespeicherten Daten
+                                    zu erhalten (Art. 15),
+                                </li>
+                                <li>unrichtige Daten berichtigen zu lassen (Art. 16),</li>
+                                <li>Daten löschen zu lassen (Art. 17),</li>
+                                <li>
+                                    die Verarbeitung einschränken zu lassen (Art. 18),
+                                </li>
+                                <li>
+                                    die von Ihnen bereitgestellten Daten in einem
+                                    übertragbaren Format zu erhalten (Art. 20) und
+                                </li>
+                                <li>
+                                    der Verarbeitung auf Grundlage unseres berechtigten
+                                    Interesses aus Gründen zu widersprechen, die sich aus
+                                    Ihrer besonderen Situation ergeben (Art. 21).
+                                </li>
+                            </ul>
+                            <p>
+                                Zur Ausübung schreiben Sie bitte an
+                                <a href="mailto:contact@tanh-lab.com"
+                                    >contact@tanh-lab.com</a
+                                >.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">
+                            <span>Beschwerderecht</span>
+                            <span class="sub">Art. 77 DSGVO</span>
+                        </h2>
+                        <div class="row-body">
+                            <p>
+                                Sie können sich bei einer Aufsichtsbehörde beschweren.
+                                Die für uns zuständige Behörde ist:
+                            </p>
+                            <p>
+                                Berliner Beauftragte für Datenschutz und
+                                Informationsfreiheit<br />
+                                Alt-Moabit 59–61<br />
+                                10555 Berlin, Deutschland<br />
+                                <a
+                                    href="https://www.datenschutz-berlin.de/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >datenschutz-berlin.de
+                                    <span aria-hidden="true">&#8599;</span></a
+                                >
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">Transportverschlüsselung</h2>
+                        <div class="row-body">
+                            <p>
+                                Die Website wird über HTTPS ausgeliefert. Anfragen
+                                zwischen Ihrem Browser und dem Hoster sind auf dem
+                                Transportweg verschlüsselt.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="row">
+                        <h2 class="row-label">Stand</h2>
+                        <div class="row-body">
+                            <p>
+                                Diese Erklärung beschreibt die Website mit Stand
+                                September 2026. Sie wird aktualisiert, wenn sich ändert,
+                                was die Website tut — die Öffnung des Kundenbereichs ist
+                                die nächste solche Änderung.
+                            </p>
+                        </div>
+                    </section>
+                </div>
             </div>
         </main>
 

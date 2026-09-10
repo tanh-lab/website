@@ -126,6 +126,74 @@ h1 {
     line-height: 1.5;
 }
 
+/* ---------- language switch --------------------------------------------
+   /legal/ carries both languages at once and hides one with a sibling
+   selector, so the switch is two radios and no script. The radios stay in the
+   page rather than being display:none — that would take them out of the tab
+   order and off a screen reader, and they are the control.
+
+   Only /legal/ has a second language, so nothing here fires on /privacy/.
+--------------------------------------------------------------------- */
+
+.lang-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.lang-switch {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    /* Level with the eyebrow of whichever version is showing, rather than
+       adding a band of its own above it. */
+    margin-bottom: -2.6rem;
+    font-size: 13.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.lang-switch label {
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.25s var(--ease);
+}
+
+.lang-switch label:hover {
+    opacity: 0.75;
+}
+
+#lang-en:checked ~ .lang-switch label[for="lang-en"],
+#lang-de:checked ~ .lang-switch label[for="lang-de"] {
+    opacity: 1;
+    cursor: default;
+}
+
+/* The radio is invisible, so its focus ring has to be drawn on the label. */
+#lang-en:focus-visible ~ .lang-switch label[for="lang-en"],
+#lang-de:focus-visible ~ .lang-switch label[for="lang-de"] {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+#lang-en:checked ~ .doc[lang="de"],
+#lang-de:checked ~ .doc[lang="en"] {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    /* The eyebrow it sat beside is now closer to the top edge. */
+    .lang-switch {
+        margin-bottom: -2.2rem;
+    }
+}
+
 /* ---------- rows -------------------------------------------------------
    The site's own row furniture: a label on the left, the body on a column of
    its own. A <dl> where the label names its body — the legal notice — and

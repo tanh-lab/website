@@ -63,67 +63,186 @@
         <a class="brand" href="/">tanh lab</a>
 
         <main>
-            <p class="label">Legal notice</p>
-            <h1>Impressum.</h1>
-            <p class="lead">Information pursuant to &sect;&nbsp;5 DDG.</p>
+            <!--
+                EN/DE without a line of script: two radios drive the switch and
+                a sibling selector hides the version that is not chosen. English
+                is checked, so it is what a visitor lands on.
 
-            <dl class="rows">
-                <div class="row">
-                    <dt class="row-label">Contact</dt>
-                    <dd class="row-body">
-                        <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>
-                    </dd>
-                </div>
+                Both versions are in the document rather than one being fetched.
+                If the stylesheet ever fails to load, the page falls back to
+                showing both — which for a statutory notice is the right way to
+                break.
+            -->
+            <input
+                class="lang-input"
+                type="radio"
+                name="lang"
+                id="lang-en"
+                checked
+            />
+            <input class="lang-input" type="radio" name="lang" id="lang-de" />
 
-                <div class="row">
-                    <dt class="row-label">Operator</dt>
-                    <dd class="row-body">
-                        Valentin Ackva<br />
-                        Harzer Str. 39<br />
-                        12059 Berlin, Germany
-                    </dd>
-                </div>
+            <div class="lang-switch" role="group" aria-label="Language / Sprache">
+                <label for="lang-en" lang="en">EN</label>
+                <label for="lang-de" lang="de">DE</label>
+            </div>
 
-                <div class="row">
-                    <dt class="row-label">
-                        <span>Responsible for content</span>
-                        <span class="sub">§ 18 Abs. 2 MStV</span>
-                    </dt>
-                    <dd class="row-body">Valentin Ackva, address as above.</dd>
-                </div>
+            <div class="doc" lang="en">
+                <p class="label">Legal notice</p>
+                <h1>Impressum.</h1>
+                <p class="lead">Information pursuant to §&nbsp;5 DDG.</p>
 
-                <div class="row">
-                    <dt class="row-label">Data protection</dt>
-                    <dd class="row-body">
-                        How this site handles personal data is set out separately:
-                        <a href="/privacy/">Privacy policy</a>
-                    </dd>
-                </div>
+                <dl class="rows">
+                    <div class="row">
+                        <dt class="row-label">Contact</dt>
+                        <dd class="row-body">
+                            <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>
+                        </dd>
+                    </div>
 
-                <div class="row">
-                    <dt class="row-label">
-                        <span>Dispute resolution</span>
-                        <span class="sub">Art. 14 ODR Regulation</span>
-                    </dt>
-                    <dd class="row-body">
-                        <p>
-                            The European Commission provides a platform for online
-                            dispute resolution:
-                            <a
-                                href="https://ec.europa.eu/consumers/odr"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                >ec.europa.eu/consumers/odr
-                                <span aria-hidden="true">&#8599;</span></a
-                            >
-                        </p>
-                        <p>
+                    <div class="row">
+                        <dt class="row-label">What tanh lab is</dt>
+                        <dd class="row-body">
+                            tanh lab is a shared business name used by two independent
+                            freelance developers, Valentin Ackva and Fares Schulz. It is
+                            neither a company nor a partnership.
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">Operators</dt>
+                        <dd class="row-body">
+                            <p>
+                                Valentin Ackva<br />
+                                Spessartstraße 4<br />
+                                14197 Berlin, Germany
+                            </p>
+                            <p>
+                                Fares Schulz<br />
+                                Karl-Marx-Allee 135<br />
+                                10243 Berlin, Germany
+                            </p>
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">
+                            <span>VAT identification number</span>
+                            <span class="sub">§ 27a UStG</span>
+                        </dt>
+                        <dd class="row-body">DE453030765 (Valentin Ackva)</dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">
+                            <span>Responsible for content</span>
+                            <span class="sub">§ 18 Abs. 2 MStV</span>
+                        </dt>
+                        <dd class="row-body">
+                            Valentin Ackva, Spessartstraße 4, 14197 Berlin, Germany.
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">Data protection</dt>
+                        <dd class="row-body">
+                            How this site handles personal data is set out separately:
+                            <a href="/privacy/">Privacy policy</a>
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">
+                            <span>Dispute resolution</span>
+                            <span class="sub">§ 36 VSBG</span>
+                        </dt>
+                        <dd class="row-body">
                             We are neither obliged nor willing to take part in dispute
                             resolution proceedings before a consumer arbitration board.
-                        </p>
-                    </dd>
-                </div>
-            </dl>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="doc" lang="de">
+                <p class="label">Rechtliche Hinweise</p>
+                <h1>Impressum.</h1>
+                <p class="lead">Angaben gemäß §&nbsp;5 DDG.</p>
+
+                <dl class="rows">
+                    <div class="row">
+                        <dt class="row-label">Kontakt</dt>
+                        <dd class="row-body">
+                            <a href="mailto:contact@tanh-lab.com">contact@tanh-lab.com</a>
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">Was tanh lab ist</dt>
+                        <dd class="row-body">
+                            tanh lab ist eine gemeinsam genutzte Geschäftsbezeichnung der
+                            freiberuflichen Entwickler Valentin Ackva und Fares Schulz.
+                            tanh lab ist weder eine Gesellschaft noch eine juristische
+                            Person.
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">Betreiber</dt>
+                        <dd class="row-body">
+                            <p>
+                                Valentin Ackva<br />
+                                Spessartstraße 4<br />
+                                14197 Berlin, Deutschland
+                            </p>
+                            <p>
+                                Fares Schulz<br />
+                                Karl-Marx-Allee 135<br />
+                                10243 Berlin, Deutschland
+                            </p>
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">
+                            <span>Umsatzsteuer-Identifikationsnummer</span>
+                            <span class="sub">§ 27a UStG</span>
+                        </dt>
+                        <dd class="row-body">DE453030765 (Valentin Ackva)</dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">
+                            <span>Verantwortlich für den Inhalt</span>
+                            <span class="sub">§ 18 Abs. 2 MStV</span>
+                        </dt>
+                        <dd class="row-body">
+                            Valentin Ackva, Spessartstraße 4, 14197 Berlin, Deutschland.
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">Datenschutz</dt>
+                        <dd class="row-body">
+                            Wie diese Website mit personenbezogenen Daten umgeht, ist
+                            gesondert dargestellt:
+                            <a href="/privacy/">Datenschutzerklärung</a>
+                        </dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="row-label">
+                            <span>Streitbeilegung</span>
+                            <span class="sub">§ 36 VSBG</span>
+                        </dt>
+                        <dd class="row-body">
+                            Wir sind nicht bereit und nicht verpflichtet, an
+                            Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+                            teilzunehmen.
+                        </dd>
+                    </div>
+                </dl>
+            </div>
         </main>
 
         <footer>
