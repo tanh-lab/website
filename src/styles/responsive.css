@@ -41,7 +41,6 @@
     .lead {
         grid-column: 1 / -1;
         max-width: none;
-        font-size: 17px;
     }
 
     .row {
