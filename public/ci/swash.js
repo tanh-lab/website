@@ -152,7 +152,16 @@ function breaksOf(chain) {
 
 const reverseChain = (chain) => chain.map((c) => [...c].reverse()).reverse();
 
-/** The run of cubics from one point on the closed outline forward to another. */
+/**
+ * The run of cubics from one point on the closed outline forward to another.
+ *
+ * An end that falls exactly on a join — which is what happens when this module
+ * reads back an outline it wrote, since it ends its two sides at the ends — is
+ * split at t = 0 or t = 1, and one of the halves that comes back is a point.
+ * Those are dropped for the same reason the seams are: no shape, but a
+ * breakpoint each, and a breakpoint on one side with no partner on the other
+ * pairs the two off by one.
+ */
 function chainBetween(cubics, from, to) {
     const out = [];
     let i = from[0];
@@ -162,7 +171,7 @@ function chainBetween(cubics, from, to) {
         if (i === to[0] && t <= to[1]) {
             if (to[1] < 1) piece = splitAt(piece, t < 1 ? (to[1] - t) / (1 - t) : 0)[0];
             out.push(piece);
-            return out;
+            return out.filter((c) => lengthOf(c) > MIN_SEGMENT);
         }
         out.push(piece);
         i = (i + 1) % cubics.length;
