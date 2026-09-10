@@ -119,13 +119,16 @@ export function Preloader() {
     }, []);
 
     return (
-        <div className={cn("preloader", revealed && "is-done")} id="preloader">
+        <div
+            className={cn("preloader", revealed && "is-done")}
+            id="preloader"
+            aria-hidden="true"
+        >
             <canvas
                 ref={canvasRef}
                 className="loader"
                 width={SIZE}
                 height={SIZE}
-                aria-hidden="true"
             />
         </div>
     );

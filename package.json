@@ -9,6 +9,7 @@
         "brand": "bun run tools/render-brand.ts",
         "start": "bun ./index.html",
         "type-check": "node_modules/typescript7/bin/tsc --noEmit",
+        "lint": "eslint . --max-warnings 0",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "type-check:ts6": "tsc --noEmit"
@@ -24,6 +25,7 @@
         "@types/react": "^19.2.18",
         "@types/react-dom": "^19.2.7",
         "eslint": "^10.10.0",
+        "eslint-plugin-jsx-a11y-x": "^0.2.0",
         "eslint-plugin-react-hooks": "^7.1.1",
         "eslint-plugin-simple-import-sort": "^14.0.0",
         "eslint-plugin-unused-imports": "^4.4.1",
