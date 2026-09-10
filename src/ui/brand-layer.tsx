@@ -84,10 +84,21 @@ export function BrandLayer() {
                     className={cn("brand", "fade", revealed && "is-in")}
                     id="brand"
                     href="#top"
-                    aria-label="tanh lab — back to the top"
                 >
                     <Wordmark />
                     <Wordmark sub />
+                    {/*
+                        The name is carried in the content rather than in an
+                        aria-label. Both wordmarks are aria-hidden but still
+                        rendered text, and axe compares a link's visible text
+                        against an author-supplied name: a label that says
+                        anything other than both lines verbatim reads as a
+                        mismatch. Naming it from content sidesteps that and says
+                        the same thing to a screen reader.
+                    */}
+                    <span className="visually-hidden">
+                        tanh lab, audio software agency — back to the top
+                    </span>
                 </a>
             </div>
         </div>
