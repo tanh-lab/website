@@ -25,13 +25,11 @@
 .row {
     display: grid;
     grid-template-columns: 6fr 1fr 11fr;
-    padding: clamp(0.6rem, 1.7vh, 1.05rem) 0;
-    border-top: 1px solid rgba(183, 183, 183, 0.22);
+    padding: 0.95rem 0 1.05rem;
 }
 
-.row:last-child {
-    border-bottom: 1px solid rgba(183, 183, 183, 0.22);
-}
+/* Rules come back below 900px, where a single column needs a line per
+   entry. Desktop separates by space only. */
 
 .row-label {
     grid-column: 1;

@@ -48,6 +48,7 @@
         grid-template-columns: 1fr;
         row-gap: 0.4rem;
         padding: 1.1rem 0;
+        border-top: 1px solid rgba(183, 183, 183, 0.22);
     }
 
     .row-label,
