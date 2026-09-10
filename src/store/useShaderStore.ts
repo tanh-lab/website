@@ -63,5 +63,9 @@ export const useShaderStore = create<ShaderState>((set) => ({
 
 const presetFor = (theme: Theme) => {
     const preset = THEME_PRESETS[theme];
-    return { palette: preset.palette, invert: preset.invert };
+    return {
+        palette: preset.palette,
+        invert: preset.invert,
+        saturation: preset.saturation
+    };
 };

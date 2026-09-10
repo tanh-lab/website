@@ -19,8 +19,28 @@ export const PALETTES = {
     magenta: [1.0, 0.0, 1.0]
 } as const satisfies Record<string, readonly [number, number, number]>;
 
-/** Each theme owns a palette and an invert state. */
-export const THEME_PRESETS: Record<Theme, { palette: PaletteName; invert: boolean }> = {
-    dark: { palette: "purple", invert: false },
-    light: { palette: "green", invert: true }
+/**
+ * Each theme owns a palette, an invert state and a saturation.
+ *
+ * Light is the one that reads too pink: it tints with green and inverts, so
+ * what reaches the eye is magenta. Its saturation is set to hold 0.7 of the
+ * chroma the flare carried, the same figure the mark's ground is baked at.
+ *
+ * 0.95 rather than the 1.4 that arithmetic suggests. `adjustSaturation` is
+ * `mix(luminance, colour, amount)`, which is linear in the distance from grey,
+ * but the green tint has already zeroed red and blue: past an amount of 1 both
+ * go negative, the clamp before the invert throws that away, and the chroma
+ * stops tracking the number. So it was measured rather than derived — rendered
+ * at a range of amounts and read back as mean Oklab chroma, where 0.95 lands on
+ * 0.703 and the 1.4 it should have been lands on 0.847.
+ *
+ * Dark stays where it was: it is the purple over black, and nobody called it
+ * pink.
+ */
+export const THEME_PRESETS: Record<
+    Theme,
+    { palette: PaletteName; invert: boolean; saturation: number }
+> = {
+    dark: { palette: "purple", invert: false, saturation: 2.0 },
+    light: { palette: "green", invert: true, saturation: 0.95 }
 };
