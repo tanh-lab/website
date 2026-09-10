@@ -494,6 +494,113 @@
             [hidden] {
                 display: none !important;
             }
+
+            /* ---------- tanh logo lab ---------- */
+
+            .logo-preview {
+                background: var(--sunken);
+                border-radius: 10px;
+                padding: 1.2rem;
+                line-height: 0;
+            }
+
+            .logo-preview canvas {
+                display: block;
+                width: 400px;
+                max-width: 100%;
+                height: auto;
+                border-radius: 4px;
+                background: #fff;
+            }
+
+            .logo-preview canvas.is-paintable {
+                cursor: pointer;
+            }
+
+            html[data-theme="dark"] .logo-preview canvas {
+                background: #1c1c1a;
+            }
+
+            .logo-thumbs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.6rem;
+                margin: 0 0 1.4rem;
+            }
+
+            .logo-thumbs button {
+                font-family: inherit;
+                font-size: 12px;
+                color: inherit;
+                background: var(--sunken);
+                border: 1px solid var(--rule);
+                border-radius: 8px;
+                padding: 0.45rem 0.5rem 0.35rem;
+                cursor: pointer;
+                line-height: 0;
+                transition: border-color 0.25s var(--ease);
+            }
+
+            .logo-thumbs button[aria-pressed="true"] {
+                border-color: currentColor;
+            }
+
+            .logo-thumbs canvas {
+                display: block;
+                width: 72px;
+                height: 72px;
+                border-radius: 3px;
+                background: #fff;
+            }
+
+            html[data-theme="dark"] .logo-thumbs canvas {
+                background: #1c1c1a;
+            }
+
+            .logo-thumbs span {
+                display: block;
+                margin-top: 0.35rem;
+                font-size: 12px;
+                line-height: 1.2;
+                text-align: center;
+                opacity: 0.55;
+            }
+
+            .logo-options .option input[type="range"] {
+                min-width: 140px;
+                accent-color: currentColor;
+            }
+
+            .logo-options .option output {
+                font-variant-numeric: tabular-nums;
+                font-size: 14px;
+                min-width: 3.5ch;
+            }
+
+            .logo-toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.6rem 1.2rem;
+                margin-bottom: 1.4rem;
+            }
+
+            .logo-toolbar .picker {
+                flex: 1;
+                margin-bottom: 0;
+            }
+
+            .logo-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.6rem;
+                align-items: center;
+                margin-top: 1rem;
+            }
+
+            .logo-actions .reset {
+                margin-left: 0.4rem;
+            }
         </style>
 
         <!--
@@ -602,6 +709,118 @@
                         </p>
                     </div>
                 </div>
+            </section>
+
+            <section id="from-tanh">
+                <h2>From tanh.</h2>
+                <p class="note">
+                    Other cuts of tanh — as marks, not the one that ships. Click
+                    a region to fill or clear it.
+                </p>
+
+                <div class="logo-toolbar needs-js" hidden>
+                    <div class="picker" id="logo-family"></div>
+                    <button
+                        class="reset"
+                        type="button"
+                        id="logo-reset-type"
+                        title="Reset this plot type"
+                    >
+                        Reset
+                    </button>
+                </div>
+
+                <div
+                    class="logo-thumbs needs-js"
+                    id="logo-polar-thumbs"
+                    hidden
+                ></div>
+
+                <div
+                    class="options logo-options needs-js"
+                    id="logo-options"
+                    hidden
+                ></div>
+
+                <div class="options logo-options needs-js" id="logo-shared" hidden>
+                    <div class="option">
+                        <span>Stroke</span>
+                        <input
+                            id="logo-stroke"
+                            type="range"
+                            min="0.5"
+                            max="24"
+                            step="0.25"
+                            value="1.5"
+                            autocomplete="off"
+                        />
+                        <output id="logo-stroke-readout">1.5</output>
+                    </div>
+                    <div class="option">
+                        <span>Line</span>
+                        <div class="segment" id="logo-stroke-invert"></div>
+                    </div>
+                    <div class="option">
+                        <span>Pad</span>
+                        <input
+                            id="logo-pad"
+                            type="range"
+                            min="-0.28"
+                            max="0.28"
+                            step="0.01"
+                            value="0.12"
+                            autocomplete="off"
+                        />
+                        <output id="logo-pad-readout">0.12</output>
+                    </div>
+                    <div class="option">
+                        <span>Ink</span>
+                        <div class="segment" id="logo-invert"></div>
+                    </div>
+                </div>
+
+                <div class="row needs-js" hidden>
+                    <div class="logo-preview">
+                        <canvas
+                            id="logo-canvas"
+                            width="400"
+                            height="400"
+                            aria-label="Generated tanh mark preview"
+                        ></canvas>
+                    </div>
+                    <div>
+                        <p class="dims" id="logo-dims">
+                            Monochrome SVG, and PNG at three sizes.
+                        </p>
+                        <div class="logo-actions">
+                            <div class="files" id="logo-files">
+                                <button type="button" id="logo-svg">SVG</button>
+                                <button type="button" data-logo-png="256">
+                                    256
+                                </button>
+                                <button type="button" data-logo-png="512">
+                                    512
+                                </button>
+                                <button type="button" data-logo-png="1024">
+                                    1024
+                                </button>
+                            </div>
+                            <button
+                                class="reset"
+                                type="button"
+                                id="logo-reset"
+                                title="Reset everything"
+                            >
+                                Reset all
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="note no-js">
+                    The generator needs JavaScript. The shipped mark above does
+                    not.
+                </p>
             </section>
 
             <section>
@@ -770,5 +989,6 @@
             }
         </script>
         <script type="module" src="/ci/ci.js"></script>
+        <script type="module" src="/ci/logo.js"></script>
     </body>
 </html>
