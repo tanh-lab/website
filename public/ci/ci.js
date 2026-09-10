@@ -10,7 +10,7 @@
  * The PNGs under /brand/ are the same renders, made ahead of time by
  * tools/render-brand.ts so the page still hands out files with no script and so
  * something stable exists to link at. That tool only emits the default
- * combination — lockup left, dark ink, subtitle on — and this has to agree with
+ * combination — lockup left, white ink, subtitle on — and this has to agree with
  * it on that one; the rest of the combinations exist only here, which is why the
  * page renders its downloads rather than linking them.
  *
@@ -105,6 +105,7 @@ const LOCKUP_OPTIONS = [
         label: "Position",
         choices: [
             { id: "left", label: "Left" },
+            { id: "middle", label: "Middle" },
             { id: "right", label: "Right" }
         ]
     },
@@ -123,26 +124,64 @@ const LOCKUP_OPTIONS = [
    would not be the same mark. */
 const INK = { dark: "#1c1c1a", light: "#e8e8e6" };
 
+/**
+ * The sliders over the artwork, in the order they are drawn.
+ *
+ * One table, and everything else reads off it: the state starts at each axis's
+ * resting value, the panel is built from it, and a file name says which axes
+ * have been moved away from rest. Adding an axis is adding a row.
+ */
+const twoPlaces = (v) => v.toFixed(2);
+const degrees = (v) => Math.round(v) + "\u00b0";
+
+const CONTROLS = [
+    { key: "chroma", label: "Chroma", min: 0, max: 1.5, step: 0.01, rest: 1, show: twoPlaces },
+    { key: "hue", label: "Hue", min: -180, max: 180, step: 1, rest: 0, show: degrees },
+    { key: "lightness", label: "Lightness", min: 0.6, max: 1.4, step: 0.01, rest: 1, show: twoPlaces },
+    { key: "contrast", label: "Contrast", min: 0.6, max: 1.4, step: 0.01, rest: 1, show: twoPlaces },
+    { key: "width", label: "Width", min: 0.25, max: 1.5, step: 0.01, rest: 1, show: twoPlaces }
+];
+
 const state = {
-    chroma: 1,
-    width: 1,
+    ...Object.fromEntries(CONTROLS.map((c) => [c.key, c.rest])),
     size: 2,
     lockup: "none",
     align: "left",
-    ink: "dark"
+    ink: "light"
 };
+
+/** The four colour axes as one value, for everything that draws the ground. */
+const grade = () => ({
+    chroma: state.chroma,
+    hue: state.hue,
+    lightness: state.lightness,
+    contrast: state.contrast
+});
 
 /** The repo card's own state: its two lines are typed rather than fixed. */
 const card = { title: "tanh-lib", sub: "tanh lab", ink: "dark" };
 
 /* ---------- colour ---------------------------------------------------------
-   Chroma scaling in Oklab, which is the whole point of the control.
+   Regrading the ground in Oklab, which is the whole point of the controls.
 
    The obvious way to make artwork less pink is to fade it toward white, and it
    is the wrong way: lightness is the only thing separating the curve from the
    ground it sits on, so fading takes the mark's legibility with it. Oklab
-   separates the two. Scaling a and b leaves L untouched, so the curve holds
-   exactly the contrast it had and only the colour gets quieter.
+   separates the two, and gives four axes that each move one thing:
+
+     chroma     scales a and b. L is untouched, so the curve holds exactly the
+                contrast it had and only the colour gets quieter.
+     hue        rotates a and b about the neutral axis. The ground changes what
+                colour it is without changing how saturated or how light — the
+                answer to "too pink" that does not also drain the artwork.
+     lightness  scales L. Hue and saturation hold; the ground gets lighter or
+                darker under a mark that stays the same colour.
+     contrast   spreads L about the ground's own mean rather than about a fixed
+                middle, so 1.00 is a true no-op on this artwork and the field's
+                falloff is what steepens or flattens.
+
+   All four are one pass: the round trip through Oklab is the expensive part and
+   there is no reason to make it four times.
 --------------------------------------------------------------------------- */
 
 const LMS_FROM_LINEAR = [
@@ -176,8 +215,37 @@ const apply = (m, x, y, z) => [
     m[2][0] * x + m[2][1] * y + m[2][2] * z
 ];
 
-/** Scale the chroma of every pixel in an ImageData, in place. */
-function scaleChroma(data, amount) {
+/** One pixel's Oklab lightness. What contrast pivots on is a mean of these. */
+function lightnessOf(r, g, b) {
+    const [l, m, s] = apply(
+        LMS_FROM_LINEAR,
+        toLinear(r / 255),
+        toLinear(g / 255),
+        toLinear(b / 255)
+    );
+    return apply(LAB_FROM_LMS, Math.cbrt(l), Math.cbrt(m), Math.cbrt(s))[0];
+}
+
+/** Every axis at rest: the artwork as it ships. */
+const NEUTRAL = { chroma: 1, hue: 0, lightness: 1, contrast: 1 };
+
+const isNeutral = (grade) =>
+    grade.chroma === 1 && grade.hue === 0 && grade.lightness === 1 &&
+    grade.contrast === 1;
+
+/**
+ * Regrade every pixel in an ImageData, in place.
+ *
+ * `pivot` is the lightness contrast spreads about — the ground's own mean, so
+ * the control has somewhere honest to turn around. Order matters only between
+ * contrast and lightness: contrast first about the mean, then lightness over
+ * the result, so turning the ground down does not also flatten it.
+ */
+function regrade(data, grade, pivot) {
+    const turn = (grade.hue * Math.PI) / 180;
+    const cos = Math.cos(turn);
+    const sin = Math.sin(turn);
+
     for (let i = 0; i < data.length; i += 4) {
         const [l, m, s] = apply(
             LMS_FROM_LINEAR,
@@ -193,9 +261,9 @@ function scaleChroma(data, amount) {
         );
         const [l2, m2, s2] = apply(
             LMS_FROM_LAB,
-            lightness,
-            a * amount,
-            b * amount
+            (pivot + (lightness - pivot) * grade.contrast) * grade.lightness,
+            (a * cos - b * sin) * grade.chroma,
+            (a * sin + b * cos) * grade.chroma
         );
         const [r, g, bl] = apply(
             LINEAR_FROM_LMS,
@@ -227,6 +295,8 @@ const SWASH_IN_SVG = /(<path[^>]*\bd=")([^"]+)(")/;
 
 let markSvg = "";
 let ground = null;
+/** The ground's own mean Oklab lightness. Measured once; see regrade. */
+let groundPivot = 0.5;
 /** The swash outline at any width; see swash.js. Read once, on load. */
 let swashAt = null;
 
@@ -239,21 +309,38 @@ async function loadArtwork() {
     const outline = markSvg.match(SWASH_IN_SVG);
     if (!outline) throw new Error("no swash outlined in favicon.svg");
     swashAt = swash(outline[2]);
+
+    const { data } = groundPixels().read();
+    let sum = 0;
+    for (let i = 0; i < data.length; i += 4) {
+        sum += lightnessOf(data[i], data[i + 1], data[i + 2]);
+    }
+    groundPivot = sum / (data.length / 4);
 }
 
-/** The mark's ground at the current chroma, at its own small native size. */
-export function groundAt(amount) {
+/** The ground drawn to a canvas at its own size, with its pixels to hand. */
+function groundPixels() {
     const canvas = document.createElement("canvas");
     canvas.width = ground.naturalWidth;
     canvas.height = ground.naturalHeight;
     const context = canvas.getContext("2d", { willReadFrequently: true });
     context.drawImage(ground, 0, 0);
-    if (amount !== 1) {
-        const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
-        scaleChroma(pixels.data, amount);
-        context.putImageData(pixels, 0, 0);
+    return {
+        canvas,
+        read: () => context.getImageData(0, 0, canvas.width, canvas.height),
+        write: (pixels) => context.putImageData(pixels, 0, 0)
+    };
+}
+
+/** The mark's ground at the current grade, at its own small native size. */
+export function groundAt(grade) {
+    const surface = groundPixels();
+    if (!isNeutral(grade)) {
+        const pixels = surface.read();
+        regrade(pixels.data, grade, groundPivot);
+        surface.write(pixels);
     }
-    return canvas;
+    return surface.canvas;
 }
 
 /**
@@ -283,23 +370,23 @@ function enlarge(source, width, height) {
 }
 
 /**
- * The mark's SVG at a chroma and a width.
+ * The mark's SVG at a colour grade and a width.
  *
  * Both controls are substitutions into the file rather than a redraw of it: the
- * ground is re-encoded at the chroma asked for, the swash re-emitted at the
- * width, and everything else in the file is the file. At 1 and 1 neither
- * replacement changes a byte, so what the page shows and hands out is the
- * artwork itself and not a copy of it.
+ * ground is re-encoded at the grade asked for, the swash re-emitted at the
+ * width, and everything else in the file is the file. With every axis at rest
+ * neither replacement changes a byte, so what the page shows and hands out is
+ * the artwork itself and not a copy of it.
  */
-function markAt(amount, width) {
+function markAt(colour, width) {
     return markSvg
         .replace(SWASH_IN_SVG, (whole, head, d, tail) => head + swashAt(width) + tail)
-        .replace(GROUND_IN_SVG, () => 'href="' + groundAt(amount).toDataURL("image/png") + '"');
+        .replace(GROUND_IN_SVG, () => 'href="' + groundAt(colour).toDataURL("image/png") + '"');
 }
 
 /** The mark, rasterised by the browser from that SVG. */
-async function renderMark(size, amount, width) {
-    const url = URL.createObjectURL(new Blob([markAt(amount, width)], {
+async function renderMark(size, colour, width) {
+    const url = URL.createObjectURL(new Blob([markAt(colour, width)], {
         type: "image/svg+xml"
     }));
     try {
@@ -406,7 +493,14 @@ function drawLockup(context, width, height, options) {
     }
 
     // Every line is fitted to the same measure, so one left edge places them all.
-    const x = options.align === "right" ? width - gutter - boxWidth : gutter;
+    // Middle centres the box in the frame rather than inside the gutters: the
+    // gutter is the ink's margin from an edge, and there is no edge to hold off.
+    const x =
+        options.align === "middle"
+            ? (width - boxWidth) / 2
+            : options.align === "right"
+              ? width - gutter - boxWidth
+              : gutter;
     let y = (height - stack(set)) / 2;
 
     context.fillStyle = INK[options.ink];
@@ -419,7 +513,7 @@ function drawLockup(context, width, height, options) {
 }
 
 /** One header, at exactly the pixel size asked for. */
-function renderHeader(width, height, amount, options) {
+function renderHeader(width, height, colour, options) {
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
@@ -427,7 +521,7 @@ function renderHeader(width, height, amount, options) {
     context.imageSmoothingQuality = "high";
     // Stretched, not cropped: the field has no edges or figures to distort, and
     // stretching keeps the whole composition rather than one flat corner of it.
-    context.drawImage(enlarge(groundAt(amount), width, height), 0, 0, width, height);
+    context.drawImage(enlarge(groundAt(colour), width, height), 0, 0, width, height);
     drawLockup(context, width, height, options);
     return canvas;
 }
@@ -447,14 +541,29 @@ export function save(canvas, name) {
     }, "image/png");
 }
 
-const setting = (name, value) =>
-    value === 1 ? "" : "-" + name + value.toFixed(2).replace(".", "");
+/**
+ * What a file name says about the settings it was rendered at.
+ *
+ * Only the axes that have been moved off their resting value: at rest the name
+ * is the plain one, which is what the files under /brand/ are called.
+ */
+const setting = (control) => {
+    const value = state[control.key];
+    if (value === control.rest) return "";
+    const written =
+        control.show === degrees
+            ? String(Math.round(value))
+            : value.toFixed(2).replace(".", "");
+    return "-" + control.key + written;
+};
+
+const isWidth = (control) => control.key === "width";
 
 /** For the ground artwork: the headers and the cards carry no swash. */
-const suffix = () => setting("chroma", state.chroma);
+const suffix = () => CONTROLS.filter((c) => !isWidth(c)).map(setting).join("");
 
 /** For the mark and the avatars, which carry both. */
-const markSuffix = () => suffix() + setting("width", state.width);
+const markSuffix = () => suffix() + setting(CONTROLS.find(isWidth));
 
 /**
  * What to draw over a card, from what has been typed into it.
@@ -487,8 +596,8 @@ function headerName(size) {
     let name = size.file;
     if (state.lockup !== "none") {
         name += state.lockup === "full" ? "-lockup" : "-wordmark";
-        if (state.align === "right") name += "-right";
-        if (state.ink === "light") name += "-light";
+        if (state.align !== "left") name += "-" + state.align;
+        if (state.ink === "dark") name += "-dark";
     }
     return name + suffix() + ".png";
 }
@@ -503,10 +612,6 @@ const cardDims = document.getElementById("card-dims");
 /* Built at the end of main(); the ground it draws over follows the slider. */
 let lab = null;
 
-const slider = document.getElementById("chroma");
-const readout = document.getElementById("chroma-readout");
-const widthSlider = document.getElementById("swash");
-const widthReadout = document.getElementById("swash-readout");
 
 function paint(canvas, source) {
     canvas.width = source.width;
@@ -518,7 +623,7 @@ async function refresh() {
     const size = SIZES[state.size];
     const dpr = previewScale();
 
-    paint(markCanvas, await renderMark(MARK_PREVIEW * dpr, state.chroma, state.width));
+    paint(markCanvas, await renderMark(MARK_PREVIEW * dpr, grade(), state.width));
     markCanvas.style.width = MARK_PREVIEW + "px";
 
     // Laid out at most PREVIEW_WIDTH across, drawn at the display's own pixels.
@@ -532,7 +637,7 @@ async function refresh() {
         renderHeader(
             Math.round(laidOut.width * dpr),
             Math.round(laidOut.height * dpr),
-            state.chroma,
+            grade(),
             state
         )
     );
@@ -548,7 +653,7 @@ async function refresh() {
         renderHeader(
             Math.round(cardWidth * dpr),
             Math.round(cardHeight * dpr),
-            state.chroma,
+            grade(),
             cardOptions()
         )
     );
@@ -556,7 +661,7 @@ async function refresh() {
     cardDims.textContent =
         "GitHub social preview — " + CARD.width + " x " + CARD.height + " px";
 
-    if (lab) lab.onChroma();
+    if (lab) lab.onGround();
 }
 
 /** Coalesced to a frame: the slider fires far faster than a redraw finishes. */
@@ -652,6 +757,59 @@ export function buildSegment(host, choices, selected, onPick) {
     }
 }
 
+/**
+ * The slider panel, built rather than written out.
+ *
+ * Same reason as the segmented controls below it: the markup cannot then drift
+ * from the axes the page actually has, and an axis is one row in CONTROLS
+ * rather than a row there and a block of HTML and two listeners here.
+ */
+function buildControls() {
+    const host = document.getElementById("grade");
+    for (const control of CONTROLS) {
+        const row = document.createElement("div");
+        row.className = "control-row";
+
+        const id = "grade-" + control.key;
+        const name = document.createElement("label");
+        name.htmlFor = id;
+        name.textContent = control.label;
+
+        const slider = document.createElement("input");
+        slider.id = id;
+        slider.type = "range";
+        slider.min = String(control.min);
+        slider.max = String(control.max);
+        slider.step = String(control.step);
+        slider.value = String(state[control.key]);
+        slider.autocomplete = "off";
+
+        const readout = document.createElement("output");
+        readout.className = "readout";
+        readout.htmlFor = id;
+
+        const reset = document.createElement("button");
+        reset.className = "reset";
+        reset.type = "button";
+        reset.textContent = "Reset";
+
+        readout.textContent = control.show(state[control.key]);
+
+        const set = (value) => {
+            state[control.key] = value;
+            slider.value = String(value);
+            readout.textContent = control.show(value);
+            scheduleRefresh();
+        };
+
+        slider.addEventListener("input", () => set(Number(slider.value)));
+        reset.addEventListener("click", () => set(control.rest));
+
+        row.append(name, slider, readout, reset);
+        host.append(row);
+    }
+}
+
 /** One pill per place that wants an avatar, each at that place's own size. */
 function buildAvatarDownloads() {
     const host = document.getElementById("avatar-files");
@@ -661,7 +819,7 @@ function buildAvatarDownloads() {
         button.textContent = avatar.label + " " + avatar.size;
         button.addEventListener("click", async () => {
             save(
-                await renderMark(avatar.size, state.chroma, state.width),
+                await renderMark(avatar.size, grade(), state.width),
                 "tanh-lab-" +
                     avatar.label.toLowerCase().replace(/\s+/g, "-") +
                     "-" +
@@ -702,7 +860,7 @@ function wireCard() {
 
     document.getElementById("card-download").addEventListener("click", () => {
         save(
-            renderHeader(CARD.width, CARD.height, state.chroma, cardOptions()),
+            renderHeader(CARD.width, CARD.height, grade(), cardOptions()),
             cardName()
         );
     });
@@ -717,7 +875,7 @@ function wireMarkDownloads() {
         link.addEventListener("click", async (event) => {
             event.preventDefault();
             save(
-                await renderMark(size, state.chroma, state.width),
+                await renderMark(size, grade(), state.width),
                 "tanh-lab-mark-" + size + markSuffix() + ".png"
             );
         });
@@ -726,9 +884,9 @@ function wireMarkDownloads() {
     const svgLink = document.querySelector("#mark-files a[href='/favicon.svg']");
     svgLink.addEventListener("click", (event) => {
         // The file on disk is already both defaults; let the href stand.
-        if (state.chroma === 1 && state.width === 1) return;
+        if (isNeutral(grade()) && state.width === 1) return;
         event.preventDefault();
-        const svg = markAt(state.chroma, state.width);
+        const svg = markAt(grade(), state.width);
         const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
         const link = document.createElement("a");
         link.href = url;
@@ -746,42 +904,17 @@ async function main() {
         document.fonts.load('italic 200 100px "Barlow Semi Condensed"')
     ]);
 
+    buildControls();
     buildSizePicker();
     buildLockupOptions();
     buildAvatarDownloads();
     wireMarkDownloads();
     wireCard();
 
-    slider.addEventListener("input", () => {
-        state.chroma = Number(slider.value);
-        readout.textContent = state.chroma.toFixed(2);
-        scheduleRefresh();
-    });
-
-    document.getElementById("chroma-reset").addEventListener("click", () => {
-        slider.value = "1";
-        state.chroma = 1;
-        readout.textContent = "1.00";
-        scheduleRefresh();
-    });
-
-    widthSlider.addEventListener("input", () => {
-        state.width = Number(widthSlider.value);
-        widthReadout.textContent = state.width.toFixed(2);
-        scheduleRefresh();
-    });
-
-    document.getElementById("swash-reset").addEventListener("click", () => {
-        widthSlider.value = "1";
-        state.width = 1;
-        widthReadout.textContent = "1.00";
-        scheduleRefresh();
-    });
-
     document.getElementById("header-download").addEventListener("click", () => {
         const size = SIZES[state.size];
         save(
-            renderHeader(size.width, size.height, state.chroma, state),
+            renderHeader(size.width, size.height, grade(), state),
             headerName(size)
         );
     });
@@ -790,7 +923,7 @@ async function main() {
 
     // Last, and after the first paint: the sketches are the slowest thing on
     // the page to draw and the least urgent to see.
-    lab = initLab({ groundAt, save, loadImage, buildSegment, chroma: () => state.chroma });
+    lab = initLab({ groundAt, save, loadImage, buildSegment, grade });
 }
 
 main();

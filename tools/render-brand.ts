@@ -138,7 +138,9 @@ body { background: #fff; }
     display: block;
     width: 100%;
     height: auto;
-    fill: #1c1c1a;
+    /* The page's default ink, which these files have to agree with: white over
+       the ground rather than black. /ci/ renders every other combination. */
+    fill: #e8e8e6;
     font-family: "Instrument Serif", serif;
     font-weight: 400;
 }

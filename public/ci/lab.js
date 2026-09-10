@@ -435,7 +435,7 @@ function drawnAt(mark, k) {
     return markup;
 }
 
-export function initLab({ groundAt, save, loadImage, buildSegment, chroma }) {
+export function initLab({ groundAt, save, loadImage, buildSegment, grade }) {
     const host = document.getElementById("lab-marks");
     const optionHost = document.getElementById("lab-options");
     const state = { k: 3, field: "paper" };
@@ -533,7 +533,7 @@ export function initLab({ groundAt, save, loadImage, buildSegment, chroma }) {
 
     function render() {
         if (state.field === "ground") {
-            groundUrl = groundAt(chroma()).toDataURL("image/png");
+            groundUrl = groundAt(grade()).toDataURL("image/png");
         }
         for (const mark of MARKS) {
             previews.get(mark.id).innerHTML = svgFor(mark);
@@ -587,8 +587,8 @@ export function initLab({ groundAt, save, loadImage, buildSegment, chroma }) {
     render();
 
     return {
-        /** The top slider moves the ground; only the sketches over it change. */
-        onChroma() {
+        /** The colour sliders move the ground; only the sketches over it change. */
+        onGround() {
             if (state.field === "ground") render();
         }
     };
