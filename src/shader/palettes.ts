@@ -23,9 +23,9 @@ export const PALETTES = {
  * Each theme owns a palette, an invert state, a saturation and a hue turn.
  *
  * Light is the one that read too pink: it tints with green and inverts, so what
- * reaches the eye is the same magenta the mark carried. It is graded the way
- * the mark is graded, in the same two passes and onto the same place — 0.384 of
- * the chroma the flare carried, at 289 degrees in Oklch.
+ * reaches the eye is the same magenta the mark carried. Two things are done
+ * about it — the chroma comes down to 0.384 of what the flare carried, and the
+ * whole thing turns 18 degrees, which puts it on 308.2 in Oklch.
  *
  * The saturation is measured rather than derived. `adjustSaturation` is
  * `mix(luminance, colour, amount)`, which is linear in the distance from grey,
@@ -37,16 +37,20 @@ export const PALETTES = {
  * arithmetic gives; this one takes 0.55 of that, which is 0.51 and lands on
  * 0.384.
  *
- * The turn is 37 degrees, not the 39 the mark was given. A hue is somewhere
- * rather than a ratio, and the two artworks started a couple of degrees apart:
- * 37 is what puts the flare on 289.2, against the ground's own 289.0.
+ * The turn is not the mark's, and deliberately not. The mark sits on 289.0, and
+ * 37 degrees is what puts the flare there — but the two are not the same object
+ * to look at. The mark is an inch of artwork in a tab; the flare is the ground
+ * the whole page stands on, and at that size the same hue reads as blue rather
+ * than as a cast. 18 is half of it, settled by eye off a ladder of renders, and
+ * it leaves the flare some 19 degrees warmer than the icon on purpose.
  *
- * Order matters between the two. At the chroma the first pass left, the bright
- * core of the flare sits on the edge of sRGB, and turning it toward violet — a
- * hue with less room at that lightness — pushes it out. The clamp on the way
- * back takes a third of the chroma with it and leaves the turn some four
- * degrees short of where it was asked for. `turnHue` runs last in the fragment
- * shader, so it sees the saturation already applied and stays in gamut.
+ * Order matters between the two, which is why `turnHue` runs last in the
+ * fragment shader rather than being left to a caller. At the chroma the first
+ * pass left, the bright core sits on the edge of sRGB, and turning it toward
+ * violet — a hue with less room at that lightness — pushes it out: taken at 37
+ * degrees before the saturation, the clamp on the way back took a third of the
+ * chroma and left the turn four degrees short of where it was asked for. After
+ * the saturation, at 18, the turn costs no chroma at all.
  *
  * Dark stays where it was: it is the purple over black, and nobody called it
  * pink.
@@ -56,5 +60,5 @@ export const THEME_PRESETS: Record<
     { palette: PaletteName; invert: boolean; saturation: number; hueTurn: number }
 > = {
     dark: { palette: "purple", invert: false, saturation: 2.0, hueTurn: 0 },
-    light: { palette: "green", invert: true, saturation: 0.51, hueTurn: -37 }
+    light: { palette: "green", invert: true, saturation: 0.51, hueTurn: -18 }
 };
