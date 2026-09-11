@@ -31,6 +31,7 @@ export function applyFlareUniforms(
     gl.uniform1f(uniforms.contrastBW!, settings.contrastBW);
     gl.uniform1f(uniforms.saturation!, settings.saturation);
     gl.uniform1i(uniforms.invert!, settings.invert ? 1 : 0);
+    gl.uniform1f(uniforms.hueTurn!, settings.hueTurn);
     gl.uniform1f(uniforms.grainAmount!, settings.grainAmount);
     gl.uniform1f(uniforms.grainSize!, settings.grainSize);
 }

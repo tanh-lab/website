@@ -2,10 +2,11 @@
  * GLSL for the hero flare, on a single fullscreen triangle.
  *
  * The fragment shader is carried over from the reference pen essentially
- * verbatim. The only additions are the `precision` line — which GLSL ES
- * requires and Three.js would otherwise inject on your behalf — and the grain
- * block, which goes into the shape *before* the tint so it colours with the
- * flare rather than hazing the empty areas into a flat wash.
+ * verbatim. The additions are the `precision` line — which GLSL ES requires and
+ * Three.js would otherwise inject on your behalf — the grain block, which goes
+ * into the shape *before* the tint so it colours with the flare rather than
+ * hazing the empty areas into a flat wash, and the Oklab hue turn, which goes
+ * *after* everything because it grades the finished artwork.
  *
  * Everything in it keys off how far `iMouse` sits from centre, so a pointer at
  * the edge would kill the effect entirely. That is corrected on the JS side by
@@ -33,6 +34,7 @@ export const UNIFORMS = [
     "contrastBW",
     "saturation",
     "invert",
+    "hueTurn",
     "grainAmount",
     "grainSize"
 ] as const;
@@ -62,6 +64,7 @@ uniform vec3 primaryColor;
 uniform float contrastBW;
 uniform float saturation;
 uniform bool invert;
+uniform float hueTurn;
 uniform float grainAmount;
 uniform float grainSize;
 varying vec2 vUv;
@@ -107,6 +110,55 @@ vec3 blackAndWhite(vec3 color, float amount) {
 vec3 adjustSaturation(vec3 color, float amount) {
     float luminance = dot(color, vec3(0.299, 0.587, 0.114));
     return mix(vec3(luminance), color, amount);
+}
+
+// The sRGB transfer function, both ways. Oklab is defined over linear light, so
+// without these the turn below would be rotating gamma-encoded numbers and the
+// hue would not land where the degrees say it does.
+vec3 toLinear(vec3 c) {
+    return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), c));
+}
+
+vec3 toSrgb(vec3 c) {
+    return mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055,
+               step(vec3(0.0031308), c));
+}
+
+/**
+ * Turn a colour about the neutral axis in Oklab.
+ *
+ * The same transform /ci/ carries over the mark's ground, and the same one that
+ * took the mark off magenta — restated in GLSL rather than shared, since the
+ * page's is a loop over an ImageData and this is a fragment. a and b rotate; L
+ * is untouched, so the flare changes what colour it is without changing how
+ * light or how saturated it is.
+ */
+vec3 turnHue(vec3 color, float turn) {
+    vec3 lin = toLinear(clamp(color, 0.0, 1.0));
+    vec3 lms = vec3(
+        dot(lin, vec3(0.4122214708, 0.5363325363, 0.0514459929)),
+        dot(lin, vec3(0.2119034982, 0.6806995451, 0.1073969566)),
+        dot(lin, vec3(0.0883024620, 0.2817188376, 0.6299787005)));
+    lms = pow(max(lms, 0.0), vec3(1.0 / 3.0));
+    vec3 lab = vec3(
+        dot(lms, vec3(0.2104542553, 0.7936177850, -0.0040720468)),
+        dot(lms, vec3(1.9779984951, -2.4285922050, 0.4505937099)),
+        dot(lms, vec3(0.0259040371, 0.7827717662, -0.8086757660)));
+
+    float c = cos(radians(turn));
+    float s = sin(radians(turn));
+    lab.yz = vec2(lab.y * c - lab.z * s, lab.y * s + lab.z * c);
+
+    vec3 back = vec3(
+        lab.x + 0.3963377774 * lab.y + 0.2158037573 * lab.z,
+        lab.x - 0.1055613458 * lab.y - 0.0638541728 * lab.z,
+        lab.x - 0.0894841775 * lab.y - 1.2914855480 * lab.z);
+    back = back * back * back;
+    vec3 rgb = vec3(
+        dot(back, vec3(4.0767416621, -3.3077115913, 0.2309699292)),
+        dot(back, vec3(-1.2684380046, 2.6097574011, -0.3413193965)),
+        dot(back, vec3(-0.0041960863, -0.7034186147, 1.7076147010)));
+    return clamp(toSrgb(clamp(rgb, 0.0, 1.0)), 0.0, 1.0);
 }
 
 void main() {
@@ -158,6 +210,18 @@ void main() {
     outcol = clamp(outcol, 0.0, 1.0);
     if (invert) outcol = 1.0 - outcol;
 
-    gl_FragColor = vec4(outcol, outcol.r + outcol.g + outcol.b);
+    // Coverage is read off the colour before the turn, not after. The flare is
+    // composited onto the page, so this alpha is how much of the page it hides;
+    // a hue control that also moved it would be changing the shape of the
+    // artwork, not its colour. Rotating a and b leaves L alone but not the sum
+    // of the three channels, so the two have to be taken in this order.
+    float coverage = outcol.r + outcol.g + outcol.b;
+
+    // Guarded because it is a full Oklab round trip per pixel and the dark
+    // theme asks for none of it. hueTurn is uniform across the draw, so the
+    // branch is coherent and costs nothing.
+    if (hueTurn != 0.0) outcol = turnHue(outcol, hueTurn);
+
+    gl_FragColor = vec4(outcol, coverage);
 }
 `;

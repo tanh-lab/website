@@ -17,6 +17,8 @@ export interface FlareSettings {
     colorIntensity: number;
     contrastBW: number;
     saturation: number;
+    /** Degrees the finished colour is turned about the neutral axis in Oklab. */
+    hueTurn: number;
     grainAmount: number;
     grainSize: number;
     pointerReach: number;
@@ -38,6 +40,7 @@ export const FLARE_DEFAULTS: FlareSettings = {
     colorIntensity: 0.5,
     contrastBW: 0.0,
     saturation: 2.0,
+    hueTurn: 0,
     grainAmount: 0.0,
     grainSize: 1.6,
     pointerReach: 0.12,
@@ -66,6 +69,7 @@ const presetFor = (theme: Theme) => {
     return {
         palette: preset.palette,
         invert: preset.invert,
-        saturation: preset.saturation
+        saturation: preset.saturation,
+        hueTurn: preset.hueTurn
     };
 };
