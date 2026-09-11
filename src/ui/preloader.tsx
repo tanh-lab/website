@@ -3,119 +3,101 @@ import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 import { prefersReducedMotion } from "@/lib/motion-preference";
 import { useMotionStore } from "@/store/useMotionStore";
-import { useThemeStore } from "@/store/useThemeStore";
 
 const SIZE = 44;
-/** One pass, no repeat. */
+/** One pass, no repeat. The same figure as `--sweep` in base.css. */
 const DRAW_MS = 800;
 const STEEPNESS = 5.2;
 const SAMPLES = 48;
 
 /**
- * The preloader: a tanh curve drawing itself left to right, once, then handing
+ * The curve, as a path.
+ *
+ * Sampled rather than fitted: the shape is the function the studio is named
+ * after, and 48 segments across 44px is finer than the stroke can show. Built
+ * at module scope so it is a constant in the markup — the pre-render carries
+ * the finished path, and the browser can paint it on the first frame without
+ * waiting for the bundle to arrive and hydrate.
+ */
+const CURVE = (() => {
+    const pad = SIZE * 0.16;
+    const span = SIZE - pad * 2;
+    let d = "";
+    for (let i = 0; i <= SAMPLES; i++) {
+        const u = i / SAMPLES;
+        const x = pad + u * span;
+        const y = SIZE / 2 - Math.tanh((u - 0.5) * STEEPNESS) * (SIZE / 2 - pad);
+        d += `${i ? "L" : "M"}${x.toFixed(2)} ${y.toFixed(2)}`;
+    }
+    return d;
+})();
+
+/**
+ * The preloader: a tanh curve sweeping in left to right, once, then handing
  * over to the reveal.
  *
  * Derived from the function the studio is named after, so the mark owes nothing
  * to anyone else's. The page is uncovered when the sweep has finished *and*
  * `load` has fired *and* the fonts have settled — whichever lands last — so the
  * animation never restarts and never cuts off mid-draw.
+ *
+ * The sweep is a panel sliding off a finished curve, not a curve drawn frame by
+ * frame. It was the latter: a canvas re-stroked from a `requestAnimationFrame`
+ * loop, which is a main-thread animation competing with the one thing that
+ * saturates the main thread on a cold load — the bundle parsing, React
+ * hydrating, the flare compiling its program. On a desktop that contest is
+ * invisible. On an iPad it is not: hydration alone is a single task long enough
+ * to swallow a run of frames, and the curve stopped dead in the middle of its
+ * 800ms and then jumped. Nothing was slow; the animation simply was not being
+ * given any frames to draw in.
+ *
+ * A transform animation is handed to the compositor and keeps its own time
+ * there, so it runs at full rate through a blocked main thread. That is the
+ * whole reason for the shape of this file: the curve is static markup, and the
+ * only thing that moves is a rectangle in the preloader's own background colour
+ * sliding off it. See `.loader-wipe` in base.css.
+ *
+ * Two things fall out of the change. The sweep now starts on the first painted
+ * frame rather than after hydration, so it overlaps the load it used to follow
+ * and the intro is shorter by however long the bundle took. And the ink is
+ * `currentColor` rather than a colour read back from the element on every theme
+ * change, which is one fewer style recalc and one fewer subscription.
  */
 export function Preloader() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const wipeRef = useRef<HTMLSpanElement>(null);
     const revealed = useMotionStore((state) => state.revealed);
 
     useEffect(() => {
-        const canvas = canvasRef.current;
-        const open = useMotionStore.getState().open;
-        if (!canvas) {
-            open("swept");
+        const open = () => useMotionStore.getState().open("swept");
+        const wipe = wipeRef.current;
+
+        // Reduced motion means arriving already swept. The stylesheet has
+        // already put the panel aside; this is only the gate.
+        if (!wipe || prefersReducedMotion()) {
+            open();
             return;
         }
 
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-            open("swept");
-            return;
+        // The animation is started by CSS, possibly long before this effect
+        // runs, so the end of it cannot be waited for with a listener — by here
+        // it may already have happened. `finished` resolves either way, which
+        // is the whole reason for going through the animation object rather
+        // than `animationend`.
+        //
+        // The timer is the floor under that: it covers a browser with no
+        // `getAnimations`, and an animation cancelled out from under us. `open`
+        // ignores a gate that is already open, so whichever arrives first wins
+        // and the other is a no-op.
+        const timer = setTimeout(open, DRAW_MS + 120);
+        const running = wipe.getAnimations?.() ?? [];
+        if (running.length > 0) {
+            void Promise.all(running.map((animation) => animation.finished)).then(
+                open,
+                open
+            );
         }
 
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = SIZE * ratio;
-        canvas.height = SIZE * ratio;
-        ctx.scale(ratio, ratio);
-
-        const pad = SIZE * 0.16;
-        const span = SIZE - pad * 2;
-        const pointAt = (u: number): [number, number] => [
-            pad + u * span,
-            SIZE / 2 - Math.tanh((u - 0.5) * STEEPNESS) * (SIZE / 2 - pad)
-        ];
-
-        // Read once. This is a style recalc, and it was being forced on every
-        // frame of the sweep.
-        let ink = getComputedStyle(canvas).color;
-        const unsubscribe = useThemeStore.subscribe(() => {
-            ink = getComputedStyle(canvas).color;
-        });
-
-        const render = (drawn: number) => {
-            ctx.clearRect(0, 0, SIZE, SIZE);
-            ctx.strokeStyle = ink;
-            ctx.lineWidth = 1.5;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.beginPath();
-
-            const upto = SAMPLES * drawn;
-            const whole = Math.floor(upto);
-            for (let i = 0; i <= whole; i++) {
-                const [x, y] = pointAt(i / SAMPLES);
-                if (i) ctx.lineTo(x, y);
-                else ctx.moveTo(x, y);
-            }
-            // The tip lands between samples on all but the last frame. Without
-            // this the line only grows when `upto` crosses a whole sample, and
-            // the curve's own flattening near the end means it stops crossing
-            // — it sat visibly frozen for the last 240ms of the 800.
-            if (upto > whole) {
-                const [x, y] = pointAt(upto / SAMPLES);
-                ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-        };
-
-        if (prefersReducedMotion()) {
-            render(1);
-            open("swept");
-            return unsubscribe;
-        }
-
-        let frame = 0;
-        let began = 0;
-
-        const loop = (now: number) => {
-            if (!began) began = now;
-            const p = Math.min(1, (now - began) / DRAW_MS);
-            // Linear, deliberately. The tanh shape supplies its own
-            // acceleration — the stroke covers far more ink per frame through
-            // the steep middle than across the flat tails — so easing on top of
-            // it only distorts that. A cubic ease-out drew half the curve in
-            // the first fifth of the time and then asymptoted, creeping the
-            // last 0.8px over 240ms: not read as easing, read as a hang.
-            // Measured ink growth: 13% in the first fifth, 16% in the last.
-            render(p);
-            if (p < 1) {
-                frame = requestAnimationFrame(loop);
-                return;
-            }
-            open("swept");
-        };
-
-        frame = requestAnimationFrame(loop);
-
-        return () => {
-            cancelAnimationFrame(frame);
-            unsubscribe();
-        };
+        return () => clearTimeout(timer);
     }, []);
 
     return (
@@ -124,7 +106,19 @@ export function Preloader() {
             id="preloader"
             aria-hidden="true"
         >
-            <canvas ref={canvasRef} className="loader" width={SIZE} height={SIZE} />
+            <span className="loader">
+                <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE} height={SIZE}>
+                    <path
+                        d={CURVE}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                </svg>
+                <span ref={wipeRef} className="loader-wipe" />
+            </span>
         </div>
     );
 }

@@ -139,6 +139,11 @@
     --wide: "Barlow", "Helvetica Neue", Arial, sans-serif;
 
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* How long the preloader's curve takes to sweep in. Named because
+       preloader.tsx has to know it too — it is what the gate falls back to when
+       the animation cannot be waited on. */
+    --sweep: 800ms;
 }
 
 /* Dark is the alternate: the artwork is set on white. --primary is not

@@ -133,11 +133,51 @@ p {
     visibility: hidden;
 }
 
+/* The curve, and the panel that uncovers it.
+
+   The sweep is a transform rather than a redraw, because it runs during the
+   cold load — the bundle parsing, React hydrating, the flare compiling — and a
+   main-thread animation gets no frames while any of that holds the thread. A
+   transform is composited and keeps its own time, so the sweep runs at rate
+   through the jank instead of stopping dead in the middle of it. See the note
+   in preloader.tsx.
+
+   It is declared here rather than started from JS so that it begins on the
+   first painted frame: the curve and the panel are both in the pre-rendered
+   markup, and neither needs the bundle to have arrived. */
 .loader {
+    position: relative;
     display: block;
     width: 44px;
     height: 44px;
     color: var(--text-positive);
+    overflow: hidden;
+}
+
+.loader svg {
+    display: block;
+}
+
+/* The preloader's own ground, so there is no edge to see — only the curve
+   arriving from under it. */
+.loader-wipe {
+    position: absolute;
+    inset: 0;
+    background: var(--background);
+    will-change: transform;
+    animation: loader-sweep var(--sweep) linear forwards;
+}
+
+/* Linear, deliberately. The tanh shape supplies its own acceleration — the
+   stroke covers far more ink per unit of travel through the steep middle than
+   across the flat tails — so easing on top of it only distorts that. A cubic
+   ease-out uncovered half the curve in the first fifth of the time and then
+   asymptoted, creeping the last 0.8px over 240ms: not read as easing, read as a
+   hang. Measured ink growth: 13% in the first fifth, 16% in the last. */
+@keyframes loader-sweep {
+    to {
+        transform: translateX(100%);
+    }
 }
 
 /* ---------- intro ------------------------------------------------------ */
@@ -241,5 +281,11 @@ body:not(.is-ready) .fade {
 
     .scroll-hint-dot {
         animation: none;
+    }
+
+    /* The curve arrives already swept rather than being uncovered. */
+    .loader-wipe {
+        animation: none;
+        transform: translateX(100%);
     }
 }
