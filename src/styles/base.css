@@ -142,13 +142,31 @@ p {
 
 /* ---------- intro ------------------------------------------------------ */
 
+/* Two different jobs wear this class, and they want different timings.
+
+   The intro plays once, behind a preloader that has already held the page for
+   the better part of a second, and a long lead-in there reads as composure.
+   Reveal-on-scroll is the same class doing the opposite job: it is answering a
+   scroll that has already happened, and the reader is looking at the space the
+   content is meant to be in. A half-second of nothing followed by a 1.2s ramp
+   is most of two seconds of blank page — which is fine at the top and reads as
+   a page that has not loaded when you have just scrolled to it.
+
+   So the delay belongs to the intro rather than to the class. `.brand` is the
+   only thing here the intro drives; everything else is on a reveal observer,
+   and keeps the duration without the wait. The observer also fires a little
+   before the content lands rather than after — see use-reveal.ts. */
 .fade {
     opacity: 0;
-    transition: opacity 1.2s var(--ease) 0.5s;
+    transition: opacity 0.8s var(--ease);
 }
 
 .fade.is-in {
     opacity: 1;
+}
+
+.brand.fade {
+    transition: opacity 1.2s var(--ease) 0.5s;
 }
 
 .header,
