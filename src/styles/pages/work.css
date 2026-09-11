@@ -14,6 +14,14 @@
 
 .partners {
     grid-column: 1 / -1;
+
+    /* The height every mark is drawn against, and one multiplier over it.
+       `--mark-scale` is per-mark and optical — see `Partner.logo` — so it
+       cannot carry a change that applies to all of them at once, and a
+       breakpoint that restated the clamp would be a second copy of the number
+       to keep in step. */
+    --mark-base: clamp(17px, 2.5vh, 29px);
+    --mark-size: 1;
 }
 
 /* Caption sits above the strip; type lives on .section-label. */
@@ -57,10 +65,11 @@
    exactly and this arithmetic holds.
 
    Clamped against viewport height, like everything else that has to fit a page
-   rather than a document. */
+   rather than a document, and taken through `--mark-size` so a breakpoint can
+   move them all together without touching either of the per-mark numbers. */
 .partner-logo {
     display: block;
-    height: calc(clamp(17px, 2.5vh, 29px) * var(--mark-scale, 1));
+    height: calc(var(--mark-base) * var(--mark-size) * var(--mark-scale, 1));
     aspect-ratio: var(--mark-aspect);
     background-color: currentColor;
     /* Barely recessive, like the row copy elsewhere: at full strength a solid

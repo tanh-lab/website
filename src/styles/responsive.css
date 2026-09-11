@@ -259,7 +259,15 @@
     .partners ul {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.15rem;
+        gap: 1.5rem;
+    }
+
+    /* And larger, now that each mark has a line to itself. In the strip the
+       size is set by how many have to sit beside each other; stacked, the only
+       constraint is the width of the widest, and at 1.2 the longest wordmark
+       still lands well inside the gutter on a 390px screen. */
+    .partners {
+        --mark-size: 1.2;
     }
 
     /* The cover would leave too little for the citation at this width. */
