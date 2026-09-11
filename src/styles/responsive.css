@@ -245,6 +245,23 @@
         gap: 1.4rem;
     }
 
+    /* ---------- work ---------- */
+
+    /* The strip stops being a strip and becomes a list.
+
+       Four marks at one height do not divide into a phone: the two narrow ones
+       share the first line and the two wide ones each take their own, so what
+       wraps out is two, one, one. Ragged like that it reads as a grid that has
+       broken rather than as a set of equals, which is the one thing the strip
+       exists to say. Stacked, it is the same marks at the same size, left
+       aligned on the page's own edge, and the unevenness is gone because there
+       is nothing left to be uneven against. */
+    .partners ul {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.15rem;
+    }
+
     /* The cover would leave too little for the citation at this width. */
     .paper {
         grid-template-columns: 1fr;
